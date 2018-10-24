@@ -5,6 +5,14 @@
 #+PROPERTY: header-args :tangle yes
 
 * About
+  I took a break from emacs from summer 2017 until fall 2018.  I have
+  been using Pycharm for development during that period and it's been
+  great; mostly because of the debugger.  I missed a lot of functionality
+  I had with emacs and after a clean of my Mac and install of emacs 26.x
+  I had a lot of issues with my old configs and decided to just do a reboot.
+  Org is my motivation to bring emacs into my flow but I'm also going to
+  attempt to get pyenv and docker images to work well together.
+
 * Configurations
 ** Meta
 ** Packages
@@ -149,8 +157,8 @@
    #+BEGIN_SRC emacs-lisp
      (setq initial-frame-alist '((top . 30)
                                  (left . 30)
-                                 (width . 140)
-                                 (height . 50)))
+                                 (width . 160)
+                                 (height . 40)))
    #+end_src
 
 ** iBuffer-mode
