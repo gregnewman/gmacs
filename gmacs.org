@@ -5,6 +5,7 @@
 #+PROPERTY: header-args :tangle yes
 
 * About
+
   I took a break from emacs from summer 2017 until fall 2018.  I have
   been using Pycharm for development during that period and it's been
   great; mostly because of the debugger.  I missed a lot of functionality
