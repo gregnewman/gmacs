@@ -75,9 +75,11 @@
    #+BEGIN_SRC emacs-lisp
    ; Set user full name
    (setq user-full-name "Greg Newman")
+
    ; Set line numbers
-   (global-linum-mode 1)
-   (setq linum-format "%d ")
+   ;;  This is breaking buffers
+   ;; (global-linum-mode 1)
+   ;; (setq linum-format "%d ")
 
    ; i hate tabs
    (setq-default indent-tabs-mode nil)
@@ -124,7 +126,7 @@
    (setq desktop-load-locked-desktop t)
 
    ; use Ubuntu mono
-   (set-frame-font "Office Code Pro 12")
+   (set-frame-font "Office Code Pro 13")
 
    ; increase the line spacing
    (setq-default line-spacing 3)
@@ -145,10 +147,10 @@
    frame.  Set a default width, height and location
 
    #+BEGIN_SRC emacs-lisp
-   (setq initial-frame-alist '((top . 30)
-                               (left . 30)
-                               (width . 180)
-                               (height . 60)))
+     (setq initial-frame-alist '((top . 30)
+                                 (left . 30)
+                                 (width . 140)
+                                 (height . 50)))
    #+end_src
 
 ** iBuffer-mode
@@ -285,6 +287,7 @@
     (ido-mode 1)
     (ido-vertical-mode 1)
     #+end_src
+
 ** Python
    When starting emacs gui, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
@@ -299,15 +302,15 @@
    When opening a python file, look for a .python-version file and activate
    the virtualenv. [fn:7]
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (defun ssbb-pyenv-hook ()
-   "Automatically activates pyenv version if .python-version file exists."
-   (f-traverse-upwards
-   (lambda (path)
-     (let ((pyenv-version-path (f-expand ".python-version" path)))
-       (if (f-exists? pyenv-version-path)
-           (pyenv-mode-set (s-trim (f-read-text pyenv-version-path 'utf-8))))))))
+     (defun ssbb-pyenv-hook ()
+     "Automatically activates pyenv version if .python-version file exists."
+     (f-traverse-upwards
+     (lambda (path)
+       (let ((pyenv-version-path (f-expand ".python-version" path)))
+         (if (f-exists? pyenv-version-path)
+             (pyenv-mode-set (s-trim (f-read-text pyenv-version-path 'utf-8))))))))
 
-   (add-hook 'find-file-hook 'ssbb-pyenv-hook)
+     (add-hook 'find-file-hook 'ssbb-pyenv-hook)
    #+end_src
 
    I'm using pyenv python so add shims path to exec-path
@@ -332,6 +335,7 @@
    ; (setq flymake-log-level 3)
    ;; (remove-hook 'elpy-modules 'elpy-module-flymake)
    #+end_src
+
 ** Org-mode
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
@@ -460,12 +464,7 @@
    ;; enable line breaks
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
    #+end_src
-** Reverting buffers
-   Very useful if dealing with git repos and also files that can change from nValt
 
-   #+BEGIN_SRC emacs-lisp
-   (global-auto-revert-mode t)
-   #+end_src
 ** Magit
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
