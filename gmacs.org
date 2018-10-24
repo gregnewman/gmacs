@@ -409,17 +409,17 @@
       (delq nil
             (mapcar (lambda (x) (and (file-exists-p x) x))
                     `("~/Dropbox/notesy/learning.org"
+                      "~/Dropbox/notesy/classical_guitar.org"
+                      "~/Dropbox/notesy/studio.org"
                       "~/Dropbox/notesy/book_notes.org"
-                      "~/Dropbox/notesy/eldarion_mgh.org"
                       "~/Dropbox/notesy/goals_bucket_list.org"
-                      "~/Dropbox/notesy/machine_learning.org"
                       "~/Dropbox/notesy/thoughts.org"
                       "~/Dropbox/notesy/people.org"
                       "~/.emacs.d/greg.org"
                       "~/Dropbox/notesy/org-mode.org"
                       "~/Dropbox/notesy/routines.org"
                       "~/Dropbox/notesy/refile.org"
-                      "~/Dropbox/notesy/workouts.org"))))
+                      "~/Dropbox/notesy/running.org"))))
 
    ;; agenda
    (setq org-agenda-span 5)
