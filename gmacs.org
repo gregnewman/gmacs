@@ -87,9 +87,9 @@
 
    ; Set line numbers
    ;;  This is breaking buffers
-   ;; (global-linum-mode 1)
-   ;; (setq linum-format "%d ")
-
+   (global-nlinum-mode 1)
+   (setq nlinum-format "%d ")
+   
    ; i hate tabs
    (setq-default indent-tabs-mode nil)
 
