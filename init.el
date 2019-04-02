@@ -1,6 +1,6 @@
 ;; The main entry point into my emacs config.
 ;; It either loads the pre-compiled GMACS configuration file,
-;; or tangles and loades the GMACS literate org configuration file.
+;; or tangles and loads the GMACS literate org configuration file.
 
 (advice-add #'display-startup-echo-area-message :override #'ignore)
 (setq inhibit-startup-message t
