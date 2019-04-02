@@ -35,8 +35,8 @@
 ** Theme
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (load-theme 'ample t t)
-   (enable-theme 'ample)
+   (load-theme 'zenburn t t)
+   (enable-theme 'zenburn)
    #+end_src
 
 ** Mac OS X
