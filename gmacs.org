@@ -15,7 +15,6 @@
   attempt to get pyenv and docker images to work well together.
 
 * Configurations
-** Meta
 ** Packages
 
    #+BEGIN_SRC emacs-lisp
@@ -35,30 +34,9 @@
 ** Theme
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (load-theme 'zenburn t t)
-   (enable-theme 'zenburn)
+   (load-theme 'monokai t t)
+   (enable-theme 'monokai)
    #+end_src
-
-** Mac OS X
-
-   I run this configuration mostly on Mac OS X, so we need a couple of
-   settings to make things work smoothly. In the package section
-   =exec-path-from-shell= is included (only if you're running OS X), this is
-   to include environment-variables from the shell. It makes using Emacs
-   along with external processes a lot simpler. I also prefer using the
-   =Command=-key as the =Meta=-key.
-
-   #+BEGIN_SRC emacs-lisp
-   ;; (setq mac-command-modifier 'meta)
-   ;;(when (memq window-system '(mac ns))
-   ;;  (setq ns-pop-up-frames nil
-   ;;        mac-option-modifier nil
-   ;;        mac-command-modifier 'meta
-   ;;        x-select-enable-clipboard t)
-     ;; (exec-path-from-shell-initialize)
-   ;;  (when (fboundp 'mac-auto-operator-composition-mode)
-   ;;    (mac-auto-operator-composition-mode 1)))'
-   #+END_SRC
 
 ** Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar dn scrollbar.
@@ -75,7 +53,6 @@
    #+end_src
 
 ** Basics and general settings
-   Show line number in the left gutter and highlight current line
    Set default tabs to 4.  Highlight line.  There are a number of
    packages for highlighting the current line but hi-line is already
    included and works fine.  No more cruft than needed.
@@ -85,11 +62,9 @@
    ; Set user full name
    (setq user-full-name "Greg Newman")
 
-   ; Set line numbers
-   ;;  This is breaking buffers
-   (global-nlinum-mode 1)
-   (setq nlinum-format "%d ")
-   
+   ; line numbers mode using new mode in 26+
+   (global-display-line-numbers-mode 1)
+
    ; i hate tabs
    (setq-default indent-tabs-mode nil)
 
@@ -138,11 +113,11 @@
    (set-frame-font "Office Code Pro 13")
 
    ; increase the line spacing
-   (setq-default line-spacing 3)
+   ; (setq-default line-spacing 2)
 
    ; don't show fringe
-   ;; (setq overflow-newline-into-fringe nil)
-   (fringe-mode 4)
+   (setq overflow-newline-into-fringe nil)
+   ;(fringe-mode 4)
 
    ; Projectile
    (projectile-global-mode)
@@ -156,10 +131,10 @@
    frame.  Set a default width, height and location
 
    #+BEGIN_SRC emacs-lisp
-     (setq initial-frame-alist '((top . 30)
-                                 (left . 30)
-                                 (width . 160)
-                                 (height . 40)))
+     ;; (setq initial-frame-alist '((top . 30)
+     ;;                             (left . 30)
+     ;;                             (width . 160)
+     ;;                             (height . 40)))
    #+end_src
 
 ** iBuffer-mode
@@ -236,72 +211,72 @@
 
    # Symbol list using ido-imenu
    #+BEGIN_SRC emacs-lisp
-   (defun ido-goto-symbol (&optional symbol-list)
-      "Refresh imenu and jump to a place in the buffer using Ido."
-      (interactive)
-      (unless (featurep 'imenu)
-        (require 'imenu nil t))
-      (cond
-       ((not symbol-list)
-        (let ((ido-mode ido-mode)
-              (ido-enable-flex-matching
-               (if (boundp 'ido-enable-flex-matching)
-                   ido-enable-flex-matching t))
-              name-and-pos symbol-names position)
-          (unless ido-mode
-            (ido-mode 1)
-            (setq ido-enable-flex-matching t))
-          (while (progn
-                   (imenu--cleanup)
-                   (setq imenu--index-alist nil)
-                   (ido-goto-symbol (imenu--make-index-alist))
-                   (setq selected-symbol
-                         (ido-completing-read "Symbol? " symbol-names))
-                   (string= (car imenu--rescan-item) selected-symbol)))
-          (unless (and (boundp 'mark-active) mark-active)
-            (push-mark nil t nil))
-          (setq position (cdr (assoc selected-symbol name-and-pos)))
-          (cond
-           ((overlayp position)
-            (goto-char (overlay-start position)))
-           (t
-            (goto-char position)))))
-       ((listp symbol-list)
-        (dolist (symbol symbol-list)
-          (let (name position)
+     (defun ido-goto-symbol (&optional symbol-list)
+        "Refresh imenu and jump to a place in the buffer using Ido."
+        (interactive)
+        (unless (featurep 'imenu)
+          (require 'imenu nil t))
+        (cond
+         ((not symbol-list)
+          (let ((ido-mode ido-mode)
+                (ido-enable-flex-matching
+                 (if (boundp 'ido-enable-flex-matching)
+                     ido-enable-flex-matching t))
+                name-and-pos symbol-names position)
+            (unless ido-mode
+              (ido-mode 1)
+              (setq ido-enable-flex-matching t))
+            (while (progn
+                     (imenu--cleanup)
+                     (setq imenu--index-alist nil)
+                     (ido-goto-symbol (imenu--make-index-alist))
+                     (setq selected-symbol
+                           (ido-completing-read "Symbol? " symbol-names))
+                     (string= (car imenu--rescan-item) selected-symbol)))
+            (unless (and (boundp 'mark-active) mark-active)
+              (push-mark nil t nil))
+            (setq position (cdr (assoc selected-symbol name-and-pos)))
             (cond
-             ((and (listp symbol) (imenu--subalist-p symbol))
-              (ido-goto-symbol symbol))
-             ((listp symbol)
-              (setq name (car symbol))
-              (setq position (cdr symbol)))
-             ((stringp symbol)
-              (setq name symbol)
-              (setq position
-                    (get-text-property 1 'org-imenu-marker symbol))))
-            (unless (or (null position) (null name)
-                        (string= (car imenu--rescan-item) name))
-              (add-to-list 'symbol-names name)
-              (add-to-list 'name-and-pos (cons name position))))))))
+             ((overlayp position)
+              (goto-char (overlay-start position)))
+             (t
+              (goto-char position)))))
+         ((listp symbol-list)
+          (dolist (symbol symbol-list)
+            (let (name position)
+              (cond
+               ((and (listp symbol) (imenu--subalist-p symbol))
+                (ido-goto-symbol symbol))
+               ((listp symbol)
+                (setq name (car symbol))
+                (setq position (cdr symbol)))
+               ((stringp symbol)
+                (setq name symbol)
+                (setq position
+                      (get-text-property 1 'org-imenu-marker symbol))))
+              (unless (or (null position) (null name)
+                          (string= (car imenu--rescan-item) name))
+                (add-to-list 'symbol-names name)
+                (add-to-list 'name-and-pos (cons name position))))))))
 
-    (global-set-key (kbd "C-x C-i") 'ido-goto-symbol)
+      (global-set-key (kbd "C-x C-i") 'ido-goto-symbol)
 
-    (add-hook 'ibuffer-hook
-     (lambda ()
-       (ibuffer-vc-set-filter-groups-by-vc-root)
-       (unless (eq ibuffer-sorting-mode 'alphabetic)
-         (ibuffer-do-sort-by-alphabetic))))
+      ;; (add-hook 'ibuffer-hook
+      ;;  (lambda ()
+      ;;    (ibuffer-vc-set-filter-groups-by-vc-root)
+      ;;    (unless (eq ibuffer-sorting-mode 'alphabetic)
+      ;;      (ibuffer-do-sort-by-alphabetic))))
 
-    (require 'ido-vertical-mode)
-    (ido-mode 1)
-    (ido-vertical-mode 1)
+      (require 'ido-vertical-mode)
+      (ido-mode 1)
+      (ido-vertical-mode 1)
     #+end_src
 
 ** Python
    When starting emacs gui, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
    #+BEGIN_SRC emacs-lisp
-   ;; (exec-path-from-shell-initialize)
+   (exec-path-from-shell-initialize)
    #+end_src
 
    #+BEGIN_SRC emacs-lisp
@@ -472,6 +447,13 @@
 
    ;; enable line breaks
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+
+   ;; font faces for monokai theme
+   (setq monokai-height-minus-1 0.8
+      monokai-height-plus-1 0.7
+      monokai-height-plus-2 0.8
+      monokai-height-plus-3 0.9
+      monokai-height-plus-4 1)
    #+end_src
 
 ** Magit
