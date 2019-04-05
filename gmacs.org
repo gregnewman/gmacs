@@ -4,19 +4,11 @@
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
 
-* About
-
-  I took a break from emacs from summer 2017 until fall 2018.  I have
-  been using Pycharm for development during that period and it's been
-  great; mostly because of the debugger.  I missed a lot of functionality
-  I had with emacs and after a clean of my Mac and install of emacs 26.x
-  I had a lot of issues with my old configs and decided to just do a reboot.
-  Org is my motivation to bring emacs into my flow but I'm also going to
-  attempt to get pyenv and docker images to work well together.
-
+* TODO About
+ Add commentary here
 * Configurations
-** Packages
-
+** TODO Packages
+   Add a list of the installed packages for future reference and a way to update or install as a group.
    #+BEGIN_SRC emacs-lisp
    (require 'package)
    (package-initialize)
@@ -32,7 +24,8 @@
    #+END_SRC
 
 ** Theme
-
+   Currently using darcula theme until I can find one that appeals to me.
+   The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
    (load-theme 'darcula t t)
    (enable-theme 'darcula)
@@ -49,7 +42,7 @@
      (scroll-bar-mode -1))
 
    ;; Turn on winner mode for C-c <> window toggling.
-   ;; (winner-mode 1)
+   (winner-mode 1)
    #+end_src
 
 ** Basics and general settings
@@ -85,10 +78,6 @@
    ; dont friggin beep at me!
    (setq ring-bell-function (lambda ()))
 
-   ; dont show startup screen
-   ;(setq inhibit-startup-screen t
-   ;      initial-major-mode 'fundamental-mode)
-
    ; confirm when killing emacs.
    (when (window-system)
      (setq confirm-kill-emacs 'yes-or-no-p))
@@ -112,12 +101,8 @@
    ; use Ubuntu mono
    (set-frame-font "Office Code Pro 13")
 
-   ; increase the line spacing
-   ; (setq-default line-spacing 2)
-
    ; don't show fringe
-   (setq overflow-newline-into-fringe nil)
-   ;(fringe-mode 4)
+   (fringe-mode 4)
 
    ; Projectile
    (projectile-global-mode)
@@ -126,18 +111,9 @@
    (global-git-gutter-mode +1)
    #+end_src
 
-** Frame location
-   I hate that emacs opens at the top left of my screen and a tiny
-   frame.  Set a default width, height and location
+** TODO iBuffer-mode
+   Determine if this can be done with counsel instead of ibuffer.
 
-   #+BEGIN_SRC emacs-lisp
-     ;; (setq initial-frame-alist '((top . 30)
-     ;;                             (left . 30)
-     ;;                             (width . 160)
-     ;;                             (height . 40)))
-   #+end_src
-
-** iBuffer-mode
    I used this in the past minimally.  Need to work with it more extensively
 
    #+Begin_SRC emacs-lisp :tangle yes
@@ -184,7 +160,6 @@
    Remember my place in files across sessions
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   ;; activate it for all buffers
    (save-place-mode +1)
    (setq-default save-place t)
    #+end_src
@@ -192,14 +167,15 @@
 ** Remember recent files
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   ;; save recent files
    (setq recentf-save-file (concat user-emacs-directory "recentf")
          recentf-max-saved-items 200
          recentf-max-menu-items 15)
    (recentf-mode t)
    #+end_src
 
-** Python
+** TODO Python
+   Test out flymake and get it working properly
+
    When starting emacs gui, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
    #+BEGIN_SRC emacs-lisp
@@ -247,7 +223,9 @@
    ;; (remove-hook 'elpy-modules 'elpy-module-flymake)
    #+end_src
 
-** Org-mode
+** TODO Org-mode
+   Rethink my list of org files and regroup them.
+
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
    notes.
@@ -376,6 +354,9 @@
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
    #+end_src
 ** Ivy, Swiper and Counsel
+   I went from IDO to Helm and now going for a more minimalist
+   lightweight solution in Ivy.
+
    #+BEGIN_SRC emacs-lisp
    (ivy-mode 1)
    (setq ivy-use-virtual-buffers t)
