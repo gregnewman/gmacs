@@ -34,8 +34,8 @@
 ** Theme
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (load-theme 'monokai t t)
-   (enable-theme 'monokai)
+   (load-theme 'darcula t t)
+   (enable-theme 'darcula)
    #+end_src
 
 ** Windows Configuration
@@ -447,13 +447,6 @@
 
    ;; enable line breaks
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
-
-   ;; font faces for monokai theme
-   (setq monokai-height-minus-1 0.8
-      monokai-height-plus-1 0.7
-      monokai-height-plus-2 0.8
-      monokai-height-plus-3 0.9
-      monokai-height-plus-4 1)
    #+end_src
 
 ** Magit
