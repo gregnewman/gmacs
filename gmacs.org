@@ -4,8 +4,19 @@
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
 
-* TODO About
- Add commentary here
+* About
+  This is my personal config for Emacs.  It is constructed in literate
+  programming using Org-mode for a much cleaner and readable configuration.
+
+  If you are borrowing or using pieces of this config you can copy pieces of it
+  into a scratch file and run `M-x eval-buffer` to try them out.
+
+  If you’re viewing the Org file, you can open source code blocks (those are the
+  ones in begin_src) in a separate buffer by moving your point inside them and
+  typing C-c ’ (org-edit-special). This opens another buffer in emacs-lisp-mode,
+  so you can use M-x eval-buffer to load the changes. If you want to explore how
+  functions work, use M-x edebug-defun to set up debugging for that function,
+  and then call it.
 * Configurations
 ** TODO Packages
    Add a list of the installed packages for future reference and a way to update or install as a group.
