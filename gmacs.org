@@ -286,6 +286,15 @@
    files throughout my days and orgmode gives me a nice interface for collecting
    notes.
 
+   ;; Disable line numbers for org which fixes doubling of the line numbers.
+   ;; not sure why yet.
+   #+BEGIN_SRC emacs-lisp
+   (defun nolineorg ()
+     (global-display-line-numbers-mode 0)
+   )
+   (add-hook 'org-mode-hook 'nolineorg)
+   #+end_src
+
    Using org from the git repo to stay up to date with fixes
    #+BEGIN_SRC emacs-lisp
    ;; activate debugging
