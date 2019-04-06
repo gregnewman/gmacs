@@ -22,6 +22,8 @@
    Add a list of the installed packages for future reference and a way to update or install as a group.
    #+BEGIN_SRC emacs-lisp
    (require 'package)
+   (setq use-package-always-ensure t)
+
    (package-initialize)
    (setq custom-file (make-temp-file "emacs-custom"))
    #+END_SRC
@@ -124,6 +126,44 @@
    ; Browse Dash documentation
    (require 'counsel-dash)
    (setq counsel-dash-common-docsets '("Javascript" "Python_3" "AngularJS"))
+
+   ; Because i forget keyboard shortcuts
+   (use-package guide-key
+     :defer t
+     :diminish guide-key-mode
+     :config
+     (progn
+     (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+     (guide-key-mode 1)))
+
+   ;; Move to beginning of line.  Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+
+   (defun my/smarter-move-beginning-of-line (arg)
+   "Move point back to indentation of beginning of line.
+
+   Move point to the first non-whitespace character on this line.
+   If point is already there, move to the beginning of the line.
+   Effectively toggle between the first non-whitespace character and
+   the beginning of the line.
+
+   If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+   point reaches the beginning or end of the buffer, stop there."
+    (interactive "^p")
+    (setq arg (or arg 1))
+
+    ;; Move lines first
+    (when (/= arg 1)
+      (let ((line-move-visual nil))
+        (forward-line (1- arg))))
+
+    (let ((orig-point (point)))
+      (back-to-indentation)
+      (when (= orig-point (point))
+        (move-beginning-of-line 1))))
+
+    ;; remap C-a to `smarter-move-beginning-of-line'
+    (global-set-key [remap move-beginning-of-line]
+                    'my/smarter-move-beginning-of-line)
    #+end_src
 
 ** TODO iBuffer-mode
