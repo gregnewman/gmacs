@@ -189,7 +189,8 @@
    #+end_src
 
 ** TODO Python
-   Test out flymake and get it working properly
+   After reading about how to setup lsp-mode I think I'm going to try it
+   out for a while using the MS LSP powering VS Code.
 
    When starting emacs gui, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
