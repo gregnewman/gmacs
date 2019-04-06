@@ -109,6 +109,10 @@
 
    ; Git Gutter
    (global-git-gutter-mode +1)
+
+   ; Browse Dash documentation
+   (require 'counsel-dash)
+   (setq counsel-dash-common-docsets '("Javascript" "Python_3" "AngularJS"))
    #+end_src
 
 ** TODO iBuffer-mode
