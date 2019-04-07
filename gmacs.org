@@ -22,18 +22,20 @@
    Add a list of the installed packages for future reference and a way to update or install as a group.
    #+BEGIN_SRC emacs-lisp
    (require 'package)
-   (setq use-package-always-ensure t)
-
+   (setq package-enable-at-startup nil)
+   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
    (package-initialize)
+
+   (unless (package-installed-p 'use-package)
+     (package-refresh-contents)
+     (package-install 'use-package))
+
+   (eval-when-compile
+     (require 'use-package))
+
    (setq custom-file (make-temp-file "emacs-custom"))
-   #+END_SRC
-
-   Packages can be fetched from different mirrors, [[http://melpa.milkbox.net/#/][melpa]] is the largest
-   archive and is well maintained.
-
-   #+BEGIN_SRC emacs-lisp
-   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
    #+END_SRC
 
 ** Theme
