@@ -50,7 +50,7 @@
    #+end_src
 
 ** Windows Configuration
-   Hide things when emacs starts up, namely the tooltips, toolbar dn scrollbar.
+   Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
 
    #+BEGIN_SRC emacs-lisp
    (when window-system
