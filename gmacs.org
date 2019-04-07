@@ -42,8 +42,10 @@
    Currently using darcula theme until I can find one that appeals to me.
    The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (load-theme 'darcula t t)
-   (enable-theme 'darcula)
+   (use-package darcula-theme
+     :ensure t
+     :config
+     (load-theme 'darcula t))
    #+end_src
 
 ** Windows Configuration
@@ -68,7 +70,8 @@
 
    #+BEGIN_SRC emacs-lisp
    ; Set user full name
-   (setq user-full-name "Greg Newman")
+   (setq user-full-name "Greg Newman"
+         user-mail-address "greg@gregnewman.org")
 
    ; line numbers mode using new mode in 26+
    (global-display-line-numbers-mode 1)
