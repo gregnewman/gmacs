@@ -19,7 +19,8 @@
   and then call it.
 * Configurations
 ** Packages
-   Add a list of the installed packages for future reference and a way to update or install as a group.
+   Use `use-package` so that all packages are automatically installed if I clone
+   this repo for another machine.
    #+BEGIN_SRC emacs-lisp
    (require 'package)
    (setq package-enable-at-startup nil)
