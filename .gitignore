@@ -9,3 +9,5 @@
 /init copy.el
 /desktops
 *~
+/.lsp-session-v1
+/.lsp-python
