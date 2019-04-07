@@ -238,40 +238,48 @@
 
    Trying out the use of the Microsoft LSP that powers VS Code for python.
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package lsp-python-ms
-      :demand
-      :load-path "~/code/scratch/lsp-python-ms"
-      :ensure nil
-      :hook (python-mode . lsp)
-      :config
-      ;; for dev build of language server
-      (setq lsp-python-ms-dir
-        (expand-file-name "~/code/scratch/python-language-server/output/bin/Release/"))
-      ;; for executable of language server
-      (setq lsp-python-ms-executable
-        "~/code/scratch/python-language-server/output/bin/Release/osx.10.14-x64/publish/Microsoft.Python.LanguageServer"))
+     (use-package lsp-python-ms
+        :demand
+        :load-path "~/code/scratch/lsp-python-ms"
+        :ensure nil
+        :hook (python-mode . lsp)
+        :config
+        ;; for dev build of language server
+        (setq lsp-python-ms-dir
+          (expand-file-name "~/code/scratch/python-language-server/output/bin/Release/"))
+        ;; for executable of language server
+        (setq lsp-python-ms-executable
+          "~/code/scratch/python-language-server/output/bin/Release/osx.10.14-x64/publish/Microsoft.Python.LanguageServer"))
 
-    (provide 'init-python)
+      (use-package lsp-mode
+        :ensure t
+        :commands lsp
+        :hook
+        (python-mode . lsp)
+        :init
+        (setq lsp-prefer-flymake nil)
+        :init)
 
-    (use-package lsp-mode
-      :ensure t
-      :commands lsp
-      :hook
-      (python-mode . lsp)
-      :init
-      (setq lsp-prefer-flymake nil)
-      :init)
+      (use-package lsp-ui
+        :ensure t
+        :after lsp-mode
+        :hook ((lsp-mode . lsp-ui-mode))
+        :config (setq lsp-ui-sideline-enable nil
+                lsp-ui-doc-enable t
+                lsp-ui-doc-use-childframe t
+                lsp-ui-doc-position 'top
+                lsp-ui-doc-include-signature t))
 
-    (use-package lsp-ui
-      :ensure t
-      :commands lsp-ui-mode)
+      ;; (use-package lsp-ui
+      ;;   :ensure t
+      ;;   :commands lsp-ui-mode)
 
-    (provide 'init-lsp-mode)
-
-    (use-package company-lsp
-      :ensure t
-      :init)
+      (use-package company-lsp
+        :ensure t
+        :init)
    #+end_src
+
+   #+RESULTS:
 
    When opening a python file, look for a .python-version file and activate
    the virtualenv. [fn:7]
