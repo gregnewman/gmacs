@@ -270,10 +270,6 @@
                 lsp-ui-doc-position 'top
                 lsp-ui-doc-include-signature t))
 
-      ;; (use-package lsp-ui
-      ;;   :ensure t
-      ;;   :commands lsp-ui-mode)
-
       (use-package company-lsp
         :ensure t
         :init)
