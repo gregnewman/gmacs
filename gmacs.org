@@ -18,7 +18,7 @@
   functions work, use M-x edebug-defun to set up debugging for that function,
   and then call it.
 * Configurations
-** TODO Packages
+** Packages
    Add a list of the installed packages for future reference and a way to update or install as a group.
    #+BEGIN_SRC emacs-lisp
    (require 'package)
