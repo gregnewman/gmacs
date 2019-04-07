@@ -229,17 +229,48 @@
    #+end_src
 
 ** TODO Python
-   After reading about how to setup lsp-mode I think I'm going to try it
-   out for a while using the MS LSP powering VS Code.
-
    When starting emacs gui, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
+
    #+BEGIN_SRC emacs-lisp
    (exec-path-from-shell-initialize)
    #+end_src
 
-   #+BEGIN_SRC emacs-lisp
-   (pyenv-mode)
+   Trying out the use of the Microsoft LSP that powers VS Code for python.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package lsp-python-ms
+      :demand
+      :load-path "~/code/scratch/lsp-python-ms"
+      :ensure nil
+      :hook (python-mode . lsp)
+      :config
+      ;; for dev build of language server
+      (setq lsp-python-ms-dir
+        (expand-file-name "~/code/scratch/python-language-server/output/bin/Release/"))
+      ;; for executable of language server
+      (setq lsp-python-ms-executable
+        "~/code/scratch/python-language-server/output/bin/Release/osx.10.14-x64/publish/Microsoft.Python.LanguageServer"))
+
+    (provide 'init-python)
+
+    (use-package lsp-mode
+      :ensure t
+      :commands lsp
+      :hook
+      (python-mode . lsp)
+      :init
+      (setq lsp-prefer-flymake nil)
+      :init)
+
+    (use-package lsp-ui
+      :ensure t
+      :commands lsp-ui-mode)
+
+    (provide 'init-lsp-mode)
+
+    (use-package company-lsp
+      :ensure t
+      :init)
    #+end_src
 
    When opening a python file, look for a .python-version file and activate
@@ -256,27 +287,9 @@
      (add-hook 'find-file-hook 'ssbb-pyenv-hook)
    #+end_src
 
-   I'm using pyenv python so add shims path to exec-path
-   #+BEGIN_SRC emacs-lisp
-   (add-to-list 'exec-path "~/.pyenv/shims")
-   (elpy-enable)
-   #+end_src
-
-   Use Jedi instead of buggy Rope
-   #+BEGIN_SRC emacs-lisp
-   (setq elpy-rpc-backend "jedi")
-   (setq python-check-command (expand-file-name "/Users/greg/.pyenv/shims/flake8"))
-   (setq python-check-command "flake8")
-
    ; cleanup whitespace on save.  This is run as a before-save-hook
    ; because it would throw flake8 errors on after-save-hook
    (add-hook 'before-save-hook 'whitespace-cleanup)
-   #+end_src
-
-   #+BEGIN_SRC emacs-lisp
-   ; Debugging flymake
-   ; (setq flymake-log-level 3)
-   ;; (remove-hook 'elpy-modules 'elpy-module-flymake)
    #+end_src
 
 ** TODO Org-mode
@@ -289,9 +302,9 @@
    Using org from the git repo to stay up to date with fixes
    #+BEGIN_SRC emacs-lisp
    ;; activate debugging
-   (setq debug-on-error t
-         debug-on-signal nil
-         debug-on-quit nil)
+   ; (setq debug-on-error t
+   ;      debug-on-signal nil
+   ;      debug-on-quit nil)
 
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
    #+end_src
