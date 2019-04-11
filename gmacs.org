@@ -125,6 +125,8 @@
 
    ; Projectile
    (projectile-global-mode)
+   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
    ; Git Gutter
    (global-git-gutter-mode +1)
@@ -170,6 +172,9 @@
     ;; remap C-a to `smarter-move-beginning-of-line'
     (global-set-key [remap move-beginning-of-line]
                     'my/smarter-move-beginning-of-line)
+
+    ;; set shell to zsh
+    (setq explicit-shell-file-name "/bin/zsh")
    #+end_src
 
 ** TODO iBuffer-mode
@@ -281,8 +286,6 @@
         :init)
    #+end_src
 
-   #+RESULTS:
-
    When opening a python file, look for a .python-version file and activate
    the virtualenv. [fn:7]
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -299,8 +302,7 @@
 
    ; cleanup whitespace on save.  This is run as a before-save-hook
    ; because it would throw flake8 errors on after-save-hook
-   (add-hook 'before-save-hook 'whitespace-cleanup)
-   #+end_src
+   ; (add-hook 'before-save-hook 'whitespace-cleanup)
 
 ** TODO Org-mode
    Rethink my list of org files and regroup them.
