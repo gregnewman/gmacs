@@ -175,6 +175,14 @@
 
     ;; set shell to zsh
     (setq explicit-shell-file-name "/bin/zsh")
+
+    ;; control backups
+    (setq backup-directory-alist `(("." . "~/.saves")))
+    (setq backup-by-copying t)
+    (setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
    #+end_src
 
 ** TODO iBuffer-mode
@@ -303,6 +311,45 @@
    ; cleanup whitespace on save.  This is run as a before-save-hook
    ; because it would throw flake8 errors on after-save-hook
    ; (add-hook 'before-save-hook 'whitespace-cleanup)
+
+** Javascript
+   The LSP client for JavaScript/TypeScript needs to be installed via npm before you can use it: npm install -g javascript-typescript-langserver.
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package js2-mode
+     :mode ("\\.js\\'")
+     :hook ((js2-mode typescript-mode-hook) . lsp)
+     :init
+     (setq-default js2-ignored-warnings '("msg.extra.trailing.comma"
+                                          "msg.missing.semi"
+                                          "msg.no.side.effects")))
+
+   (use-package indium
+     :defer t
+     :init
+     (add-hook 'js2-mode-hook (lambda ()
+                             (require 'indium)
+                             (indium-interaction-mode))))
+   #+end_src
+
+** JSON
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package json-mode
+     :defer t)
+   #+end_src
+
+** Markdown
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (use-package markdown-mode
+     :commands (markdown-mode gfm-mode)
+     :mode ("\\.md\\'"
+            "\\.mkd\\'"
+            "\\.markdown\\'")
+     :init
+     (setq mardown-command "multimarkdown"))
+   #+end_src
 
 ** TODO Org-mode
    Rethink my list of org files and regroup them.
