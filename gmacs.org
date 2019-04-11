@@ -274,16 +274,17 @@
         :ensure t
         :commands lsp
         :hook
-        (python-mode . lsp)
+          (python-mode . lsp)
         :init
-        (setq lsp-prefer-flymake nil)
-        :init)
+          (setq lsp-prefer-flymake nil))
 
       (use-package lsp-ui
         :ensure t
         :after lsp-mode
         :hook ((lsp-mode . lsp-ui-mode))
-        :config (setq lsp-ui-sideline-enable nil
+        :config 
+          (setq lsp-ui-sideline-ignore-duplicate t
+                lsp-ui-sideline-enable nil
                 lsp-ui-doc-enable t
                 lsp-ui-doc-use-childframe t
                 lsp-ui-doc-position 'top
