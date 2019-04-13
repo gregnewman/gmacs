@@ -369,20 +369,16 @@
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
    #+end_src
 
-   I also work on these notes in nvAlt from multiple macs so I have set txt files
-   to open as org.
+   I also work on these notes in Notesy on the iphone so I have set txt files
+   to open as org. 
    #+BEGIN_SRC emacs-lisp
-   ;;OPEN ALL TXT FILES IN ORGMODE
    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
    #+end_src
 
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
    and use org-bullets for a much cleaner presentation.
    #+BEGIN_SRC emacs-lisp
-   ;; hide leading stars
    (setq org-hide-leading-stars t)
-
-   ;; use org-bullets for a cleaner view
    (require 'org-bullets)
    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
@@ -427,14 +423,13 @@
    (setq org-agenda-files
       (delq nil
             (mapcar (lambda (x) (and (file-exists-p x) x))
-                    `("~/Dropbox/notesy/learning.org"
+                    `("~/Dropbox/notesy/kizen.org"
+                      "~/Dropbox/notesy/learning.org"
                       "~/Dropbox/notesy/classical_guitar.org"
                       "~/Dropbox/notesy/studio.org"
                       "~/Dropbox/notesy/book_notes.org"
-                      "~/Dropbox/notesy/goals_bucket_list.org"
-                      "~/Dropbox/notesy/thoughts.org"
-                      "~/Dropbox/notesy/people.org"
-                      "~/.emacs.d/greg.org"
+                      "~/Dropbox/notesy/journal.org"
+                      "~/.emacs.d/gmacs.org"
                       "~/Dropbox/notesy/org-mode.org"
                       "~/Dropbox/notesy/routines.org"
                       "~/Dropbox/notesy/refile.org"
@@ -506,6 +501,14 @@
    (global-set-key (kbd "C-c k") 'counsel-ag)
    (global-set-key (kbd "C-x l") 'counsel-locate)
    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+
+   (use-package ivy-rich
+     :ensure t
+     :after (ivy)
+     :init
+     (setq ivy-rich-path-style 'abbrev
+        ivy-virtual-abbreviate 'full)
+     :config (ivy-rich-mode 1))
    #+end_src
 ** Magit
    #+BEGIN_SRC emacs-lisp
