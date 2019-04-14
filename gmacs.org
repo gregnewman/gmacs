@@ -43,10 +43,10 @@
    Currently using darcula theme until I can find one that appeals to me.
    The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package dracula
+   (use-package gruvbox-theme
      :ensure t
      :config
-     (load-theme 'dracula t))
+     (load-theme 'gruvbox t))
    #+end_src
 
 ** Windows Configuration
