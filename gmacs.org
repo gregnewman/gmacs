@@ -352,8 +352,7 @@
      (setq mardown-command "multimarkdown"))
    #+end_src
 
-** TODO Org-mode
-   Rethink my list of org files and regroup them.
+** Org-mode
 
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
