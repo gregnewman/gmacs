@@ -105,7 +105,7 @@
    (fset 'yes-or-no-p 'y-or-n-p)
 
    ; require a new line at the end of files
-   (setq require-final-newline t)
+   ; (setq require-final-newline t)
 
    ; Desktop setup.  I'm using multiple macs and using emacs --deamon
    ; so i'm concatinating the desktop name with the system name so the other
@@ -392,8 +392,6 @@
          ((t ( :foreground "#eeeeee"   :background "#252221")))))
    #+end_src
 
-   #+RESULTS:
-
    I also work on these notes in Notesy on the iphone so I have set txt files
    to open as org. 
    #+BEGIN_SRC emacs-lisp
@@ -406,6 +404,9 @@
    (setq org-hide-leading-stars t)
    (require 'org-bullets)
    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+   ;; respects splits
+   (setq org-agenda-window-setup 'current-window) 
 
    ;; Keywords
    (setq org-todo-keywords
