@@ -43,11 +43,15 @@
    Currently using darcula theme until I can find one that appeals to me.
    The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package gruvbox-theme
+   (use-package spacemacs-theme
      :ensure t
-     :config
-     (load-theme 'gruvbox t))
+     :defer t
+     :init
+     (load-theme 'spacemacs-dark t))
    #+end_src
+
+   #+RESULTS:
+   : t
 
 ** Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
@@ -120,9 +124,6 @@
    ; use Ubuntu mono
    (set-frame-font "Office Code Pro 13")
 
-   ; don't show fringe
-   (fringe-mode 4)
-
    ; Projectile
    (projectile-global-mode)
    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
@@ -183,6 +184,9 @@
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
+
+    ;; always how paren highlights
+    (show-paren-mode 1)
    #+end_src
 
 ** TODO iBuffer-mode
@@ -383,13 +387,13 @@
      ;; Fix an incompatibility between the ob-async and ob-ipython packages
      (setq ob-async-no-async-languages-alist '("ipython"))
 
-     (custom-set-faces
-       '(org-block-begin-line
-         ((t ( :foreground "#eeeeee"   :background "#252221"))))
-       '(org-block
-         ((t ( :foreground "#d3d3d3" :background "#443f3e"))))
-       '(org-block-end-line
-         ((t ( :foreground "#eeeeee"   :background "#252221")))))
+     ;; (custom-set-faces
+     ;;   '(org-block-begin-line
+     ;;     ((t ( :foreground "#eeeeee"   :background "#252221"))))
+     ;;   '(org-block
+     ;;     ((t ( :foreground "#d3d3d3" :background "#443f3e"))))
+     ;;   '(org-block-end-line
+     ;;     ((t ( :foreground "#eeeeee"   :background "#252221")))))
    #+end_src
 
    I also work on these notes in Notesy on the iphone so I have set txt files
@@ -401,103 +405,103 @@
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
    and use org-bullets for a much cleaner presentation.
    #+BEGIN_SRC emacs-lisp
-   (setq org-hide-leading-stars t)
-   (require 'org-bullets)
-   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+     (setq org-hide-leading-stars t)
+     (require 'org-bullets)
+     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-   ;; respects splits
-   (setq org-agenda-window-setup 'current-window) 
+     ;; respects splits
+     (setq org-agenda-window-setup 'current-window) 
 
-   ;; Keywords
-   (setq org-todo-keywords
-   '((sequence
-    "TODO(t)"
-    "STARTED(s)"
-    "WAITING(w@/!)"
-    "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")
-   (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE(x)")
-   (sequence "TOSKETCH" "SKETCHED" "|" "POSTED")))
+     ;; Keywords
+     (setq org-todo-keywords
+     '((sequence
+      "TODO(t)"
+      "STARTED(s)"
+      "WAITING(w@/!)"
+      "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")
+     (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE(x)")
+     (sequence "TOSKETCH" "SKETCHED" "|" "POSTED")))
 
-   (setq org-todo-keyword-faces
-      '(("TODO" . (:foreground "green" :weight bold))
-        ("DONE" . (:foreground "cyan" :weight bold))
-        ("WAITING" . (:foreground "red" :weight bold))
-        ("SOMEDAY" . (:foreground "gray" :weight bold))))
+     ;; (setq org-todo-keyword-faces
+     ;;    '(("TODO" . (:foreground "green" :weight bold))
+     ;;      ("DONE" . (:foreground "cyan" :weight bold))
+     ;;      ("WAITING" . (:foreground "red" :weight bold))
+     ;;      ("SOMEDAY" . (:foreground "gray" :weight bold))))
 
-   (setq org-log-done 'time)
+     (setq org-log-done 'time)
 
-   ;; tags - TODO: Redo these tags to mimic omnifocus
-   (setq org-tag-alist '(("@work" . ?b)
-                      ("@home" . ?h)
-                      ("@writing" . ?w)
-                      ("@errands" . ?e)
-                      ("@drawing" . ?d)
-                      ("@coding" . ?c)
-                      ("@learning" . ?l)
-                      ("@phone" . ?p)
-                      ("@reading" . ?r)
-                      ("@computer" . ?s)
-                      ("@studio" . ?q)
-                      ("thinking" . ?t)
-                      ("highenergy" . ?1)))
+     ;; tags - TODO: Redo these tags to mimic omnifocus
+     (setq org-tag-alist '(("@work" . ?b)
+                        ("@home" . ?h)
+                        ("@writing" . ?w)
+                        ("@errands" . ?e)
+                        ("@drawing" . ?d)
+                        ("@coding" . ?c)
+                        ("@learning" . ?l)
+                        ("@phone" . ?p)
+                        ("@reading" . ?r)
+                        ("@computer" . ?s)
+                        ("@studio" . ?q)
+                        ("thinking" . ?t)
+                        ("highenergy" . ?1)))
 
-   ;; efforts
-   (add-to-list 'org-global-properties
-      '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00 6:00 8:00"))
+     ;; efforts
+     (add-to-list 'org-global-properties
+        '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00 6:00 8:00"))
 
-   ;; agenda files
-   (setq org-agenda-files
-      (delq nil
-            (mapcar (lambda (x) (and (file-exists-p x) x))
-                    `("~/Dropbox/notesy/kizen.org"
-                      "~/Dropbox/notesy/learning.org"
-                      "~/Dropbox/notesy/classical_guitar.org"
-                      "~/Dropbox/notesy/studio.org"
-                      "~/Dropbox/notesy/book_notes.org"
-                      "~/Dropbox/notesy/journal.org"
-                      "~/.emacs.d/gmacs.org"
-                      "~/Dropbox/notesy/org-mode.org"
-                      "~/Dropbox/notesy/routines.org"
-                      "~/Dropbox/notesy/refile.org"
-                      "~/Dropbox/notesy/running.org"))))
+     ;; agenda files
+     (setq org-agenda-files
+        (delq nil
+              (mapcar (lambda (x) (and (file-exists-p x) x))
+                      `("~/Documents/org/kizen.org"
+                        "~/Documents/org/learning.org"
+                        "~/Documents/org/classical_guitar.org"
+                        "~/Documents/org/studio.org"
+                        "~/Documents/org/book_notes.org"
+                        "~/Documents/org/journal.org"
+                        "~/.emacs.d/gmacs.org"
+                        "~/Documents/org/org-mode.org"
+                        "~/Documents/org/routines.org"
+                        "~/Documents/org/refile.org"
+                        "~/Documents/org/running.org"))))
 
-   ;; agenda
-   (setq org-agenda-span 5)
-   (setq org-agenda-tags-column -100) ; take advantage of the screen width
-   (setq org-agenda-sticky nil)
-   (setq org-agenda-inhibit-startup t)
-   (setq org-agenda-use-tag-inheritance t)
-   (setq org-agenda-show-log t)
-   (setq org-agenda-skip-scheduled-if-done t)
-   (setq org-agenda-skip-deadline-if-done t)
-   (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-   (setq org-agenda-time-grid
-      '((daily today require-timed)
-       "----------------"
-       (800 1000 1200 1400 1600 1800)))
-   (setq org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
+     ;; agenda
+     (setq org-agenda-span 5)
+     (setq org-agenda-tags-column -100) ; take advantage of the screen width
+     (setq org-agenda-sticky nil)
+     (setq org-agenda-inhibit-startup t)
+     (setq org-agenda-use-tag-inheritance t)
+     (setq org-agenda-show-log t)
+     (setq org-agenda-skip-scheduled-if-done t)
+     (setq org-agenda-skip-deadline-if-done t)
+     (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+     (setq org-agenda-time-grid
+        '((daily today require-timed)
+         "----------------"
+         (800 1000 1200 1400 1600 1800)))
+     (setq org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
 
-   ;; The following lines are always needed.  Choose your own keys.
-   (global-set-key "\C-cl" 'org-store-link)
-   (global-set-key "\C-ca" 'org-agenda)
-   (global-set-key "\C-cb" 'org-iswitchb)
+     ;; The following lines are always needed.  Choose your own keys.
+     (global-set-key "\C-cl" 'org-store-link)
+     (global-set-key "\C-ca" 'org-agenda)
+     (global-set-key "\C-cb" 'org-iswitchb)
    #+end_src
 
    Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (setq org-directory "~/Dropbox/notesy")
-   (setq org-default-notes-file "~/Dropbox/notesy/refile.org")
+   (setq org-directory "~/Documents/org")
+   (setq org-default-notes-file "~/Documents/org/refile.org")
 
    ;; I use C-c c to start capture mode
    (global-set-key (kbd "C-c c") 'org-capture)
 
    ;; Capture templates
    (setq org-capture-templates
-       (quote (("n" "note" entry (file "~/Dropbox/notesy/refile.org")
+       (quote (("n" "note" entry (file "~/Documents/org/refile.org")
                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-               ("m" "Meeting" entry (file "~/Dropbox/notesy/refile.org")
+               ("m" "Meeting" entry (file "~/Documents/org/refile.org")
                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-               ("p" "Phone call" entry (file "~/Dropbox/notesy/refile.org")
+               ("p" "Phone call" entry (file "~/Documents/org/refile.org")
                 "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t))))
 
    ;; enable line breaks
