@@ -453,17 +453,17 @@
      (setq org-agenda-files
         (delq nil
               (mapcar (lambda (x) (and (file-exists-p x) x))
-                      `("~/Documents/org/kizen.org"
-                        "~/Documents/org/learning.org"
-                        "~/Documents/org/classical_guitar.org"
-                        "~/Documents/org/studio.org"
-                        "~/Documents/org/book_notes.org"
-                        "~/Documents/org/journal.org"
+                      `("~/Dropbox/Org/kizen.org"
+                        "~/Dropbox/Org/learning.org"
+                        "~/Dropbox/Org/classical_guitar.org"
+                        "~/Dropbox/Org/studio.org"
+                        "~/Dropbox/Org/book_notes.org"
+                        "~/Dropbox/Org/journal.org"
                         "~/.emacs.d/gmacs.org"
-                        "~/Documents/org/org-mode.org"
-                        "~/Documents/org/routines.org"
-                        "~/Documents/org/refile.org"
-                        "~/Documents/org/running.org"))))
+                        "~/Dropbox/Org/org-mode.org"
+                        "~/Dropbox/Org/routines.org"
+                        "~/Dropbox/Org/refile.org"
+                        "~/Dropbox/Org/running.org"))))
 
      ;; agenda
      (setq org-agenda-span 5)
@@ -489,19 +489,19 @@
 
    Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (setq org-directory "~/Documents/org")
-   (setq org-default-notes-file "~/Documents/org/refile.org")
+   (setq org-directory "~/Dropbox/Org")
+   (setq org-default-notes-file "~/Dropbox/Org/refile.org")
 
    ;; I use C-c c to start capture mode
    (global-set-key (kbd "C-c c") 'org-capture)
 
    ;; Capture templates
    (setq org-capture-templates
-       (quote (("n" "note" entry (file "~/Documents/org/refile.org")
+       (quote (("n" "note" entry (file "~/Dropbox/Org/refile.org")
                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-               ("m" "Meeting" entry (file "~/Documents/org/refile.org")
+               ("m" "Meeting" entry (file "~/Dropbox/Org/refile.org")
                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-               ("p" "Phone call" entry (file "~/Documents/org/refile.org")
+               ("p" "Phone call" entry (file "~/Dropbox/Org/refile.org")
                 "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t))))
 
    ;; enable line breaks
