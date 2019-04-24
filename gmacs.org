@@ -512,6 +512,9 @@
 
    ;; enable line breaks
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+
+   ;; enable indent mode
+   (setq org-indent-mode t)
    #+end_src
 
    Customizing the font sizes due to the theme I'm using making them HUGE
