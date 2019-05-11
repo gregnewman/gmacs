@@ -206,7 +206,7 @@
 
    (setq ibuffer-saved-filter-groups
      (quote (("default"
-            ("DESERVE" (filename . "/code/deserve/"))
+            ("Kizen" (filename . "/code/webapp/"))
             ("Python"
                 (mode . python-mode))
             ("HTML"
