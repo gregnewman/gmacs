@@ -206,7 +206,7 @@
 
    (setq ibuffer-saved-filter-groups
      (quote (("default"
-            ("DESERVE" (filename . "/code/deserve/"))
+            ("Kizen" (filename . "/code/webapp/"))
             ("Python"
                 (mode . python-mode))
             ("HTML"
@@ -437,23 +437,21 @@
      (setq org-log-done 'time)
 
      ;; tags - TODO: Redo these tags to mimic omnifocus
-     (setq org-tag-alist '(("@work" . ?b)
+     (setq org-tag-alist '(("@kizen" . ?k)
                         ("@home" . ?h)
-                        ("@writing" . ?w)
                         ("@errands" . ?e)
                         ("@drawing" . ?d)
                         ("@coding" . ?c)
+                        ("@guitar" . ?g)
                         ("@learning" . ?l)
                         ("@phone" . ?p)
                         ("@reading" . ?r)
-                        ("@computer" . ?s)
                         ("@studio" . ?q)
-                        ("thinking" . ?t)
-                        ("highenergy" . ?1)))
+                        ("@thinking" . ?t)))
 
      ;; efforts
      (add-to-list 'org-global-properties
-        '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 3:00 4:00 6:00 8:00"))
+        '("Effort_ALL". "0:05 0:15 0:30 0:45 1:00 2:00 3:00 4:00 6:00 7:00 8:00 9:00 10:00 0:00"))
 
      ;; agenda files
      (setq org-agenda-files
@@ -467,8 +465,8 @@
                         "~/Dropbox/Org/journal.org"
                         "~/.emacs.d/gmacs.org"
                         "~/Dropbox/Org/org-mode.org"
-                        "~/Dropbox/Org/routines.org"
                         "~/Dropbox/Org/refile.org"
+                        "~/Dropbox/Org/inbox.org"
                         "~/Dropbox/Org/running.org"))))
 
      ;; agenda
@@ -512,7 +510,22 @@
 
    ;; enable line breaks
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+
+   ;; enable indent mode
+   (setq org-indent-mode t)
    #+end_src
+
+   Customizing the font sizes due to the theme I'm using making them HUGE
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (custom-set-faces
+     '(org-level-1 ((t (:inherit outline-1 :height 1.1))))
+     '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+     '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+     '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+     '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+   )
+   #+end_src
+
 ** Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
    lightweight solution in Ivy.
