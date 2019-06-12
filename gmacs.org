@@ -459,7 +459,7 @@
      (setq org-agenda-files
         (delq nil
               (mapcar (lambda (x) (and (file-exists-p x) x))
-                      `("~/Dropbox/Org/kizen.org"
+                      `("~/Dropbox/Org/freelance.org"
                         "~/Dropbox/Org/learning.org"
                         "~/Dropbox/Org/classical_guitar.org"
                         "~/Dropbox/Org/studio.org"
