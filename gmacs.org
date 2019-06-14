@@ -269,16 +269,16 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
      (use-package lsp-python-ms
         :demand
-        :load-path "~/code/scratch/lsp-python-ms"
+        :load-path "~/code/lsp-python-ms"
         :ensure nil
         :hook (python-mode . lsp)
         :config
         ;; for dev build of language server
         (setq lsp-python-ms-dir
-          (expand-file-name "~/code/scratch/python-language-server/output/bin/Release/"))
+          (expand-file-name "~/python-language-server/output/bin/Release/"))
         ;; for executable of language server
         (setq lsp-python-ms-executable
-          "~/code/scratch/python-language-server/output/bin/Release/osx.10.14-x64/publish/Microsoft.Python.LanguageServer"))
+          "~/python-language-server/output/bin/Release/osx.10.14-x64/publish/Microsoft.Python.LanguageServer"))
 
       (use-package lsp-mode
         :ensure t
@@ -327,20 +327,20 @@
    The LSP client for JavaScript/TypeScript needs to be installed via npm before you can use it: npm install -g javascript-typescript-langserver.
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (use-package js2-mode
-     :mode ("\\.js\\'")
-     :hook ((js2-mode typescript-mode-hook) . lsp)
-     :init
-     (setq-default js2-ignored-warnings '("msg.extra.trailing.comma"
-                                          "msg.missing.semi"
-                                          "msg.no.side.effects")))
+   ; (use-package js2-mode
+   ;  :mode ("\\.js\\'")
+   ;  :hook ((js2-mode typescript-mode-hook) . lsp)
+   ;  :init
+   ;  (setq-default js2-ignored-warnings '("msg.extra.trailing.comma"
+   ;                                       "msg.missing.semi"
+   ;                                       "msg.no.side.effects")))
 
-   (use-package indium
-     :defer t
-     :init
-     (add-hook 'js2-mode-hook (lambda ()
-                             (require 'indium)
-                             (indium-interaction-mode))))
+   ;(use-package indium
+   ;  :defer t
+   ;  :init
+   ;  (add-hook 'js2-mode-hook (lambda ()
+   ;                          (require 'indium)
+   ;                          (indium-interaction-mode))))
    #+end_src
 
 ** JSON
