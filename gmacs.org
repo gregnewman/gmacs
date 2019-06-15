@@ -441,12 +441,14 @@
                         ("@home" . ?h)
                         ("@errands" . ?e)
                         ("@drawing" . ?d)
-                        ("@coding" . ?c)
+                        ("@current" . ?c)
                         ("@guitar" . ?g)
                         ("@learning" . ?l)
                         ("@phone" . ?p)
+                        ("@email" . ?m)
                         ("@reading" . ?r)
-                        ("@studio" . ?q)
+                        ("@studio" . ?s)
+                        ("@watch" . ?v)
                         ("@thinking" . ?t)))
 
      ;; efforts
