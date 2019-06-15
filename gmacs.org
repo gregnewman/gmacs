@@ -437,7 +437,7 @@
      (setq org-log-done 'time)
 
      ;; tags - TODO: Redo these tags to mimic omnifocus
-     (setq org-tag-alist '(("@kizen" . ?k)
+     (setq org-tag-alist '(("@work" . ?w)
                         ("@home" . ?h)
                         ("@errands" . ?e)
                         ("@drawing" . ?d)
@@ -458,8 +458,13 @@
         (delq nil
               (mapcar (lambda (x) (and (file-exists-p x) x))
                       `("~/Dropbox/Org/freelance.org"
+                        "~/Dropbox/Org/mac_to_linux.org"
                         "~/Dropbox/Org/learning.org"
                         "~/Dropbox/Org/classical_guitar.org"
+                        "~/Dropbox/Org/me.org"
+                        "~/Dropbox/Org/family.org"
+                        "~/Dropbox/Org/finance.org"
+                        "~/Dropbox/Org/home_and_cars.org"
                         "~/Dropbox/Org/studio.org"
                         "~/Dropbox/Org/book_notes.org"
                         "~/Dropbox/Org/journal.org"
