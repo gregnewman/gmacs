@@ -114,7 +114,7 @@
    (fset 'yes-or-no-p 'y-or-n-p)
 
    ; require a new line at the end of files
-   ; (setq require-final-newline t)
+   (setq require-final-newline t)
 
    ; Desktop setup.  I'm using multiple macs and using emacs --deamon
    ; so i'm concatinating the desktop name with the system name so the other
@@ -138,8 +138,9 @@
    (global-git-gutter-mode +1)
 
    ; Browse Dash documentation
-   (require 'counsel-dash)
-   (setq counsel-dash-common-docsets '("Javascript" "Python_3" "AngularJS"))
+   (use-package counsel-dash
+     :config
+     (setq counsel-dash-common-docsets '("Javascript" "Python_3" "AngularJS")))
 
    ; Because i forget keyboard shortcuts
    (use-package guide-key
@@ -297,7 +298,7 @@
         :ensure t
         :after lsp-mode
         :hook ((lsp-mode . lsp-ui-mode))
-        :config 
+        :config
           (setq lsp-ui-sideline-ignore-duplicate t
                 lsp-ui-sideline-enable nil
                 lsp-ui-doc-enable t
@@ -408,7 +409,7 @@
    #+end_src
 
    I also work on these notes in Notesy on the iphone so I have set txt files
-   to open as org. 
+   to open as org.
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
    #+end_src
@@ -421,7 +422,7 @@
      (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
      ;; respects splits
-     (setq org-agenda-window-setup 'current-window) 
+     (setq org-agenda-window-setup 'current-window)
 
      ;; Keywords
      (setq org-todo-keywords
