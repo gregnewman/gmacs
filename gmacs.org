@@ -130,12 +130,31 @@
    (set-frame-font "Office Code Pro 13")
 
    ; Projectile
-   (projectile-global-mode)
-   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+   (use-package projectile
+     :bind-keymap
+     ("C-c p" . projectile-command-map))
 
    ; Git Gutter
-   (global-git-gutter-mode +1)
+   (use-package git-gutter
+     :ensure t
+     :diminish git-gutter-mode
+     :config (global-git-gutter-mode)
+     :init
+     (progn
+       (setq git-gutter:separator-sign " "
+           git-gutter:lighter " GG"))
+     :config
+       (progn
+         (set-face-background 'git-gutter:deleted "#990A1B")
+         (set-face-foreground 'git-gutter:deleted "#990A1B")
+         (set-face-background 'git-gutter:modified "#00736F")
+         (set-face-foreground 'git-gutter:modified "#00736F")
+         (set-face-background 'git-gutter:added "#546E00")
+         (set-face-foreground 'git-gutter:added "#546E00"))
+     :bind (("C-x p" . git-gutter:previous-hunk)
+       ("C-x n" . git-gutter:next-hunk)
+       ("C-x v =" . git-gutter:popup-hunk)
+       ("C-x v r" . git-gutter:revert-hunk)))
 
    ; Browse Dash documentation
    (use-package counsel-dash
@@ -268,7 +287,9 @@
    Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
-   (exec-path-from-shell-initialize)
+   (use-package exec-path-from-shell
+     :ensure t
+     :if (memq window-system '(mac ns)))
    #+end_src
 
    Trying out the use of the Microsoft LSP that powers VS Code for python.
@@ -381,6 +402,7 @@
 
    Org Babel
    #+BEGIN_SRC emacs-lisp
+     (use-package ob-ipython)
      (org-babel-do-load-languages
        'org-babel-load-languages
        '(
