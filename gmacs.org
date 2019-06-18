@@ -418,8 +418,13 @@
    and use org-bullets for a much cleaner presentation.
    #+BEGIN_SRC emacs-lisp
      (setq org-hide-leading-stars t)
-     (require 'org-bullets)
-     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+     ;; Org bullets for prettier org files
+     (use-package org-bullets
+     :commands org-bullets-mode
+     :init
+     (add-hook 'org-mode-hook 'org-bullets-mode)
+     (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•")))
 
      ;; respects splits
      (setq org-agenda-window-setup 'current-window)
