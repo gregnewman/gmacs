@@ -94,9 +94,14 @@
    (setq-default default-tab-width 4)
 
    ; show lines that are longer than 79 columns
-   (require 'whitespace)
-   (setq whitespace-style '(face empty tabs lines-tail trailing))
-   (global-whitespace-mode t)
+   (use-package whitespace
+     :init
+     (dolist (hook '(prog-mode-hook text-mode-hook))
+       (add-hook hook #'whitespace-mode))
+     (add-hook 'before-save-hook #'whitespace-cleanup)
+     :config
+     (setq whitespace-line-column 80) ;; limit line length
+     (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
    ; dont friggin beep at me!
    (setq ring-bell-function (lambda ()))
