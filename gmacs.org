@@ -222,7 +222,7 @@
       (telephone-line-mode 1))
    #+end_src
 
-** TODO iBuffer-mode
+** iBuffer-mode
    Determine if this can be done with counsel instead of ibuffer.
 
    I used this in the past minimally.  Need to work with it more extensively
