@@ -80,6 +80,8 @@
 
    ; line numbers mode using new mode in 26+
    (global-display-line-numbers-mode 1)
+   (setq display-line-numbers-type 'relative)
+   (setq display-line-numbers-width-start t)
 
    ; i hate tabs
    (setq-default indent-tabs-mode nil)
@@ -566,6 +568,35 @@
      '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
    )
    #+end_src
+
+Agenda commands
+Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+#+BEGIN_SRC emacs-lisp :tangle yes
+(defun air-org-skip-subtree-if-priority (priority)
+  "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?A, ?B, or ?C."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (pri-value (* 1000 (- org-lowest-priority priority)))
+        (pri-current (org-get-priority (thing-at-point 'line t))))
+    (if (= pri-value pri-current)
+        subtree-end
+      nil)))
+
+(setq org-agenda-custom-commands
+      '(("c" "Simple agenda view"
+         ((tags "PRIORITY=\"A\""
+                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+          (agenda "")
+          (alltodo ""
+                   ((org-agenda-skip-function
+                     '(or (air-org-skip-subtree-if-priority ?A)
+                          (org-agenda-skip-if nil '(scheduled deadline))))))))))
+
+#+end_src
+
+#+RESULTS:
 
 ** Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
