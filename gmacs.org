@@ -129,7 +129,7 @@
    (setq desktop-load-locked-desktop t)
 
    ; use Ubuntu mono
-   (set-frame-font "Office Code Pro 13")
+   ;(set-frame-font "Office Code Pro 13")
 
    ; Projectile
    (use-package projectile
@@ -296,38 +296,38 @@
 
    Trying out the use of the Microsoft LSP that powers VS Code for python.
    #+BEGIN_SRC emacs-lisp :tangle yes
-     (use-package lsp-python-ms
-        :demand
-        :load-path "~/code/lsp-python-ms"
-        :ensure nil
-        :hook (python-mode . lsp)
-        :config
-        ;; for dev build of language server
-        (setq lsp-python-ms-dir
-          (expand-file-name "~/python-language-server/output/bin/Release/"))
-        ;; for executable of language server
-        (setq lsp-python-ms-executable
-          "~/python-language-server/output/bin/Release/osx.10.14-x64/publish/Microsoft.Python.LanguageServer"))
+     ;(use-package lsp-python-ms
+     ;   :demand
+     ;   :load-path "~/code/lsp-python-ms"
+     ;   :ensure nil
+     ;   :hook (python-mode . lsp)
+     ;   :config
+     ;   ;; for dev build of language server
+     ;   (setq lsp-python-ms-dir
+     ;     (expand-file-name "~/code/python-language-server/output/bin/Release/"))
+     ;   ;; for executable of language server
+     ;   (setq lsp-python-ms-executable
+     ;     "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
 
-      (use-package lsp-mode
-        :ensure t
-        :commands lsp
-        :hook
-          (python-mode . lsp)
-        :init
-          (setq lsp-prefer-flymake nil))
+     ; (use-package lsp-mode
+     ;   :ensure t
+     ;   :commands lsp
+     ;   :hook
+     ;     (python-mode . lsp)
+     ;   :init
+     ;     (setq lsp-prefer-flymake nil))
 
-      (use-package lsp-ui
-        :ensure t
-        :after lsp-mode
-        :hook ((lsp-mode . lsp-ui-mode))
-        :config
-          (setq lsp-ui-sideline-ignore-duplicate t
-                lsp-ui-sideline-enable nil
-                lsp-ui-doc-enable t
-                lsp-ui-doc-use-childframe t
-                lsp-ui-doc-position 'top
-                lsp-ui-doc-include-signature t))
+     ; (use-package lsp-ui
+     ;   :ensure t
+     ;   :after lsp-mode
+     ;   :hook ((lsp-mode . lsp-ui-mode))
+     ;   :config
+     ;     (setq lsp-ui-sideline-ignore-duplicate t
+     ;           lsp-ui-sideline-enable nil
+     ;           lsp-ui-doc-enable t
+     ;           lsp-ui-doc-use-childframe t
+     ;           lsp-ui-doc-position 'top
+     ;           lsp-ui-doc-include-signature t))
 
       (use-package company-lsp
         :ensure t
@@ -603,9 +603,15 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
    lightweight solution in Ivy.
 
    #+BEGIN_SRC emacs-lisp
-   (ivy-mode 1)
-   (setq ivy-use-virtual-buffers t)
-   (setq ivy-count-format "(%d/%d) ")
+   (use-package ivy
+     :ensure t
+     :diminish ivy-mode
+     :config
+     (ivy-mode 1))
+
+   ;(ivy-mode 1)
+   ;(setq ivy-use-virtual-buffers t)
+   ;(setq ivy-count-format "(%d/%d) ")
    ;; Ivy-based interface to standard commands
    (global-set-key (kbd "C-s") 'swiper)
    (global-set-key (kbd "M-x") 'counsel-M-x)
