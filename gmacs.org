@@ -624,7 +624,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
    ;; Ivy-based interface to shell and system tools
-   (global-set-key (kbd "C-c c") 'counsel-compile)
    (global-set-key (kbd "C-c g") 'counsel-git)
    (global-set-key (kbd "C-c j") 'counsel-git-grep)
    (global-set-key (kbd "C-c k") 'counsel-ag)
@@ -639,6 +638,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         ivy-virtual-abbreviate 'full)
      :config (ivy-rich-mode 1))
    #+end_src
+
 ** Magit
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
