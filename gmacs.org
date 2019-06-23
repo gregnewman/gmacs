@@ -129,7 +129,7 @@
    (setq desktop-load-locked-desktop t)
 
    ; use Ubuntu mono
-   ;(set-frame-font "Office Code Pro 13")
+   (set-frame-font "Office Code Pro 11")
 
    ; Projectile
    (use-package projectile
@@ -222,7 +222,7 @@
       (telephone-line-mode 1))
    #+end_src
 
-** iBuffer-mode
+ ** iBuffer-mode
    Determine if this can be done with counsel instead of ibuffer.
 
    I used this in the past minimally.  Need to work with it more extensively
@@ -296,38 +296,38 @@
 
    Trying out the use of the Microsoft LSP that powers VS Code for python.
    #+BEGIN_SRC emacs-lisp :tangle yes
-     ;(use-package lsp-python-ms
-     ;   :demand
-     ;   :load-path "~/code/lsp-python-ms"
-     ;   :ensure nil
-     ;   :hook (python-mode . lsp)
-     ;   :config
-     ;   ;; for dev build of language server
-     ;   (setq lsp-python-ms-dir
-     ;     (expand-file-name "~/code/python-language-server/output/bin/Release/"))
-     ;   ;; for executable of language server
-     ;   (setq lsp-python-ms-executable
-     ;     "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+     (use-package lsp-python-ms
+        :demand
+        :load-path "~/code/lsp-python-ms"
+        :ensure nil
+        :hook (python-mode . lsp)
+        :config
+        ;; for dev build of language server
+        (setq lsp-python-ms-dir
+          (expand-file-name "~/code/python-language-server/output/bin/Release/"))
+        ;; for executable of language server
+        (setq lsp-python-ms-executable
+          "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
 
-     ; (use-package lsp-mode
-     ;   :ensure t
-     ;   :commands lsp
-     ;   :hook
-     ;     (python-mode . lsp)
-     ;   :init
-     ;     (setq lsp-prefer-flymake nil))
+     (use-package lsp-mode
+       :ensure t
+       :commands lsp
+       :hook
+         (python-mode . lsp)
+       :init
+         (setq lsp-prefer-flymake nil))
 
-     ; (use-package lsp-ui
-     ;   :ensure t
-     ;   :after lsp-mode
-     ;   :hook ((lsp-mode . lsp-ui-mode))
-     ;   :config
-     ;     (setq lsp-ui-sideline-ignore-duplicate t
-     ;           lsp-ui-sideline-enable nil
-     ;           lsp-ui-doc-enable t
-     ;           lsp-ui-doc-use-childframe t
-     ;           lsp-ui-doc-position 'top
-     ;           lsp-ui-doc-include-signature t))
+     (use-package lsp-ui
+        :ensure t
+        :after lsp-mode
+        :hook ((lsp-mode . lsp-ui-mode))
+        :config
+          (setq lsp-ui-sideline-ignore-duplicate t
+                lsp-ui-sideline-enable nil
+                lsp-ui-doc-enable t
+                lsp-ui-doc-use-childframe t
+                lsp-ui-doc-position 'top
+                lsp-ui-doc-include-signature t))
 
       (use-package company-lsp
         :ensure t
@@ -548,6 +548,8 @@
    (setq org-capture-templates
        (quote (("n" "note" entry (file "~/Dropbox/Org/refile.org")
                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+               ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
+               "* %?\n%U\n" :clock-in t :clock-resume t)
                ("m" "Meeting" entry (file "~/Dropbox/Org/refile.org")
                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
                ("p" "Phone call" entry (file "~/Dropbox/Org/refile.org")
