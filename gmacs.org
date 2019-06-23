@@ -284,8 +284,8 @@
    (recentf-mode t)
    #+end_src
 
-** TODO Python
-   When starting emacs gui, the paths are not read from .zshrc
+** Python
+   When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
@@ -407,7 +407,6 @@
 
    Org Babel
    #+BEGIN_SRC emacs-lisp
-     (use-package ob-ipython)
      (org-babel-do-load-languages
        'org-babel-load-languages
        '(
