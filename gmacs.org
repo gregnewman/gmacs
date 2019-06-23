@@ -412,7 +412,6 @@
        'org-babel-load-languages
        '(
        (python . t)
-       (ipython . t)
        (emacs-lisp . t)
        (js . t)
        (org . t)
@@ -423,16 +422,7 @@
      (setq org-src-fontify-natively t)
      ;; Don't prompt before running code in org
      (setq org-confirm-babel-evaluate nil)
-     ;; Fix an incompatibility between the ob-async and ob-ipython packages
-     (setq ob-async-no-async-languages-alist '("ipython"))
 
-     ;; (custom-set-faces
-     ;;   '(org-block-begin-line
-     ;;     ((t ( :foreground "#eeeeee"   :background "#252221"))))
-     ;;   '(org-block
-     ;;     ((t ( :foreground "#d3d3d3" :background "#443f3e"))))
-     ;;   '(org-block-end-line
-     ;;     ((t ( :foreground "#eeeeee"   :background "#252221")))))
    #+end_src
 
    I also work on these notes in Notesy on the iphone so I have set txt files
