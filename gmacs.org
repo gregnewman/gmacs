@@ -334,6 +334,8 @@
         :init)
    #+end_src
 
+   #+RESULTS:
+
    When opening a python file, look for a .python-version file and activate
    the virtualenv. [fn:7]
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -587,7 +589,29 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
 #+end_src
 
-#+RESULTS:
+   Pomodoro
+   #+BEGIN_SRC emacs-lisp
+    (use-package org-pomodoro
+      :after org-agenda
+      :custom
+        (org-pomodoro-ask-upon-killing t)
+        (org-pomodoro-format "%s") ;;     
+        (org-pomodoro-short-break-format "%s")
+        (org-pomodoro-long-break-format  "%s")
+      :custom-face
+        (org-pomodoro-mode-line ((t (:foreground "#ff5555"))))
+        (org-pomodoro-mode-line-break   ((t (:foreground "#50fa7b"))))
+      :hook
+        (org-pomodoro-started . (lambda () (notifications-notify
+          :title "org-pomodoro"
+          :body "Let's focus for 25 minutes!")))
+        (org-pomodoro-finished . (lambda () (notifications-notify
+          :title "org-pomodoro"
+          :body "Well done! Take a break.")))
+
+      :bind (:map org-agenda-mode-map
+      ("p" . org-pomodoro)))
+#+end_src
 
 ** Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
