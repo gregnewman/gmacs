@@ -465,6 +465,9 @@
           ("SOMEDAY" . (:foreground "gray" :weight bold))))
 
      (setq org-log-done 'time)
+     (setq org-log-done 'time)
+     (setq org-log-redeadline 'time)
+     (setq org-log-reschedule 'time)
 
      ;; tags - TODO: Redo these tags to mimic omnifocus
      (setq org-tag-alist '(("@work" . ?w)
@@ -550,6 +553,8 @@
    ;; enable line breaks
    (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
 
+   ;; Don't allow parent to be marked done unless children are done
+   (setq org-enforce-todo-dependencies t)
    #+end_src
 
    Customizing the font sizes due to the theme I'm using making them HUGE
@@ -565,6 +570,7 @@
 
 Agenda commands
 Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+
 #+BEGIN_SRC emacs-lisp :tangle yes
 (defun air-org-skip-subtree-if-priority (priority)
   "Skip an agenda subtree if it has a priority of PRIORITY.
