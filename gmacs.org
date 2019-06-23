@@ -220,6 +220,9 @@
       :ensure t
       :config
       (telephone-line-mode 1))
+
+    ;; icons
+    (use-package all-the-icons)
    #+end_src
 
  ** iBuffer-mode
@@ -453,15 +456,13 @@
       "TODO(t)"
       "STARTED(s)"
       "WAITING(w@/!)"
-      "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")
-     (sequence "LEARN" "TRY" "TEACH" "|" "COMPLETE(x)")
-     (sequence "TOSKETCH" "SKETCHED" "|" "POSTED")))
+      "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")))
 
-     ;; (setq org-todo-keyword-faces
-     ;;    '(("TODO" . (:foreground "green" :weight bold))
-     ;;      ("DONE" . (:foreground "cyan" :weight bold))
-     ;;      ("WAITING" . (:foreground "red" :weight bold))
-     ;;      ("SOMEDAY" . (:foreground "gray" :weight bold))))
+     (setq org-todo-keyword-faces
+        '(("TODO" . (:foreground "green" :weight bold))
+          ("DONE" . (:foreground "cyan" :weight bold))
+          ("WAITING" . (:foreground "red" :weight bold))
+          ("SOMEDAY" . (:foreground "gray" :weight bold))))
 
      (setq org-log-done 'time)
 
@@ -595,7 +596,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       :after org-agenda
       :custom
         (org-pomodoro-ask-upon-killing t)
-        (org-pomodoro-format "%s") ;;     
+        (org-pomodoro-format "%s")  ;;     
         (org-pomodoro-short-break-format "%s")
         (org-pomodoro-long-break-format  "%s")
       :custom-face
@@ -611,7 +612,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
       :bind (:map org-agenda-mode-map
       ("p" . org-pomodoro)))
-#+end_src
+   #+end_src
 
 ** Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
