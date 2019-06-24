@@ -80,7 +80,7 @@
 
    ; line numbers mode using new mode in 26+
    (global-display-line-numbers-mode 1)
-   (setq display-line-numbers-type 'relative)
+   ;;(setq display-line-numbers-type 'relative)
    (setq display-line-numbers-width-start t)
 
    ; i hate tabs
@@ -224,6 +224,8 @@
     ;; icons
     (use-package all-the-icons)
    #+end_src
+
+   #+RESULTS:
 
  ** iBuffer-mode
    Determine if this can be done with counsel instead of ibuffer.
@@ -456,12 +458,6 @@
       "WAITING(w@/!)"
       "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")))
 
-     (setq org-todo-keyword-faces
-        '(("TODO" . (:foreground "green" :weight bold))
-          ("DONE" . (:foreground "cyan" :weight bold))
-          ("WAITING" . (:foreground "red" :weight bold))
-          ("SOMEDAY" . (:foreground "gray" :weight bold))))
-
      (setq org-log-done 'time)
      (setq org-log-done 'time)
      (setq org-log-redeadline 'time)
@@ -552,17 +548,43 @@
 
    ;; Don't allow parent to be marked done unless children are done
    (setq org-enforce-todo-dependencies t)
+   (setq org-enforce-todo-checkbox-dependencies t)
+   (setq org-fontify-done-headline t)
+   (setq org-startup-folded nil)
    #+end_src
 
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (custom-set-faces
-     '(org-level-1 ((t (:inherit outline-1 :height 1.1))))
-     '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
-     '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
-     '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-     '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-   )
+     (custom-set-faces
+       '(org-level-1 ((t (:inherit outline-1 :height 1.2 :width normal :family "Fira Sans Book" :background "#1c1c1c"))))
+       '(org-level-2 ((t (:inherit outline-2 :height 1.0)))
+       '(org-level-3 ((t (:inherit outline-3 :height 0.9))))
+       '(org-level-4 ((t (:inherit outline-4 :height 0.8))))
+       '(org-level-5 ((t (:inherit outline-5 :height 0.8))))
+       '(org-headline-done ((t (:foreground "dim gray"))))
+       '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
+       '(variable-pitch ((t (:family "Fira Mono" :height 100 :weight light))))
+       '(fixed-pitch ((t ( :family "Fira Mon" :slant normal :weight normal :height 1.0 :width normal)))))
+       '(org-block                 ((t (:inherit fixed-pitch))))
+       '(org-document-info         ((t (:foreground "dark orange"))))
+       '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+       '(org-link                  ((t (:foreground "royal blue" :underline t))))
+       '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+       '(org-property-value        ((t (:inherit fixed-pitch))) t)
+       '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+       '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+       '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+       '(org-indent                ((t (:inherit (org-hide fixed-pitch)))))
+     )
+
+     (add-hook 'org-mode-hook 'variable-pitch-mode)
+     ;;(add-hook 'org-mode-hook 'visual-line-mode)
+
+     (setq org-todo-keyword-faces
+          '(("TODO" . (:foreground "green" :weight bold))
+            ("DONE" . (:foreground "dim gray" :weight normal))
+            ("WAITING" . (:foreground "red" :weight bold))
+            ("SOMEDAY" . (:foreground "gray" :weight bold))))
    #+end_src
 
 Agenda commands
