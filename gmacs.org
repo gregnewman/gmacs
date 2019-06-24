@@ -236,7 +236,8 @@
 
    (setq ibuffer-saved-filter-groups
      (quote (("default"
-            ("Kizen" (filename . "/code/webapp/"))
+            ("RJ2" (filename . "/code/rejoiner/"))
+            ("TIP" (filename . "/code/tip/"))
             ("Python"
                 (mode . python-mode))
             ("HTML"
@@ -405,9 +406,6 @@
    Using org from the git repo to stay up to date with fixes
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
-
-   ;; enable indent mode
-   (setq org-indent-mode t)
    #+end_src
 
    Org Babel
@@ -528,7 +526,6 @@
      ;; The following lines are always needed.  Choose your own keys.
      (global-set-key "\C-cl" 'org-store-link)
      (global-set-key "\C-ca" 'org-agenda)
-     (global-set-key "\C-cb" 'org-iswitchb)
    #+end_src
 
    Org-capture
@@ -618,6 +615,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
       :bind (:map org-agenda-mode-map
       ("p" . org-pomodoro)))
+
+   ;; enable indent mode
+   (setq org-indent-mode t)
+   (setq org-fontify-whole-heading-line t
+      org-fontify-done-headline t
+      org-fontify-quote-and-verse-blocks t)
    #+end_src
 
 ** Ivy, Swiper and Counsel
