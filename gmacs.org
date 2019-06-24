@@ -556,15 +556,15 @@
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
      (custom-set-faces
-       '(org-level-1 ((t (:inherit outline-1 :height 1.2 :width normal :family "Fira Sans Book" :background "#1c1c1c"))))
-       '(org-level-2 ((t (:inherit outline-2 :height 1.0)))
-       '(org-level-3 ((t (:inherit outline-3 :height 0.9))))
-       '(org-level-4 ((t (:inherit outline-4 :height 0.8))))
-       '(org-level-5 ((t (:inherit outline-5 :height 0.8))))
+       '(org-level-1 ((t (:inherit outline-1 :height 1.0 :width normal :family "Fira Sans Book" :background "#1c1c1c"))))
+       '(org-level-2 ((t (:inherit outline-2 :height 0.9)))
+       '(org-level-3 ((t (:inherit outline-3 :height 0.8))))
+       '(org-level-4 ((t (:inherit outline-4 :height 0.7))))
+       '(org-level-5 ((t (:inherit outline-5 :height 0.7))))
        '(org-headline-done ((t (:foreground "dim gray"))))
        '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
-       '(variable-pitch ((t (:family "Fira Mono" :height 100 :weight light))))
-       '(fixed-pitch ((t ( :family "Fira Mon" :slant normal :weight normal :height 1.0 :width normal)))))
+       '(variable-pitch ((t (:family "Fira Mono" :weight light))))
+       '(fixed-pitch ((t ( :family "Fira Mon" :slant normal :weight normal :width normal)))))
        '(org-block                 ((t (:inherit fixed-pitch))))
        '(org-document-info         ((t (:foreground "dark orange"))))
        '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
@@ -586,6 +586,12 @@
             ("WAITING" . (:foreground "red" :weight bold))
             ("SOMEDAY" . (:foreground "gray" :weight bold))))
    #+end_src
+
+   #+RESULTS:
+   | TODO    | :foreground | green    | :weight | bold   |
+   | DONE    | :foreground | dim gray | :weight | normal |
+   | WAITING | :foreground | red      | :weight | bold   |
+   | SOMEDAY | :foreground | gray     | :weight | bold   |
 
 Agenda commands
 Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
