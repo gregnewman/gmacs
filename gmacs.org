@@ -296,8 +296,7 @@
 
    #+BEGIN_SRC emacs-lisp
    (use-package exec-path-from-shell
-     :ensure t
-     :if (memq window-system '(mac ns)))
+     :ensure t)
    #+end_src
 
    Trying out the use of the Microsoft LSP that powers VS Code for python.
