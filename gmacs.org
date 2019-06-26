@@ -173,6 +173,12 @@
      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
      (guide-key-mode 1)))
 
+   (defun guide-key/my-hook-function-for-org-mode ()
+     (guide-key/add-local-guide-key-sequence "C-c")
+     (guide-key/add-local-guide-key-sequence "C-c C-x")
+     (guide-key/add-local-highlight-command-regexp "org-"))
+   (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+
    ;; Move to beginning of line.
    ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
    (defun my/smarter-move-beginning-of-line (arg)
@@ -225,6 +231,8 @@
     ;; icons
     (use-package all-the-icons)
    #+end_src
+
+   #+RESULTS:
 
 ** iBuffer-mode
 
@@ -470,7 +478,7 @@
         (delq nil
               (mapcar (lambda (x) (and (file-exists-p x) x))
                       `("~/Dropbox/Org/freelance.org"
-                        "~/Dropbox/Org/mac_to_linux.org"
+                        "~/Dropbox/Org/linux.org"
                         "~/Dropbox/Org/learning.org"
                         "~/Dropbox/Org/classical_guitar.org"
                         "~/Dropbox/Org/me.org"
