@@ -351,6 +351,19 @@
        (add-hook 'python-mode-hook #'lsp))
 
    (add-hook 'before-save-hook 'whitespace-cleanup)
+
+   (defun regenerate-tags ()
+     (interactive)
+     (let ((tags-directory (directory-file-name (projectile-project-root))))
+       (shell-command
+       (format "ctags -f %s -e -R %s" tags-file-name tags-directory))))
+
+   (use-package ctags-update
+     :ensure t
+     :config
+       (progn
+         (add-hook 'python-mode-hook 'turn-on-ctags-auto-update-mode)))
+
    #+end_src
 
 ** JSON
