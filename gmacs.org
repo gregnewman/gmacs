@@ -28,8 +28,9 @@
   and then call it.
 * Configurations
 ** Packages
-   Use `use-package` so that all packages are automatically installed if I clone
+   Use `use-package` so that all packages are automatically installed if cloning
    this repo for another machine.
+
    #+BEGIN_SRC emacs-lisp
    (require 'package)
    (setq package-enable-at-startup nil)
@@ -49,7 +50,7 @@
    #+END_SRC
 
 ** Theme
-   Currently using darcula theme until I can find one that appeals to me.
+   Currently using spacemacs-them until I can find one that appeals to me.
    The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package spacemacs-theme
@@ -58,9 +59,6 @@
      :init
      (load-theme 'spacemacs-dark t))
    #+end_src
-
-   #+RESULTS:
-   : t
 
 ** Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
@@ -71,9 +69,6 @@
      (tool-bar-mode -1)
      (menu-bar-mode 1)
      (scroll-bar-mode -1))
-
-   ;; Turn on winner mode for C-c <> window toggling.
-   (winner-mode 1)
    #+end_src
 
 ** Basics and general settings
@@ -87,12 +82,11 @@
    (setq user-full-name "Greg Newman"
          user-mail-address "greg@gregnewman.org")
 
-   ; line numbers mode using new mode in 26+
+   ; line numbers
    (global-display-line-numbers-mode 1)
-   ;;(setq display-line-numbers-type 'relative)
    (setq display-line-numbers-width-start t)
 
-   ; i hate tabs
+   ; no hate tabs
    (setq-default indent-tabs-mode nil)
 
    ; column numbers
@@ -111,8 +105,8 @@
        (add-hook hook #'whitespace-mode))
      (add-hook 'before-save-hook #'whitespace-cleanup)
      :config
-     (setq whitespace-line-column 80) ;; limit line length
-     (setq whitespace-style '(face tabs empty trailing lines-tail)))
+       (setq whitespace-line-column 80) ;; limit line length
+       (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
    ; dont friggin beep at me!
    (setq ring-bell-function (lambda ()))
@@ -127,9 +121,7 @@
    ; require a new line at the end of files
    (setq require-final-newline t)
 
-   ; Desktop setup.  I'm using multiple macs and using emacs --deamon
-   ; so i'm concatinating the desktop name with the system name so the other
-   ; macs have their own desktop file-name.
+   ; Desktop setup.
    (desktop-save-mode 1)
    (setq desktop-dirname "~/.emacs.d/desktops/")
    (setq desktop-base-file-name (concat ".desktop." (system-name)))
@@ -137,7 +129,7 @@
    (setq desktop-base-lock-name "lock")
    (setq desktop-load-locked-desktop t)
 
-   ; use Ubuntu mono
+   ; Font
    (set-frame-font "Office Code Pro 11")
 
    ; Projectile
@@ -170,7 +162,7 @@
    ; Browse Dash documentation
    (use-package counsel-dash
      :config
-     (setq counsel-dash-common-docsets '("Javascript" "Python_3" "AngularJS")))
+     (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
 
    ; Because i forget keyboard shortcuts
    (use-package guide-key
@@ -181,8 +173,8 @@
      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
      (guide-key-mode 1)))
 
-   ;; Move to beginning of line.  Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-
+   ;; Move to beginning of line.
+   ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
    (defun my/smarter-move-beginning-of-line (arg)
    "Move point back to indentation of beginning of line.
 
@@ -234,12 +226,7 @@
     (use-package all-the-icons)
    #+end_src
 
-   #+RESULTS:
-
  ** iBuffer-mode
-   Determine if this can be done with counsel instead of ibuffer.
-
-   I used this in the past minimally.  Need to work with it more extensively
 
    #+Begin_SRC emacs-lisp :tangle yes
    (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -358,8 +345,6 @@
    (use-package ms-python
      :config
        (add-hook 'python-mode-hook #'lsp))
-
-   (add-hook 'before-save-hook 'whitespace-cleanup)
 
    ;; taken from
    ;; https://thegreata.pe/articles/2015/10/24/setting-up-evil-mode-friendly-ctags-in-emacs/
