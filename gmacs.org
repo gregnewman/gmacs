@@ -299,90 +299,57 @@
      :ensure t)
    #+end_src
 
-   Trying out the use of the Microsoft LSP that powers VS Code for python.
-   #+BEGIN_SRC emacs-lisp :tangle yes
-     (use-package yasnippet
-     :hook (after-init . yas-global-mode))
+   Configure the LSP server and UI
+   Taken from https://github.com/xhcoding/ms-python
 
-     (use-package lsp-python-ms
-        :demand
-        :load-path "~/code/lsp-python-ms"
-        :ensure nil
-        :hook (python-mode . lsp)
-        :config
-        ;; for dev build of language server
-        (setq lsp-python-ms-dir
-          (expand-file-name "~/code/python-language-server/output/bin/Release/"))
-        ;; for executable of language server
-        (setq lsp-python-ms-executable
-          "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+   #+BEGIN_SRC emacs-lisp
+   (defun +my-python/enable-lsp()
+     (unless pyvenv-virtual-env-name
+       (pyvenv-activate "/path/to/venv/"))
+     (lsp)
+     ;; You also can put the code for change checker here.
+     (setq-local flycheck-checker 'python-pylint))
 
-     (use-package lsp-mode
-       :ensure t
-       :commands lsp
-       :hook
-         (python-mode . lsp)
-       :init
-         (setq lsp-prefer-flymake nil))
+   (add-hook 'python-mode-hook #'+my-python/enable-lsp)
 
-     ;; (use-package lsp-ui
-     ;;    :ensure t
-     ;;    :after lsp-mode
-     ;;    :hook ((lsp-mode . lsp-ui-mode))
-     ;;    :config
-     ;;      (setq lsp-ui-sideline-ignore-duplicate t
-     ;;            lsp-ui-sideline-enable nil
-     ;;            lsp-ui-doc-enable t
-     ;;            lsp-ui-doc-use-childframe t
-     ;;            lsp-ui-doc-position 'top
-     ;;            lsp-ui-doc-include-signature t))
+   ;; TODO: add dap-mode
 
-     (use-package company-lsp
-        :ensure t
-        :init)
+   (use-package projectile
+     :ensure t)
 
-      (use-package lsp-ui
-      :after lsp-mode
-      :commands lsp-ui-mode
-      :bind (:map lsp-ui-mode-map
-              ("M-,"  . lsp-ui-peek-find-definitions)
-              ("M-?"  . lsp-ui-peek-find-references)
-              ("C-c u"   . lsp-ui-imenu)
-              ("C-c C-a" . lsp-ui-sideline-apply-code-actions))
-      :init
-      (setq lsp-ui-doc-position 'at-point
-         lsp-ui-doc-header nil
-         lsp-ui-doc-border "violet"
-         ;; lsp-ui-doc-include-signature t
-         lsp-ui-sideline-update-mode 'point
-         lsp-ui-sideline-delay 1
-         lsp-ui-sideline-ignore-duplicate t
-         lsp-ui-peek-always-show t
-         lsp-ui-flycheck-enable t))
-   #+end_src
+   (use-package lsp-mode
+     :ensure t)
 
-   When opening a python file, look for a .python-version file and activate
-   the virtualenv. [fn:7]
-   #+BEGIN_SRC emacs-lisp :tangle yes
-     (use-package pipenv
-     :hook (python-mode . pipenv-mode)
-     :init
-     (setq
-       pipenv-projectile-after-switch-function
-       #'pipenv-projectile-after-switch-extended))
+   (use-package lsp-ui
+     :ensure t
+     :config
+       (setq lsp-ui-doc-max-height 20
+       	     lsp-ui-doc-max-width 50
+	     lsp-ui-sideline-ignore-duplicate t
+	     lsp-ui-peek-always-show t))
 
-     ;(defun ssbb-pyenv-hook ()
-     ;"Automatically activates pyenv version if .python-version file exists."
-     ;(f-traverse-upwards
-     ;(lambda (path)
-     ;  (let ((pyenv-version-path (f-expand ".python-version" path)))
-     ;    (if (f-exists? pyenv-version-path)
-     ;        (pyenv-mode-set (s-trim (f-read-text pyenv-version-path 'utf-8))))))))
+   (use-package company
+     :ensure t
+     :config
+       (setq company-minimum-prefix-length 1
+	     company-idle-delay 0
+	     company-tooltip-limit 10
+	     company-transformers nil
+	     company-show-numbers t)
+   (global-company-mode +1))
 
-     ;(add-hook 'find-file-hook 'ssbb-pyenv-hook)
+   (use-package company-lsp
+     :ensure t
+     :commands (company-lsp))
 
-   ; cleanup whitespace on save.  This is run as a before-save-hook
-   ; because it would throw flake8 errors on after-save-hook
+   (use-package company-box
+     :ensure t
+     :hook (company-mode . company-box-mode))
+
+   (use-package ms-python
+     :config
+       (add-hook 'python-mode-hook #'lsp))
+
    (add-hook 'before-save-hook 'whitespace-cleanup)
    #+end_src
 
