@@ -259,11 +259,10 @@
    (setq frame-title-format
       (list (format "%s %%S: %%j " (system-name))
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-
    #+end_src
 
 ** Reverting buffers
-   Very useful if dealing with git repos and also files that can change from nValt
+   Very useful if dealing with git repos and also files that can change from Dropbox
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (global-auto-revert-mode t)
@@ -392,7 +391,7 @@
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
    #+end_src
 
-   Org Babel
+*** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
        'org-babel-load-languages
@@ -411,12 +410,14 @@
 
    #+end_src
 
-   I also work on these notes in Notesy on the iphone so I have set txt files
-   to open as org.
+*** Text files
+    I also work on these notes in Notesy on the iphone so I have set txt filesto open as org.
+
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
    #+end_src
 
+*** Misc Org settings
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
    and use org-bullets for a much cleaner presentation.
    #+BEGIN_SRC emacs-lisp
@@ -506,7 +507,7 @@
      (global-set-key "\C-ca" 'org-agenda)
    #+end_src
 
-   Org-capture
+*** Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-directory "~/Dropbox/Org")
    (setq org-default-notes-file "~/Dropbox/Org/refile.org")
@@ -535,6 +536,7 @@
    (setq org-startup-folded nil)
    #+end_src
 
+*** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
    (custom-set-faces
@@ -574,35 +576,35 @@
        ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))))
    #+end_src
 
-Agenda commands
-Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
+*** Agenda commands
+    Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-(defun air-org-skip-subtree-if-priority (priority)
-  "Skip an agenda subtree if it has a priority of PRIORITY.
+   #+BEGIN_SRC emacs-lisp :tangle yes
+   (defun air-org-skip-subtree-if-priority (priority)
+   "Skip an agenda subtree if it has a priority of PRIORITY.
 
-PRIORITY may be one of the characters ?A, ?B, or ?C."
-  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+   PRIORITY may be one of the characters ?A, ?B, or ?C."
+     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
         (pri-value (* 1000 (- org-lowest-priority priority)))
         (pri-current (org-get-priority (thing-at-point 'line t))))
-    (if (= pri-value pri-current)
+      (if (= pri-value pri-current)
         subtree-end
       nil)))
 
-(setq org-agenda-custom-commands
-      '(("c" "Simple agenda view"
-         ((tags "PRIORITY=\"A\""
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "High-priority unfinished tasks:")))
+      (setq org-agenda-custom-commands
+        '(("c" "Simple agenda view"
+          ((tags "PRIORITY=\"A\""
+            ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+            (org-agenda-overriding-header "High-priority unfinished tasks:")))
           (agenda "")
           (alltodo ""
-                   ((org-agenda-skip-function
-                     '(or (air-org-skip-subtree-if-priority ?A)
-                          (org-agenda-skip-if nil '(scheduled deadline))))))))))
+            ((org-agenda-skip-function
+            '(or (air-org-skip-subtree-if-priority ?A)
+            (org-agenda-skip-if nil '(scheduled deadline))))))))))
 
 #+end_src
 
-   Pomodoro
+*** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
     (use-package org-pomodoro
       :after org-agenda
