@@ -226,7 +226,7 @@
     (use-package all-the-icons)
    #+end_src
 
- ** iBuffer-mode
+** iBuffer-mode
 
    #+Begin_SRC emacs-lisp :tangle yes
    (global-set-key (kbd "C-x C-b") 'ibuffer)
