@@ -7,7 +7,7 @@
 #+OPTIONS:   H:3 num:t   toc:3 \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:nil
 #+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+OPTIONS:   author:t creator:t timestamp:t email:t
-#+DESCRIPTION: My configs to include orgmode
+#+DESCRIPTION: My configs for emacs and orgmode
 #+KEYWORDS:  org-mode Emacs organization GTD getting-things-done git
 #+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
 #+EXPORT_SELECT_TAGS: export
@@ -26,7 +26,7 @@
   so you can use M-x eval-buffer to load the changes. If you want to explore how
   functions work, use M-x edebug-defun to set up debugging for that function,
   and then call it.
-* Configurations
+
 * Packages
    Use `use-package` so that all packages are automatically installed if cloning
    this repo for another machine.
