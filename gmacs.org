@@ -543,29 +543,30 @@
 
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
-          (custom-set-faces
-            '(org-level-1 ((t (:inherit outline-1 :height 1.0 :width normal :background "#1c1c1c"))))
-            '(org-level-2 ((t (:inherit outline-2 :height 1.0 :foreground "gray" :weight normal))))
-            '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
-            '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-            '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-            '(org-headline-done ((t (:foreground "dim gray" :inherit))))
-            '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
-            '(variable-pitch ((t (:family "Fira Mono" :weight light))))
-            '(fixed-pitch ((t ( :family "Fira Mon" :slant normal :weight normal :width normal))))
-            '(org-block                 ((t (:inherit fixed-pitch))))
-            '(org-document-info         ((t (:foreground "dark orange"))))
-            '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-            '(org-link                  ((t (:foreground "royal blue" :underline t))))
-            '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-            '(org-property-value        ((t (:inherit fixed-pitch))) t)
-            '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-            '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-            '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
-            '(org-indent                ((t (:inherit (org-hide fixed-pitch)))))
-          )
+   (custom-set-faces
+     '(org-level-1 ((t (:inherit outline-1 :height 1.0 :width normal :background "#1c1c1c"))))
+     '(org-level-2 ((t (:inherit outline-2 :height 1.0 :foreground "gray" :weight normal))))
+     '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+     '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+     '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+     '(org-headline-done ((t (:foreground "dim gray" :inherit))))
+     '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
+     '(variable-pitch ((t (:family "Fira Mono" :weight light))))
+     '(fixed-pitch ((t ( :family "Fira Mon" :slant normal :weight normal :width normal))))
+     '(org-block                 ((t (:inherit fixed-pitch))))
+     '(org-document-info         ((t (:foreground "dark orange"))))
+     '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+     '(org-link                  ((t (:foreground "royal blue" :underline t))))
+     '(org-meta-line             ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-property-value        ((t (:inherit fixed-pitch))) t)
+     '(org-special-keyword       ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+     '(org-tag                   ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+     '(org-verbatim              ((t (:inherit (shadow fixed-pitch)))))
+     '(org-indent                ((t (:inherit (org-hide fixed-pitch)))))
+     '(org-mode-line-clock       ((t (:background "grey75" :foreground "red" :box (:line-width -1 :style released-button)))))
+   )
 
-          (add-hook 'org-mode-hook 'variable-pitch-mode)
+   (add-hook 'org-mode-hook 'variable-pitch-mode)
 
    (setq org-blank-before-new-entry (quote ((heading)
                                          (plain-list-item . auto))))
@@ -578,12 +579,6 @@
        ("WAITING" . (:foreground "red" :weight bold :inherit))
        ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))))
    #+end_src
-
-   #+RESULTS:
-   | TODO    | :foreground | green    | :weight | bold   | :inherit |
-   | DONE    | :foreground | dim gray | :weight | normal | :inherit |
-   | WAITING | :foreground | red      | :weight | bold   | :inherit |
-   | SOMEDAY | :foreground | gray     | :weight | bold   | :inherit |
 
 Agenda commands
 Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
