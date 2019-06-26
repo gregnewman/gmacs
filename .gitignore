@@ -13,4 +13,7 @@
 /.lsp-python
 /eshell
 /bookmarks
-/ms-pyls/server/Microsoft.Extensions.FileSystemGlobbing.dll
+/ms-pyls
+/.lsp-session-v1
+/.lsp-python
+/eshell
