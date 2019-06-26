@@ -27,7 +27,7 @@
   functions work, use M-x edebug-defun to set up debugging for that function,
   and then call it.
 * Configurations
-** Packages
+* Packages
    Use `use-package` so that all packages are automatically installed if cloning
    this repo for another machine.
 
@@ -49,7 +49,7 @@
    (setq custom-file (make-temp-file "emacs-custom"))
    #+END_SRC
 
-** Theme
+* Theme
    Currently using spacemacs-them until I can find one that appeals to me.
    The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -60,7 +60,7 @@
      (load-theme 'spacemacs-dark t))
    #+end_src
 
-** Windows Configuration
+* Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
 
    #+BEGIN_SRC emacs-lisp
@@ -71,7 +71,7 @@
      (scroll-bar-mode -1))
    #+end_src
 
-** Basics and general settings
+* Basics and general settings
    Set default tabs to 4.  Highlight line.  There are a number of
    packages for highlighting the current line but hi-line is already
    included and works fine.  No more cruft than needed.
@@ -234,7 +234,7 @@
 
    #+RESULTS:
 
-** iBuffer-mode
+* iBuffer-mode
 
    #+Begin_SRC emacs-lisp :tangle yes
    (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -269,14 +269,14 @@
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
    #+end_src
 
-** Reverting buffers
+* Reverting buffers
    Very useful if dealing with git repos and also files that can change from Dropbox
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (global-auto-revert-mode t)
    #+end_src
 
-** Saveplace
+* Saveplace
    Remember my place in files across sessions
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -284,7 +284,7 @@
    (setq-default save-place t)
    #+end_src
 
-** Remember recent files
+* Remember recent files
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq recentf-save-file (concat user-emacs-directory "recentf")
@@ -293,7 +293,7 @@
    (recentf-mode t)
    #+end_src
 
-** Python
+* Python
    When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
 
@@ -369,14 +369,14 @@
 
    #+end_src
 
-** JSON
+* JSON
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package json-mode
      :defer t)
    #+end_src
 
-** Markdown
+* Markdown
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package markdown-mode
@@ -388,7 +388,7 @@
      (setq mardown-command "multimarkdown"))
    #+end_src
 
-** Org-mode
+* Org-mode
 
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
@@ -399,7 +399,7 @@
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
    #+end_src
 
-*** Org Babel
+** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
        'org-babel-load-languages
@@ -418,14 +418,14 @@
 
    #+end_src
 
-*** Text files
+** Text files
     I also work on these notes in Notesy on the iphone so I have set txt filesto open as org.
 
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
    #+end_src
 
-*** Misc Org settings
+** Misc Org settings
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
    and use org-bullets for a much cleaner presentation.
    #+BEGIN_SRC emacs-lisp
@@ -515,7 +515,7 @@
      (global-set-key "\C-ca" 'org-agenda)
    #+end_src
 
-*** Org-capture
+** Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-directory "~/Dropbox/Org")
    (setq org-default-notes-file "~/Dropbox/Org/refile.org")
@@ -544,7 +544,7 @@
    (setq org-startup-folded nil)
    #+end_src
 
-*** Org faces and styling
+** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
    (custom-set-faces
@@ -584,7 +584,7 @@
        ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))))
    #+end_src
 
-*** Agenda commands
+** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -612,7 +612,7 @@
 
 #+end_src
 
-*** Org Pomodoro
+** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
     (use-package org-pomodoro
       :after org-agenda
@@ -642,7 +642,7 @@
       org-fontify-quote-and-verse-blocks t)
    #+end_src
 
-** Ivy, Swiper and Counsel
+* Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
    lightweight solution in Ivy.
 
@@ -681,7 +681,7 @@
      :config (ivy-rich-mode 1))
    #+end_src
 
-** Magit
+* Magit
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
