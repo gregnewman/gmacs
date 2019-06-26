@@ -352,6 +352,8 @@
 
    (add-hook 'before-save-hook 'whitespace-cleanup)
 
+   ;; taken from
+   ;; https://thegreata.pe/articles/2015/10/24/setting-up-evil-mode-friendly-ctags-in-emacs/
    (defun regenerate-tags ()
      (interactive)
      (let ((tags-directory (directory-file-name (projectile-project-root))))
@@ -544,9 +546,9 @@
           (custom-set-faces
             '(org-level-1 ((t (:inherit outline-1 :height 1.0 :width normal :background "#1c1c1c"))))
             '(org-level-2 ((t (:inherit outline-2 :height 1.0 :foreground "gray" :weight normal))))
-            '(org-level-3 ((t (:inherit outline-3 :height 0.9))))
-            '(org-level-4 ((t (:inherit outline-4 :height 0.9))))
-            '(org-level-5 ((t (:inherit outline-5 :height 0.9))))
+            '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+            '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+            '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
             '(org-headline-done ((t (:foreground "dim gray" :inherit))))
             '(org-agenda-clocking ((t (:inherit secondary-selection :foreground "black"))) t)
             '(variable-pitch ((t (:family "Fira Mono" :weight light))))
