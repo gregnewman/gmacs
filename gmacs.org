@@ -397,6 +397,39 @@
    Using org from the git repo to stay up to date with fixes
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
+
+   (setq org-modules '(org-drill
+                      org-info
+                      org-habit
+                      org-panel
+                      org-toc))
+   (eval-after-load 'org
+     '(org-load-modules-maybe t))
+   #+end_src
+
+** Org Habits
+   #+BEGIN_SRC emacs-lisp
+   (setq org-habit-graph-column 80)
+   (setq org-habit-show-habits-only-for-today nil)
+   #+end_src
+
+** Estimates
+   I need to track time for clients and projects.  This nudges me when I clock in
+   to make sure I have an estimate set.
+
+   #+BEGIN_SRC emacs-lisp
+   (defun gn/org-mode-ask-effort ()
+     "Ask for an effort estimate when clocking in."
+     (unless (org-entry-get (point) "Effort")
+       (let ((effort
+              (completing-read
+               "Effort: "
+               (org-entry-get-multivalued-property (point) "Effort"))))
+       (unless (equal effort "")
+         (org-set-property "Effort" effort)))))
+
+   (add-hook 'org-clock-in-prepare-hook
+     'gn/org-mode-ask-effort)
    #+end_src
 
 ** Org Babel
@@ -525,7 +558,9 @@
 
    ;; Capture templates
    (setq org-capture-templates
-       (quote (("n" "note" entry (file "~/Dropbox/Org/refile.org")
+       (quote (("t" "todo" entry (file "~/Dropbox/Org/refile.org")
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+               ("n" "note" entry (file "~/Dropbox/Org/refile.org")
                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
                "* %?\n%U\n" :clock-in t :clock-resume t)
@@ -588,7 +623,7 @@
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
 
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (defun air-org-skip-subtree-if-priority (priority)
+   (defun gn/org-skip-subtree-if-priority (priority)
    "Skip an agenda subtree if it has a priority of PRIORITY.
 
    PRIORITY may be one of the characters ?A, ?B, or ?C."
@@ -603,14 +638,14 @@
         '(("c" "Simple agenda view"
           ((tags "PRIORITY=\"A\""
             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-            (org-agenda-overriding-header "High-priority unfinished tasks:")))
+            (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
           (agenda "")
           (alltodo ""
             ((org-agenda-skip-function
-            '(or (air-org-skip-subtree-if-priority ?A)
+            '(or (gn/org-skip-subtree-if-priority ?A)
             (org-agenda-skip-if nil '(scheduled deadline))))))))))
 
-#+end_src
+   #+end_src
 
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
