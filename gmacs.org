@@ -409,7 +409,7 @@
 
 ** Org Habits
    #+BEGIN_SRC emacs-lisp
-   (setq org-habit-graph-column 80)
+   (setq org-habit-graph-column 60)
    (setq org-habit-show-habits-only-for-today nil)
    #+end_src
 
@@ -563,7 +563,7 @@
                ("n" "note" entry (file "~/Dropbox/Org/refile.org")
                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
-               "* %?\n%U\n" :clock-in t :clock-resume t)
+               "* %?\n%U\n" :clock-keep t)
                ("m" "Meeting" entry (file "~/Dropbox/Org/refile.org")
                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
                ("p" "Phone call" entry (file "~/Dropbox/Org/refile.org")
@@ -616,7 +616,8 @@
      '(("TODO" . (:foreground "green" :weight bold :inherit))
        ("DONE" . (:foreground "dim gray" :weight normal :inherit))
        ("WAITING" . (:foreground "red" :weight bold :inherit))
-       ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))))
+       ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))
+       ("CANCELLED" . (:foreground "dim gray" :weight bold :inherit))))
    #+end_src
 
 ** Agenda commands
