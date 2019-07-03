@@ -105,6 +105,7 @@
        (add-hook hook #'whitespace-mode))
      (add-hook 'before-save-hook #'whitespace-cleanup)
      :config
+       (setq whitespace-global-modes '(not org-mode))
        (setq whitespace-line-column 80) ;; limit line length
        (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
@@ -721,3 +722,13 @@
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
+
+* Terraform
+  #+BEGIN_SRC emacs-lisp
+  (use-package terraform-mode
+    :ensure t
+    :mode "\\.tf$"
+    :config (setq terraform-indent-level 2)
+    :hook
+      (terraform-mode . company-mode))
+  #+end_src
