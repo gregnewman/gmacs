@@ -477,11 +477,7 @@
 
      ;; Keywords
      (setq org-todo-keywords
-     '((sequence
-      "TODO(t)"
-      "STARTED(s)"
-      "WAITING(w@/!)"
-      "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")))
+       '((sequence "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")))
 
      (setq org-log-done 'time)
      (setq org-log-done 'time)
