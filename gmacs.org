@@ -480,7 +480,6 @@
        '((sequence "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")))
 
      (setq org-log-done 'time)
-     (setq org-log-done 'time)
      (setq org-log-redeadline 'time)
      (setq org-log-reschedule 'time)
 
