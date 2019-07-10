@@ -674,6 +674,17 @@
       org-fontify-quote-and-verse-blocks t)
    #+end_src
 
+* Deft
+  #+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :bind ("<f8>" . deft)
+    :commands (deft)
+    :config (setq deft-directory "~/Dropbox/Org"
+                deft-extensions '("md" "org" "txt")
+                deft-recursive t
+                ))
+  #+end_src
+
 * Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
    lightweight solution in Ivy.
