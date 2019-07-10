@@ -680,8 +680,7 @@
     :bind ("<f8>" . deft)
     :commands (deft)
     :config (setq deft-directory "~/Dropbox/Org"
-                deft-extensions '("md" "org" "txt")
-                deft-recursive t
+                deft-extensions '("org" "txt")
                 ))
   #+end_src
 
