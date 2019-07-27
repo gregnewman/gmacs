@@ -523,6 +523,8 @@
                         "~/Dropbox/Org/running.org"))))
 
      ;; agenda
+     ;; Start the weekly agenda on Monday
+     (setq org-agenda-start-on-weekday 1)
      (setq org-agenda-span 5)
      (setq org-agenda-tags-column -100) ; take advantage of the screen width
      (setq org-agenda-sticky nil)
