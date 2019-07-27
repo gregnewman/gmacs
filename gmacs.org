@@ -525,6 +525,14 @@
      ;; agenda
      ;; Start the weekly agenda on Monday
      (setq org-agenda-start-on-weekday 1)
+     ;; Enable display of the time grid so we can see the marker for the current time
+     (setq org-agenda-time-grid (quote ((daily today remove-match)
+                                   #("----------------" 0 16 (org-heading t))
+                                   (0900 1100 1300 1500 1700))))
+
+     ;; Display tags farther right
+     (setq org-agenda-tags-column -102)
+
      (setq org-agenda-span 5)
      (setq org-agenda-tags-column -100) ; take advantage of the screen width
      (setq org-agenda-sticky nil)
@@ -543,6 +551,19 @@
      ;; The following lines are always needed.  Choose your own keys.
      (global-set-key "\C-cl" 'org-store-link)
      (global-set-key "\C-ca" 'org-agenda)
+   #+end_src
+
+** Sticky agendas allow you to have more than one agenda view created simultaneously.
+   You can quickly switch to the view without incurring an agenda
+   rebuild by invoking the agenda custom command key that normally
+   generates the agenda. If it already exists it will display the
+   existing view. g forces regeneration of the agenda view.  I
+   normally have two views displayed (F12 a for the daily/weekly
+   agenda and F12 SPC for my project management view)
+
+   #+BEGIN_SRC emacs-lisp
+   ;; Use sticky agenda's so they persist
+   (setq org-agenda-sticky t)
    #+end_src
 
 ** Org-capture
