@@ -518,7 +518,6 @@
                         "~/Dropbox/Org/book_notes.org"
                         "~/Dropbox/Org/journal.org"
                         "~/.emacs.d/gmacs.org"
-                        "~/Dropbox/Org/org-mode.org"
                         "~/Dropbox/Org/refile.org"
                         "~/Dropbox/Org/inbox.org"
                         "~/Dropbox/Org/running.org"))))
