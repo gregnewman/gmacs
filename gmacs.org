@@ -477,7 +477,7 @@
 
      ;; Keywords
      (setq org-todo-keywords
-       '((sequence "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(.)" "|" "DONE(x!)" "CANCELLED(c@)")))
+       '((sequence "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(.)" "|" "DONE(x!)" "DEFERRED(d@)" "CANCELLED(c@)")))
 
      (setq org-log-done 'time)
      (setq org-log-redeadline 'time)
@@ -506,7 +506,7 @@
      (setq org-agenda-files
         (delq nil
               (mapcar (lambda (x) (and (file-exists-p x) x))
-                      `("~/Dropbox/Org/freelance.org"
+                      `("~/Dropbox/Org/clients.org"
                         "~/Dropbox/Org/linux.org"
                         "~/Dropbox/Org/learning.org"
                         "~/Dropbox/Org/classical_guitar.org"
@@ -679,9 +679,15 @@
   (use-package deft
     :bind ("<f8>" . deft)
     :commands (deft)
-    :config (setq deft-directory "~/Dropbox/Org"
-                deft-extensions '("org" "txt")
-                ))
+    :config
+      (setq deft-directory "~/Dropbox/Org"
+        deft-extensions '("org" "txt"))
+      (setq deft-use-filename-as-title t)
+      (setq deft-file-naming-rules
+      '((noslash . "_")
+        (nospace . "_")
+        (case-fn . downcase)))
+   )
   #+end_src
 
 * Ivy, Swiper and Counsel
