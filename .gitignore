@@ -17,3 +17,5 @@
 /.lsp-session-v1
 /.lsp-python
 /eshell
+/session*
+/#recentf#
