@@ -484,18 +484,18 @@
      (setq org-log-reschedule 'time)
 
      ;; tags - TODO: Redo these tags to mimic omnifocus
-     (setq org-tag-alist '(("@client" . ?c)
-                           ("@home" . ?h)
-                           ("@studio" . ?s)
-                           ("@guitar" . ?g)
-                           ("@finance" . ?f)
-                           ("@agenda" . ?a)
-                           ("@errands" . ?e)
-                           ("@learning" . ?l)
-                           ("@phone" . ?p)
-                           ("@email" . ?m)
-                           ("@read" . ?r)
-                           ("@watch" . ?w)))
+     (setq org-tag-alist '(("client" . ?c)
+                           ("home" . ?h)
+                           ("studio" . ?s)
+                           ("guitar" . ?g)
+                           ("finance" . ?f)
+                           ("agenda" . ?a)
+                           ("errands" . ?e)
+                           ("learning" . ?l)
+                           ("phone" . ?p)
+                           ("email" . ?m)
+                           ("read" . ?r)
+                           ("watch" . ?w)))
 
      ;; efforts
      (add-to-list 'org-global-properties
