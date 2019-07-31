@@ -523,10 +523,6 @@
      ;; agenda
      ;; Start the weekly agenda on Monday
      (setq org-agenda-start-on-weekday 1)
-     ;; Enable display of the time grid so we can see the marker for the current time
-     (setq org-agenda-time-grid (quote ((daily today remove-match)
-                                   #("----------------" 0 16 (org-heading t))
-                                   (0900 1100 1300 1500 1700))))
 
      ;; Display tags farther right
      (setq org-agenda-tags-column -102)
@@ -540,10 +536,10 @@
      (setq org-agenda-skip-scheduled-if-done t)
      (setq org-agenda-skip-deadline-if-done t)
      (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-     (setq org-agenda-time-grid
-        '((daily today require-timed)
-         "----------------"
-         (800 1000 1200 1400 1600 1800)))
+     ;; (setq org-agenda-time-grid
+     ;;   '((daily today require-timed)
+     ;;    "----------------"
+     ;;    (800 1000 1200 1400 1600 1800)))
      (setq org-columns-default-format "%14SCHEDULED %Effort{:} %1PRIORITY %TODO %50ITEM %TAGS")
 
      ;; The following lines are always needed.  Choose your own keys.
@@ -642,6 +638,7 @@
    #+BEGIN_SRC emacs-lisp :tangle yes
    (defun gn/org-skip-subtree-if-priority (priority)
    "Skip an agenda subtree if it has a priority of PRIORITY.
+
    PRIORITY may be one of the characters ?A, ?B, or ?C."
      (let ((subtree-end (save-excursion (org-end-of-subtree t)))
         (pri-value (* 1000 (- org-lowest-priority priority)))
