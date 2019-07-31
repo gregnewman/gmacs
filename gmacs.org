@@ -647,16 +647,33 @@
         subtree-end
       nil)))
 
+         ;'(("1" "Paid Work" tags-todo "client"
+         ;  ((agenda "")
+         ;   (org-agenda-files '("~/Dropbox/Org/clients.org"))
+         ;   (org-agenda-sorting-strategy '(priority-up effort-down)))))
+         ;   )
+
    (setq org-agenda-custom-commands
-         '(("c" "Simple agenda view"
-            ((tags "PRIORITY=\"A\""
-              ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-               (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
-            (agenda "")
-            (alltodo ""
-              ((org-agenda-skip-function
-               '(or (gn/org-skip-subtree-if-priority ?A)
-                (org-agenda-skip-if nil '(scheduled deadline))))))))))
+         '(("1" "Clients"
+             ((tags "PRIORITY=\"A\""
+               ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
+             (agenda "")
+             (tags-todo "client"
+               ((org-agenda-skip-function
+                '(or (gn/org-skip-subtree-if-priority ?A)
+                 (org-agenda-skip-if nil '(scheduled deadline))))))))
+
+           ("c" "Simple agenda view"
+             ((tags "PRIORITY=\"A\""
+               ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
+             (agenda "")
+             (alltodo ""
+               ((org-agenda-skip-function
+                '(or (gn/org-skip-subtree-if-priority ?A)
+                 (org-agenda-skip-if nil '(scheduled deadline))))))))
+          ))
    #+end_src
 
 ** Org Pomodoro
