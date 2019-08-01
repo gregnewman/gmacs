@@ -761,6 +761,14 @@
      :config (ivy-rich-mode 1))
    #+end_src
 
+* iMenu
+  #+BEGIN_SRC emacs-lisp
+  (use-package imenu-anywhere
+  :ensure t
+  :bind (("C-c i" . imenu-anywhere)
+         ("s-i" . imenu-anywhere)))
+  #+end_src
+
 * Magit
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
