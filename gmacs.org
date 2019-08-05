@@ -50,16 +50,14 @@
    #+END_SRC
 
 * Theme
-   Currently using spacemacs-them until I can find one that appeals to me.
-   The artist in me is very picky with themes and nothing I've tried is pleasing, yet.
+   Currently using Leuven-theme.  I've always used dark themes but
+   decided to try out a light theme for a while.  The artist in me is
+   very picky with themes and nothing I've tried is pleasing, yet.
    #+BEGIN_SRC emacs-lisp :tangle yes
      (setq leuven-scale-outline-headlines nil)
      (setq leuven-scale-org-agenda-structure nil)
      (load-theme 'leuven t)
    #+end_src
-
-   #+RESULTS:
-   : t
 
 * Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
