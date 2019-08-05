@@ -132,7 +132,7 @@
    (setq desktop-load-locked-desktop t)
 
    ; Font
-   (set-frame-font "Office Code Pro 11")
+   (set-frame-font "Office Code Pro 10")
 
    ; Projectile
    (use-package projectile
