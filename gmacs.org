@@ -589,7 +589,7 @@
    (setq org-enforce-todo-dependencies t)
    (setq org-enforce-todo-checkbox-dependencies t)
    (setq org-fontify-done-headline t)
-   (setq org-startup-folded nil)
+   (setq org-startup-folded t)
    #+end_src
 
 ** Org faces and styling
