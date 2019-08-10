@@ -570,8 +570,6 @@
 ** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (add-hook 'org-mode-hook 'variable-pitch-mode)
-
    (setq org-blank-before-new-entry (quote ((heading)
                                          (plain-list-item . auto))))
    (setq org-insert-heading-respect-content nil)
