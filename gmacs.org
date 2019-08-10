@@ -82,12 +82,7 @@
          user-mail-address "greg@gregnewman.org")
 
    ; line numbers
-   (global-display-line-numbers-mode 1)
-   (setq display-line-numbers-width-start t)
-   (setq-default display-line-numbers 'visual
-              display-line-numbers-current-absolute t
-              display-line-numbers-width 4
-              display-line-numbers-widen t)
+   (global-display-line-numbers-mode)
 
    ; no hate tabs
    (setq-default indent-tabs-mode nil)
@@ -499,23 +494,7 @@
         '("Effort_ALL". "0:05 0:15 0:30 0:45 1:00 2:00 3:00 4:00 6:00 7:00 8:00 9:00 10:00 0:00"))
 
      ;; agenda files
-     (setq org-agenda-files
-        (delq nil
-              (mapcar (lambda (x) (and (file-exists-p x) x))
-                      `("~/Dropbox/Org/clients.org"
-                        "~/Dropbox/Org/linux.org"
-                        "~/Dropbox/Org/learning.org"
-                        "~/Dropbox/Org/classical_guitar.org"
-                        "~/Dropbox/Org/me.org"
-                        "~/Dropbox/Org/family.org"
-                        "~/Dropbox/Org/finance.org"
-                        "~/Dropbox/Org/home_and_cars.org"
-                        "~/Dropbox/Org/studio.org"
-                        "~/Dropbox/Org/book_notes.org"
-                        "~/Dropbox/Org/journal.org"
-                        "~/Dropbox/Org/refile.org"
-                        "~/Dropbox/Org/inbox.org"
-                        "~/Dropbox/Org/running.org"))))
+     (setq org-agenda-files '("~/Dropbox/Org/"))
 
      ;; agenda
      ;; Start the weekly agenda on Monday
