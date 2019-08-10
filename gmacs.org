@@ -84,6 +84,10 @@
    ; line numbers
    (global-display-line-numbers-mode 1)
    (setq display-line-numbers-width-start t)
+   (setq-default display-line-numbers 'visual
+              display-line-numbers-current-absolute t
+              display-line-numbers-width 4
+              display-line-numbers-widen t)
 
    ; no hate tabs
    (setq-default indent-tabs-mode nil)
@@ -407,12 +411,6 @@
      '(org-load-modules-maybe t))
    #+end_src
 
-** Org Habits
-   #+BEGIN_SRC emacs-lisp
-   (setq org-habit-graph-column 60)
-   (setq org-habit-show-habits-only-for-today nil)
-   #+end_src
-
 ** Estimates
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -671,9 +669,10 @@
 
    ;; enable indent mode
    (setq org-indent-mode t)
-   (setq org-fontify-whole-heading-line t
-      org-fontify-done-headline t
-      org-fontify-quote-and-verse-blocks t)
+   (setq org-fontify-whole-heading-line t)
+   (setq org-fontify-done-headline t)
+   (setq org-fontify-quote-and-verse-blocks t)
+
    #+end_src
 
 * Deft
