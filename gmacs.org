@@ -399,7 +399,6 @@
 
    (setq org-modules '(org-drill
                       org-info
-                      org-habit
                       org-panel
                       org-toc))
    (eval-after-load 'org
@@ -532,7 +531,8 @@
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
-     (setq org-tag-alist '(("client" . ?c)
+     (setq org-tag-alist '((:startgroup)
+                           ("client" . ?c)
                            ("home" . ?h)
                            ("studio" . ?s)
                            ("guitar" . ?g)
@@ -540,10 +540,14 @@
                            ("agenda" . ?a)
                            ("errands" . ?e)
                            ("learning" . ?l)
+                           (:endgroup)
                            ("PROJECT" . ?p)
                            ("phone" . ?t)
                            ("email" . ?m)
                            ("read" . ?r)
+                           ("HOLD" . ?H)
+                           ("FLAGGED" . ?F)
+                           ("WAITING" . ?W)
                            ("watch" . ?w)))
 
      ;; efforts
