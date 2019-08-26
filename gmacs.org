@@ -655,8 +655,21 @@
         subtree-end
       nil)))
 
-   (setq org-agenda-custom-commands
-         '(("1" "Clients"
+   (defun gn/org-agenda-with-tip (arg)
+     (org-agenda-list arg)
+     (let ((inhibit-read-only t)
+        (pos (point)))
+     (goto-char (point-max))
+     (goto-char pos)))
+
+   ;; Reset everything to nil
+   (setq org-agenda-custom-commands nil)
+
+   (add-to-list 'org-agenda-custom-commands
+             '("b" "Agenda" gn/org-agenda-with-tip))
+
+   (add-to-list 'org-agenda-custom-commands
+        '("1" "Clients"
              ((tags "PRIORITY=\"A\""
                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                 (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
@@ -664,9 +677,10 @@
              (tags-todo "client"
                ((org-agenda-skip-function
                 '(or (gn/org-skip-subtree-if-priority ?A)
-                 (org-agenda-skip-if nil '(scheduled deadline))))))))
+                 (org-agenda-skip-if nil '(scheduled deadline)))))))))
 
-           ("c" "Simple agenda view"
+   (add-to-list 'org-agenda-custom-commands
+        '("c" "Simple agenda view"
              ((tags "PRIORITY=\"A\""
                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                 (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
@@ -674,9 +688,57 @@
              (alltodo ""
                ((org-agenda-skip-function
                 '(or (gn/org-skip-subtree-if-priority ?A)
-                 (org-agenda-skip-if nil '(scheduled deadline))))))))
-          ))
+                 (org-agenda-skip-if nil '(scheduled deadline)))))))))
+
+   (add-to-list 'org-agenda-custom-commands
+             '("2" . "COLLECT...") t)
+
+   (add-to-list 'org-agenda-custom-commands
+             '("2b" "CollectBox"
+               ((alltodo ""))))
+
+   (add-to-list 'org-agenda-custom-commands
+             '("f" . "FOCUS...") t)
+
+   (add-to-list 'org-agenda-custom-commands
+             `("f." "Today"
+               ((agenda ""
+                        ((org-agenda-entry-types '(:timestamp :sexp))
+                         (org-agenda-overriding-header
+                          (concat "CALENDAR Today: "
+                                  (format-time-string "%a %d" (current-time))))
+                         (org-agenda-span 'day)))
+                (tags-todo "LEVEL=1+REFILE"
+                           ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
+                (tags-todo "DEADLINE=\"<+0d>\""
+                           ((org-agenda-overriding-header "DUE TODAY")
+                            (org-agenda-skip-function
+                             '(org-agenda-skip-entry-if 'notedeadline))
+                            (org-agenda-sorting-strategy '(priority-down))))
+                (tags-todo "DEADLINE<\"<+0d>\""
+                           ((org-agenda-overriding-header "OVERDUE")
+                            (org-qagenda-skip-function
+                             '(org-agenda-skip-entry-if 'notedeadline))
+                            (org-agenda-sorting-strategy '(priority-down))))
+                (agenda ""
+                        ((org-agenda-entry-types '(:scheduled))
+                         (org-agenda-overriding-header "SCHEDULED")
+                         (org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'todo 'done))
+                         (org-agenda-sorting-strategy
+                          '(priority-down time-down))
+                         (org-agenda-span 'day)
+                         (org-agenda-start-on-weekday nil)
+                         (org-agenda-time-grid nil)))
+                (todo "DONE"
+                      ((org-agenda-overriding-header "COMPLETED"))))
+               ((org-agenda-format-date "")
+                (org-agenda-start-with-clockreport-mode nil))) t)
+
    #+end_src
+
+   #+RESULTS:
+   : ((2b CollectBox ((alltodo ))) (c Simple agenda view ((tags PRIORITY="A" ((org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote todo) (quote done)))) (org-agenda-overriding-header HIGH PRIORITY ITEMS))) (agenda ) (alltodo  ((org-agenda-skip-function (quote (or (gn/org-skip-subtree-if-priority 65) (org-agenda-skip-if nil (quote (scheduled deadline)))))))))) (1 Clients ((tags PRIORITY="A" ((org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote todo) (quote done)))) (org-agenda-overriding-header HIGH PRIORITY ITEMS))) (agenda ) (tags-todo client ((org-agenda-skip-function (quote (or (gn/org-skip-subtree-if-priority 65) (org-agenda-skip-if nil (quote (scheduled deadline)))))))))) (b Agenda gn/org-agenda-with-tip) (2 . COLLECT...) (f . FOCUS...) (f. Today ((agenda  ((org-agenda-entry-types (quote (:timestamp :sexp))) (org-agenda-overriding-header (concat CALENDAR Today (format-time-string %a %d (current-time)))) (org-agenda-span (quote day)))) (tags-todo LEVEL=1+REFILE ((org-agenda-overriding-header COLLECTBOX (Unscheduled)))) (tags-todo DEADLINE="<+0d>" ((org-agenda-overriding-header DUE TODAY) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notedeadline)))) (org-agenda-sorting-strategy (quote (priority-down))))) (tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notedeadline)))) (org-agenda-sorting-strategy (quote (priority-down))))) (agenda  ((org-agenda-entry-types (quote (:scheduled))) (org-agenda-overriding-header SCHEDULED) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote todo) (quote done)))) (org-agenda-sorting-strategy (quote (priority-down time-down))) (org-agenda-span (quote day)) (org-agenda-start-on-weekday nil) (org-agenda-time-grid nil))) (todo DONE ((org-agenda-overriding-header COMPLETED)))) ((org-agenda-format-date ) (org-agenda-start-with-clockreport-mode nil))))
 
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
