@@ -229,9 +229,10 @@
 
     ;; icons
     (use-package all-the-icons)
-   #+end_src
 
-   #+RESULTS:
+    ;; javascript indents
+    (setq js-indent-level 2)
+   #+end_src
 
 * iBuffer-mode
 
