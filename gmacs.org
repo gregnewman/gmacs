@@ -31,6 +31,11 @@
    Use `use-package` so that all packages are automatically installed if cloning
    this repo for another machine.
 
+   [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github).
+
+   Along with the quelpa package, quelpa-use-package adds a handler to
+   use-package.
+
    #+BEGIN_SRC emacs-lisp
    (require 'package)
    (setq package-enable-at-startup nil)
@@ -47,6 +52,12 @@
      (require 'use-package))
 
    (setq custom-file (make-temp-file "emacs-custom"))
+
+   (use-package quelpa)
+   (use-package quelpa-use-package :ensure t)
+
+   ;; Handle the `use-package-always-ensure' setting
+   (quelpa-use-package-activate-advice)
    #+END_SRC
 
 * Theme
