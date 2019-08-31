@@ -622,7 +622,10 @@
    (setq org-insert-heading-respect-content nil)
    (setq org-cycle-separator-lines 1)
 
-   ;(setq org-todo-keyword-faces
+   (setq org-todo-keyword-faces
+      '(("TODO" . (:foreground "green" :weight bold :inherit))
+       ("DONE" . (:foreground "dim gray" :weight normal :inherit)))
+   )
    ;  '(("TODO" . (:foreground "green" :weight bold :inherit))
    ;    ("DONE" . (:foreground "dim gray" :weight normal :inherit))
    ;    ("WAITING" . (:foreground "red" :weight bold :inherit))
@@ -637,6 +640,7 @@
        '(org-block-end-line
          ((t ( :foreground "#eeeeee"   :background "#56595e")))))
    #+end_src
+
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
