@@ -26,7 +26,6 @@
   so you can use M-x eval-buffer to load the changes. If you want to explore how
   functions work, use M-x edebug-defun to set up debugging for that function,
   and then call it.
-
 * Packages
    Use `use-package` so that all packages are automatically installed if cloning
    this repo for another machine.
@@ -61,13 +60,11 @@
    #+END_SRC
 
 * Theme
-   Currently using Leuven-theme.  I've always used dark themes but
-   decided to try out a light theme for a while.  The artist in me is
-   very picky with themes and nothing I've tried is pleasing, yet.
+   Back to Zenburn with some modifications to face for orgmode
    #+BEGIN_SRC emacs-lisp :tangle yes
-     (setq leuven-scale-outline-headlines nil)
-     (setq leuven-scale-org-agenda-structure nil)
-     (load-theme 'leuven t)
+     (use-package zenburn-theme
+       :if (not window-system)
+       :ensure t)
    #+end_src
 
 * Windows Configuration
@@ -417,6 +414,7 @@
      '(org-load-modules-maybe t))
    #+end_src
 
+
 ** Estimates
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -445,6 +443,7 @@
    (add-hook 'org-clock-out-hook 'gn/remove-empty-drawer-on-clock-out 'append)
    #+end_src
 
+
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
@@ -464,12 +463,14 @@
 
    #+end_src
 
+
 ** Text files
     I also work on these notes in Notesy on the iphone so I have set txt filesto open as org.
 
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
    #+end_src
+
 
 ** Misc Org settings
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
@@ -605,6 +606,7 @@
    (setq org-agenda-sticky t)
    #+end_src
 
+
 ** Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-directory "~/Dropbox/Org")
@@ -636,6 +638,7 @@
    (setq org-startup-folded t)
    #+end_src
 
+
 ** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -650,7 +653,16 @@
    ;    ("WAITING" . (:foreground "red" :weight bold :inherit))
    ;    ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))
    ;    ("CANCELLED" . (:foreground "dim gray" :weight bold :inherit))))
+
+    (custom-set-faces
+       '(org-block-begin-line
+         ((t ( :foreground "#eeeeee"   :background "#56595e"))))
+       '(org-block
+         ((t ( :foreground "#d3d3d3" :background "#303236"))))
+       '(org-block-end-line
+         ((t ( :foreground "#eeeeee"   :background "#56595e")))))
    #+end_src
+
 
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
@@ -870,6 +882,23 @@
 
    #+end_src
 
+   Org-Super-Agenda commands
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package org-super-agenda
+     :ensure t
+     :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+     :config
+     (org-super-agenda-mode t)
+     (add-to-list 'org-agenda-custom-commands
+               '("rag" "Grouped Tasks"
+                 ((todo "" ((org-super-agenda-groups
+                             '((:name "All Tasks" :auto-category t)))))))))
+   #+end_src
+
+   #+RESULTS:
+   : t
+
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
     (use-package org-pomodoro
@@ -995,3 +1024,6 @@
     (eyebrowse-mode t)
     (setq eyebrowse-new-workspace t)))
   #+end_src
+
+
+  End of configs
