@@ -311,8 +311,10 @@
    Configure the LSP server and UI
    Taken from https://github.com/xhcoding/ms-python
 
-   #+BEGIN_SRC emacs-lisp
 
+   ####
+   Removing this code after fixing python setup
+   ####
    (defun +my-python/enable-lsp()
      (unless pyvenv-virtual-env-name
        (pyvenv-activate "/path/to/venv/"))
@@ -360,6 +362,45 @@
      :config
        (add-hook 'python-mode-hook #'lsp))
 
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package projectile
+     :ensure t)
+
+   (use-package lsp-mode
+     :ensure t)
+
+   (use-package lsp-ui
+     :ensure t
+     :config
+     (setq lsp-ui-doc-max-height 20
+	   lsp-ui-doc-max-width 50
+	   lsp-ui-sideline-ignore-duplicate t
+	   lsp-ui-peek-always-show t))
+
+   (use-package company
+     :ensure t
+     :config
+     (setq company-minimum-prefix-length 1
+	   company-idle-delay 0
+	   company-tooltip-limit 10
+	   company-transformers nil
+	   company-show-numbers t
+	   )
+   (global-company-mode +1))
+
+   (use-package company-lsp
+     :ensure t
+     :commands (company-lsp))
+
+   (use-package company-box
+     :ensure t
+     :hook (company-mode . company-box-mode))
+
+   (use-package ms-python
+     :config
+     (add-hook 'python-mode-hook #'lsp))
+
    ;; taken from
    ;; https://thegreata.pe/articles/2015/10/24/setting-up-evil-mode-friendly-ctags-in-emacs/
    (defun regenerate-tags ()
@@ -373,7 +414,6 @@
      :config
        (progn
          (add-hook 'python-mode-hook 'turn-on-ctags-auto-update-mode)))
-
    #+end_src
 
 * JSON
