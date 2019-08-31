@@ -58,6 +58,7 @@
    ;; Handle the `use-package-always-ensure' setting
    (quelpa-use-package-activate-advice)
    #+END_SRC
+
 * Theme
    Back to Zenburn with some modifications to face for orgmode
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -65,6 +66,7 @@
        :if (not window-system)
        :ensure t)
    #+end_src
+
 * Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
 
@@ -75,6 +77,7 @@
      (menu-bar-mode 1)
      (scroll-bar-mode -1))
    #+end_src
+
 * Basics and general settings
    Set default tabs to 4.  Highlight line.  There are a number of
    packages for highlighting the current line but hi-line is already
@@ -232,6 +235,7 @@
     ;; javascript indents
     (setq js-indent-level 2)
    #+end_src
+
 * iBuffer-mode
 
    #+Begin_SRC emacs-lisp :tangle yes
@@ -266,12 +270,14 @@
       (list (format "%s %%S: %%j " (system-name))
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
    #+end_src
+
 * Reverting buffers
    Very useful if dealing with git repos and also files that can change from Dropbox
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (global-auto-revert-mode t)
    #+end_src
+
 * Saveplace
    Remember my place in files across sessions
 
@@ -279,6 +285,7 @@
    (save-place-mode +1)
    (setq-default save-place t)
    #+end_src
+
 * Remember recent files
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -287,6 +294,7 @@
          recentf-max-menu-items 15)
    (recentf-mode t)
    #+end_src
+
 * Python
    When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
@@ -300,6 +308,7 @@
    Taken from https://github.com/xhcoding/ms-python
 
    #+BEGIN_SRC emacs-lisp
+
    (defun +my-python/enable-lsp()
      (unless pyvenv-virtual-env-name
        (pyvenv-activate "/path/to/venv/"))
@@ -362,12 +371,14 @@
          (add-hook 'python-mode-hook 'turn-on-ctags-auto-update-mode)))
 
    #+end_src
+
 * JSON
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package json-mode
      :defer t)
    #+end_src
+
 * Markdown
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -379,6 +390,7 @@
      :init
      (setq mardown-command "multimarkdown"))
    #+end_src
+
 * Org-mode
 
    This will be a expanding collection of org customization.  I live in text
@@ -468,16 +480,6 @@
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
-     (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-              ("DONE" :foreground "dim gray" :weight bold)
-              ("WAITING" :foreground "orange" :weight bold)
-              ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold)
-              ("MEETING" :foreground "forest green" :weight bold)
-              ("PHONE" :foreground "forest green" :weight bold))))
-
      ; Fast todo selection allows changing from any task todo state to any
      ; other state directly by selecting the appropriate key from the fast
      ; todo selection key menu. This is a great feature!
@@ -493,6 +495,9 @@
      (setq org-log-redeadline 'time)
      (setq org-log-reschedule 'time)
    #+end_src
+
+   #+RESULTS:
+   : time
 
    I have a few triggers that automatically assign tags to tasks based on state changes. If a task moves to CANCELLED state then it gets a CANCELLED tag. Moving a CANCELLED task back to TODO removes the CANCELLED tag. These are used for filtering tasks in agenda views which I'll talk about later.
 
@@ -609,22 +614,23 @@
    (setq org-fontify-done-headline t)
    (setq org-startup-folded t)
    #+end_src
+
 ** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (setq org-blank-before-new-entry '((heading . t) (plain-list-item . nil)))
-   (setq org-insert-heading-respect-content nil)
-   (setq org-cycle-separator-lines 1)
+   ;(setq org-blank-before-new-entry '((heading . t) (plain-list-item . nil)))
+   ;(setq org-insert-heading-respect-content nil)
+   ;(setq org-cycle-separator-lines 1)
 
    (setq org-todo-keyword-faces
-      '(("TODO" . (:foreground "green" :weight bold :inherit))
-       ("DONE" . (:foreground "dim gray" :weight normal :inherit)))
-   )
-   ;  '(("TODO" . (:foreground "green" :weight bold :inherit))
-   ;    ("DONE" . (:foreground "dim gray" :weight normal :inherit))
-   ;    ("WAITING" . (:foreground "red" :weight bold :inherit))
-   ;    ("SOMEDAY" . (:foreground "gray" :weight bold :inherit))
-   ;    ("CANCELLED" . (:foreground "dim gray" :weight bold :inherit))))
+      (quote (("TODO" :foreground "green" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "dim gray" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold)
+              ("MEETING" :foreground "forest green" :weight bold)
+              ("PHONE" :foreground "forest green" :weight bold))))
 
     (custom-set-faces
        '(org-block-begin-line
@@ -899,6 +905,7 @@
    (setq org-fontify-quote-and-verse-blocks t)
 
    #+end_src
+
 * Deft
   #+BEGIN_SRC emacs-lisp
   (use-package deft
@@ -914,6 +921,7 @@
         (case-fn . downcase)))
    )
   #+end_src
+
 * Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
    lightweight solution in Ivy.
@@ -952,6 +960,7 @@
         ivy-virtual-abbreviate 'full)
      :config (ivy-rich-mode 1))
    #+end_src
+
 * iMenu
   #+BEGIN_SRC emacs-lisp
   (use-package imenu-anywhere
@@ -959,10 +968,12 @@
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
   #+end_src
+
 * Magit
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
+
 * Terraform
   #+BEGIN_SRC emacs-lisp
   (use-package terraform-mode
@@ -972,6 +983,7 @@
     :hook
       (terraform-mode . company-mode))
   #+end_src
+
 * Eyebrowse
   For saving window configs because I bounce around from project to
   project and org files a lot it's handy to save configs of windows
