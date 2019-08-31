@@ -58,7 +58,6 @@
    ;; Handle the `use-package-always-ensure' setting
    (quelpa-use-package-activate-advice)
    #+END_SRC
-
 * Theme
    Back to Zenburn with some modifications to face for orgmode
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -66,7 +65,6 @@
        :if (not window-system)
        :ensure t)
    #+end_src
-
 * Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
 
@@ -77,7 +75,6 @@
      (menu-bar-mode 1)
      (scroll-bar-mode -1))
    #+end_src
-
 * Basics and general settings
    Set default tabs to 4.  Highlight line.  There are a number of
    packages for highlighting the current line but hi-line is already
@@ -241,7 +238,6 @@
     ;; javascript indents
     (setq js-indent-level 2)
    #+end_src
-
 * iBuffer-mode
 
    #+Begin_SRC emacs-lisp :tangle yes
@@ -276,14 +272,12 @@
       (list (format "%s %%S: %%j " (system-name))
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
    #+end_src
-
 * Reverting buffers
    Very useful if dealing with git repos and also files that can change from Dropbox
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (global-auto-revert-mode t)
    #+end_src
-
 * Saveplace
    Remember my place in files across sessions
 
@@ -291,7 +285,6 @@
    (save-place-mode +1)
    (setq-default save-place t)
    #+end_src
-
 * Remember recent files
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -300,7 +293,6 @@
          recentf-max-menu-items 15)
    (recentf-mode t)
    #+end_src
-
 * Python
    When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
@@ -376,14 +368,12 @@
          (add-hook 'python-mode-hook 'turn-on-ctags-auto-update-mode)))
 
    #+end_src
-
 * JSON
 
    #+BEGIN_SRC emacs-lisp :tangle yes
    (use-package json-mode
      :defer t)
    #+end_src
-
 * Markdown
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -395,7 +385,6 @@
      :init
      (setq mardown-command "multimarkdown"))
    #+end_src
-
 * Org-mode
 
    This will be a expanding collection of org customization.  I live in text
@@ -413,8 +402,6 @@
    (eval-after-load 'org
      '(org-load-modules-maybe t))
    #+end_src
-
-
 ** Estimates
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -442,8 +429,6 @@
 
    (add-hook 'org-clock-out-hook 'gn/remove-empty-drawer-on-clock-out 'append)
    #+end_src
-
-
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
@@ -462,16 +447,12 @@
      (setq org-confirm-babel-evaluate nil)
 
    #+end_src
-
-
 ** Text files
     I also work on these notes in Notesy on the iphone so I have set txt filesto open as org.
 
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
    #+end_src
-
-
 ** Misc Org settings
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
    and use org-bullets for a much cleaner presentation.
@@ -592,7 +573,6 @@
      (global-set-key "\C-cl" 'org-store-link)
      (global-set-key "\C-ca" 'org-agenda)
    #+end_src
-
 ** Sticky agendas allow you to have more than one agenda view created simultaneously.
    You can quickly switch to the view without incurring an agenda
    rebuild by invoking the agenda custom command key that normally
@@ -605,8 +585,6 @@
    ;; Use sticky agenda's so they persist
    (setq org-agenda-sticky t)
    #+end_src
-
-
 ** Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-directory "~/Dropbox/Org")
@@ -637,13 +615,10 @@
    (setq org-fontify-done-headline t)
    (setq org-startup-folded t)
    #+end_src
-
-
 ** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
-   (setq org-blank-before-new-entry (quote ((heading)
-                                         (plain-list-item . auto))))
+   (setq org-blank-before-new-entry '((heading . t) (plain-list-item . nil)))
    (setq org-insert-heading-respect-content nil)
    (setq org-cycle-separator-lines 1)
 
@@ -662,8 +637,6 @@
        '(org-block-end-line
          ((t ( :foreground "#eeeeee"   :background "#56595e")))))
    #+end_src
-
-
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
@@ -898,7 +871,6 @@
 
    #+RESULTS:
    : t
-
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
     (use-package org-pomodoro
@@ -929,7 +901,6 @@
    (setq org-fontify-quote-and-verse-blocks t)
 
    #+end_src
-
 * Deft
   #+BEGIN_SRC emacs-lisp
   (use-package deft
@@ -945,7 +916,6 @@
         (case-fn . downcase)))
    )
   #+end_src
-
 * Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
    lightweight solution in Ivy.
@@ -984,7 +954,6 @@
         ivy-virtual-abbreviate 'full)
      :config (ivy-rich-mode 1))
    #+end_src
-
 * iMenu
   #+BEGIN_SRC emacs-lisp
   (use-package imenu-anywhere
@@ -992,12 +961,10 @@
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
   #+end_src
-
 * Magit
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
-
 * Terraform
   #+BEGIN_SRC emacs-lisp
   (use-package terraform-mode
@@ -1007,7 +974,6 @@
     :hook
       (terraform-mode . company-mode))
   #+end_src
-
 * Eyebrowse
   For saving window configs because I bounce around from project to
   project and org files a lot it's handy to save configs of windows
