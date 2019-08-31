@@ -100,6 +100,7 @@
 
    ; highlight current line
    (global-hl-line-mode 1)
+   (set-face-background 'hl-line "gray15")
 
    ; default tab width
    (setq-default default-tab-width 4)
@@ -235,6 +236,9 @@
     ;; javascript indents
     (setq js-indent-level 2)
    #+end_src
+
+   #+RESULTS:
+   : 2
 
 * iBuffer-mode
 
@@ -623,23 +627,30 @@
    ;(setq org-cycle-separator-lines 1)
 
    (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "green" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
+      (quote (("TODO" :foreground "olive drab" :weight bold)
+              ("NEXT" :foreground "cyan" :weight bold)
               ("DONE" :foreground "dim gray" :weight bold)
-              ("WAITING" :foreground "orange" :weight bold)
+              ("WAITING" :foreground "tomato" :weight bold)
               ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold)
-              ("MEETING" :foreground "forest green" :weight bold)
-              ("PHONE" :foreground "forest green" :weight bold))))
+              ("CANCELLED" :foreground "dim gray" :weight bold)
+              ("MEETING" :foreground "orange2" :weight bold)
+              ("PHONE" :foreground "yellow2" :weight bold))))
 
+    (setq org-fontify-done-headline t)
     (custom-set-faces
        '(org-block-begin-line
          ((t ( :foreground "#eeeeee"   :background "#56595e"))))
        '(org-block
          ((t ( :foreground "#d3d3d3" :background "#303236"))))
        '(org-block-end-line
-         ((t ( :foreground "#eeeeee"   :background "#56595e")))))
+         ((t ( :foreground "#eeeeee"   :background "#56595e"))))
+       '(org-done
+         ((t (:foreground "PaleGreen"))))
+       '(org-headline-done
+         ((t (:foreground "olive drab")))))
    #+end_src
+
+   #+RESULTS:
 
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
