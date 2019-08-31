@@ -226,12 +226,6 @@
     ;; always how paren highlights
     (show-paren-mode 1)
 
-    ;; telephone line for better mode line
-    (use-package telephone-line
-      :ensure t
-      :config
-      (telephone-line-mode 1))
-
     ;; icons
     (use-package all-the-icons)
 
