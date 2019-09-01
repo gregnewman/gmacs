@@ -339,7 +339,24 @@
 
    (use-package lsp-ui
      :ensure t
-     :commands lsp-ui-mode)
+     :commands lsp-ui-mode
+     :custom
+       (lsp-ui-doc-enable nil)
+       (lsp-ui-doc-position 'at-point)
+       (lsp-ui-doc-use-childframe t)
+       (lsp-ui-doc-use-webkit t)
+       (lsp-ui-sideline-enable nil)
+       ;; lsp-ui-imenu
+       (lsp-ui-imenu-enable t)
+       (lsp-ui-imenu-kind-position 'top) ;; top, bottom, or at-point
+     :bind
+       (:map lsp-mode-map
+       ("C-c C-r" . lsp-ui-peek-find-references)
+       ("C-c C-j" . lsp-ui-peek-find-definitions)
+       ("C-c i"   . lsp-ui-peek-find-implementation)
+       ("C-c m"   . lsp-ui-imenu)
+       ("C-c s"   . lsp-ui-sideline-mode)
+       ("C-c d"   . ladicle/toggle-lsp-ui-doc)))
 
    (provide 'init-lsp-mode)
 
@@ -374,7 +391,6 @@
    #+end_src
 
    #+RESULTS:
-   : t
 
 * JSON
 
