@@ -316,6 +316,13 @@
    (use-package projectile
      :ensure t)
 
+   (use-package pipenv
+     :hook (python-mode . pipenv-mode)
+     :init
+     (setq
+     pipenv-projectile-after-switch-function
+     #'pipenv-projectile-after-switch-extended))
+
    (use-package lsp-python-ms
      :demand
      :load-path "~/code/lsp-python-ms"
@@ -374,6 +381,11 @@
      :ensure t
      :after company
      :init (add-to-list 'company-backends 'company-lsp))
+
+   (defun lsp-set-cfg ()
+     (let ((lsp-cfg `(:pyls (:configurationSources ("flake8")))))
+        (lsp--set-configuration lsp-cfg)))
+   (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
 
    ;; taken from
    ;; https://thegreata.pe/articles/2015/10/24/setting-up-evil-mode-friendly-ctags-in-emacs/
