@@ -91,6 +91,7 @@
 
    ; line numbers
    (global-display-line-numbers-mode)
+   (setq-default display-line-numbers-width 3)
 
    ; no hate tabs
    (setq-default indent-tabs-mode nil)
@@ -315,54 +316,65 @@
    (use-package projectile
      :ensure t)
 
+   (use-package lsp-python-ms
+     :demand
+     :load-path "~/code/lsp-python-ms"
+     :ensure nil
+     :hook (python-mode . lsp)
+     :config
+     ;; for dev build of language server
+     (setq lsp-python-ms-dir
+        (expand-file-name "~/code/python-language-server/output/bin/Release/"))
+     ;; for executable of language server
+     (setq lsp-python-ms-executable
+        "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+
+   (provide 'init-python)
+
    (use-package lsp-mode
-     :ensure t)
+     :ensure t
+     :commands lsp
+     :hook
+     (python-mode . lsp))
 
    (use-package lsp-ui
      :ensure t
-     :config
-     (setq lsp-ui-doc-max-height 20
-	   lsp-ui-doc-max-width 50
-	   lsp-ui-sideline-ignore-duplicate t
-	   lsp-ui-peek-always-show t))
+     :commands lsp-ui-mode)
+
+   (provide 'init-lsp-mode)
 
    (use-package company
      :ensure t
      :config
      (setq company-minimum-prefix-length 1
-	   company-idle-delay 0
-	   company-tooltip-limit 10
-	   company-transformers nil
-	   company-show-numbers t
-	   )
-   (global-company-mode +1))
+       company-idle-delay 0
+       company-tooltip-limit 10
+       company-transformers nil
+       company-show-numbers t)
+     (global-company-mode +1))
 
    (use-package company-lsp
      :ensure t
-     :commands (company-lsp))
-
-   (use-package company-box
-     :ensure t
-     :hook (company-mode . company-box-mode))
-
-   (use-package ms-python
-     :config
-     (add-hook 'python-mode-hook #'lsp))
+     :after company
+     :init (add-to-list 'company-backends 'company-lsp))
 
    ;; taken from
    ;; https://thegreata.pe/articles/2015/10/24/setting-up-evil-mode-friendly-ctags-in-emacs/
-   (defun regenerate-tags ()
-     (interactive)
-     (let ((tags-directory (directory-file-name (projectile-project-root))))
-       (shell-command
-       (format "ctags -f %s -e -R %s" tags-file-name tags-directory))))
+;   (defun regenerate-tags ()
+;     (interactive)
+;     (let ((tags-directory (directory-file-name (projectile-project-root))))
+;       (shell-command
+;       (format "ctags -f %s -e -R %s" tags-file-name tags-directory))))
 
-   (use-package ctags-update
-     :ensure t
-     :config
-       (progn
-         (add-hook 'python-mode-hook 'turn-on-ctags-auto-update-mode)))
+;   (use-package ctags-update
+;     :ensure t
+;     :config
+;       (progn
+;         (add-hook 'python-mode-hook 'turn-on-ctags-auto-update-mode)))
    #+end_src
+
+   #+RESULTS:
+   : t
 
 * JSON
 
@@ -427,6 +439,7 @@
 
    (add-hook 'org-clock-out-hook 'gn/remove-empty-drawer-on-clock-out 'append)
    #+end_src
+
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
@@ -445,6 +458,7 @@
      (setq org-confirm-babel-evaluate nil)
 
    #+end_src
+
 ** Text files
     I also work on these notes in Notesy on the iphone so I have set txt filesto open as org.
 
@@ -576,6 +590,7 @@
    ;; Use sticky agenda's so they persist
    (setq org-agenda-sticky t)
    #+end_src
+
 ** Org-capture
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-directory "~/Dropbox/Org")
