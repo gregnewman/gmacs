@@ -460,8 +460,7 @@
    #+BEGIN_SRC emacs-lisp
    (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
 
-   (setq org-modules '(org-drill
-                      org-info
+   (setq org-modules '(org-info
                       org-panel
                       org-toc))
    (eval-after-load 'org
