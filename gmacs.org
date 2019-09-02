@@ -312,7 +312,18 @@
    Taken from https://github.com/xhcoding/ms-python
 
    #+BEGIN_SRC emacs-lisp
+   (use-package flycheck
+     :ensure t
+     :config
+     (setq flycheck-flake8rc "~/.config/flake8")
+     (setq flycheck-python-flake8-executable "~/.pyenv/versions/rejoiner2/bin/flake8")
+     :init (global-flycheck-mode))
+
+   #+end_src
+
+   #+BEGIN_SRC emacs-lisp
    (require 'pyenv-mode-auto)
+   (require 'yasnippet)
 
    (use-package projectile
      :ensure t)
@@ -358,13 +369,17 @@
         (expand-file-name "~/code/python-language-server/output/bin/Release/"))
      ;; for executable of language server
      (setq lsp-python-ms-executable
-        "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+        "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")
+     (setq lsp-pyls-plugins-pylint-enabled nil))
 
    (provide 'init-python)
 
    (use-package lsp-mode
      :ensure t
      :commands lsp
+     :custom
+     (setq lsp-prefer-flymake nil)
+     (setq lsp-enable-snippet nil)
      :hook
      (python-mode . lsp))
 
@@ -377,6 +392,8 @@
        (lsp-ui-doc-use-childframe t)
        (lsp-ui-doc-use-webkit t)
        (lsp-ui-sideline-enable nil)
+       ;; flycheck
+       (lsp-ui-flycheck-enable t)
        ;; lsp-ui-imenu
        (lsp-ui-imenu-enable t)
        (lsp-ui-imenu-kind-position 'top) ;; top, bottom, or at-point
@@ -404,12 +421,11 @@
    (use-package company-lsp
      :ensure t
      :after company
+     :config
+     (setq company-lsp-enable-snippet nil)
      :init (add-to-list 'company-backends 'company-lsp))
 
-   (defun lsp-set-cfg ()
-     (let ((lsp-cfg `(:pyls (:configurationSources ("flake8")))))
-        (lsp--set-configuration lsp-cfg)))
-   (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
+   (add-hook 'python-mode-hook 'flycheck-mode)
 
    #+end_src
 
