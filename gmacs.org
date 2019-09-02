@@ -427,9 +427,12 @@
 
    (add-hook 'python-mode-hook 'flycheck-mode)
 
-   #+end_src
+   ;; Fixes an issue where pyenv conflicts with org-mode
+   (eval-after-load 'pyenv-mode
+     '(progn
+      (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
 
-   #+RESULTS:
+   #+end_src
 
 * JSON
 
