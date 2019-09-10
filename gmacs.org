@@ -1045,6 +1045,24 @@
    (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
 
+* Highlight TODOs
+   #+BEGIN_SRC emacs-lisp
+   (use-package hl-todo
+     :config
+     ;; Adding a new keyword: TEST.
+     (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
+     (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
+     :init
+     (add-hook 'python-mode-hook (lambda () (hl-todo-mode t)))
+     )
+
+   (use-package magit-todos
+     :after magit
+     :after hl-todo
+     :config
+     (magit-todos-mode))
+   #+end_src
+
 * Terraform
   #+BEGIN_SRC emacs-lisp
   (use-package terraform-mode
