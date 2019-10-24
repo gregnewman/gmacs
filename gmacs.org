@@ -1116,7 +1116,7 @@
                     (highlight-indent-guides-mode -1))))
       (add-hook 'company-after-completion-hook
                 (lambda (&rest _)
-                  "Trun on indentation highlighting."
+                  "Turn on indentation highlighting."
                   (when (and (derived-mode-p 'prog-mode)
                              (not highlight-indent-guides-mode))
                     (highlight-indent-guides-mode 1)))))
