@@ -239,9 +239,6 @@
     (setq js-indent-level 2)
    #+end_src
 
-   #+RESULTS:
-   : 2
-
 * iBuffer-mode
 
    #+Begin_SRC emacs-lisp :tangle yes
