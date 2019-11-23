@@ -468,6 +468,30 @@
    (eval-after-load 'org
      '(org-load-modules-maybe t))
    #+end_src
+** Org Setup
+   #+BEGIN_SRC emacs-lisp
+     ;; respects splits
+     (setq org-agenda-window-setup 'current-window)
+     ;; agenda files
+     (setq org-agenda-files '("~/Dropbox/Org/"))
+     ;; Start the weekly agenda on Monday
+     (setq org-agenda-start-on-weekday 1)
+     ;; Display tags farther right
+     (setq org-agenda-tags-column -102)
+     (setq org-agenda-span 5)
+     (setq org-agenda-tags-column -100) ; take advantage of the screen width
+     (setq org-agenda-sticky nil)
+     (setq org-agenda-inhibit-startup t)
+     (setq org-agenda-use-tag-inheritance t)
+     (setq org-agenda-show-log t)
+     (setq org-agenda-skip-scheduled-if-done t)
+     (setq org-agenda-skip-deadline-if-done t)
+     (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+     (setq org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS")
+     ;; The following lines are always needed.  Choose your own keys.
+     (global-set-key "\C-cl" 'org-store-link)
+     (global-set-key "\C-ca" 'org-agenda)
+   #+end_src
 ** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -494,6 +518,10 @@
      (org-remove-empty-drawer-at "LOGBOOK" (point))))
 
    (add-hook 'org-clock-out-hook 'gn/remove-empty-drawer-on-clock-out 'append)
+
+   ;; efforts
+   (add-to-list 'org-global-properties
+        '("Effort_ALL". "0:05 0:15 0:30 0:45 1:00 2:00 3:00 4:00 6:00 7:00 8:00 9:00 10:00 0:00"))
    #+end_src
 
 ** Org Babel
@@ -515,60 +543,64 @@
 
    #+end_src
 
-** Misc Org settings
-   Org-mode is ugly with all the leading stars.  I'm going to turn those off
-   and use org-bullets for a much cleaner presentation.
+** Keywords and Tags
+*** Todo Keywords
+    Setting up my todo keywords which are global and their relative colors.
    #+BEGIN_SRC emacs-lisp
-     (setq org-hide-leading-stars t)
-
-     ;; Org bullets for prettier org files
-     (use-package org-bullets
-     :commands org-bullets-mode
-     :init
-     (add-hook 'org-mode-hook 'org-bullets-mode)
-     (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•")))
-
-     ;; respects splits
-     (setq org-agenda-window-setup 'current-window)
-
-     ;; Keywords
-     (setq org-todo-keywords
+    ;; Keywords
+    (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
 
-     ; Fast todo selection allows changing from any task todo state to any
-     ; other state directly by selecting the appropriate key from the fast
-     ; todo selection key menu. This is a great feature!
+    (setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "lime green" :weight bold)
+              ("NEXT" :foreground "cyan" :weight bold)
+              ("DONE" :foreground "dim gray" :weight bold)
+              ("WAITING" :foreground "tomato" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "dim gray" :weight bold)
+              ("MEETING" :foreground "orange2" :weight bold)
+              ("PHONE" :foreground "yellow2" :weight bold))))
+   #+end_src
+*** Fast todo selection
+     Fast todo selection allows changing from any task todo state to any
+     other state directly by selecting the appropriate key from the fast
+     todo selection key menu. This is a great feature!
+   #+BEGIN_SRC emacs-lisp
      (setq org-use-fast-todo-selection t)
-     ; allows changing todo states with S-left and S-right skipping all of
-     ; the normal processing when entering or leaving a todo state. This
-     ; cycles through the todo states but skips setting timestamps and
-     ; entering notes which is very convenient when all you want to do is
-     ; fix up the status of an entry.
+   #+end_src
+
+     Allows changing todo states with S-left and S-right skipping all of
+     the normal processing when entering or leaving a todo state. This
+     cycles through the todo states but skips setting timestamps and
+     entering notes which is very convenient when all you want to do is
+     fix up the status of an entry.
+   #+BEGIN_SRC emacs-lisp
      (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
      (setq org-log-done 'time)
      (setq org-log-redeadline 'time)
      (setq org-log-reschedule 'time)
    #+end_src
+*** Todo state triggers
+    I have a few triggers that automatically assign tags to tasks
+    based on state changes. If a task moves to CANCELLED state then it
+    gets a CANCELLED tag. Moving a CANCELLED task back to TODO removes
+    the CANCELLED tag. These are used for filtering tasks in agenda
+    views which I'll talk about later.
 
-   #+RESULTS:
-   : time
+    The triggers break down to the following rules:
 
-   I have a few triggers that automatically assign tags to tasks based on state changes. If a task moves to CANCELLED state then it gets a CANCELLED tag. Moving a CANCELLED task back to TODO removes the CANCELLED tag. These are used for filtering tasks in agenda views which I'll talk about later.
+    Moving a task to CANCELLED adds a CANCELLED tag
+    Moving a task to WAITING adds a WAITING tag
+    Moving a task to HOLD adds WAITING and HOLD tags
+    Moving a task to a done state removes WAITING and HOLD tags
+    Moving a task to TODO removes WAITING, CANCELLED, and HOLD tags
+    Moving a task to NEXT removes WAITING, CANCELLED, and HOLD tags
+    Moving a task to DONE removes WAITING, CANCELLED, and HOLD tags
+    The tags are used to filter tasks in the agenda views conveniently.
 
-   The triggers break down to the following rules:
-
-   Moving a task to CANCELLED adds a CANCELLED tag
-   Moving a task to WAITING adds a WAITING tag
-   Moving a task to HOLD adds WAITING and HOLD tags
-   Moving a task to a done state removes WAITING and HOLD tags
-   Moving a task to TODO removes WAITING, CANCELLED, and HOLD tags
-   Moving a task to NEXT removes WAITING, CANCELLED, and HOLD tags
-   Moving a task to DONE removes WAITING, CANCELLED, and HOLD tags
-   The tags are used to filter tasks in the agenda views conveniently.
-
-   Attribution: [[http://doc.norang.ca/org-mode.html][http://doc.norang.ca/org-mode.html]]
+    Attribution: [[http://doc.norang.ca/org-mode.html][http://doc.norang.ca/org-mode.html]]
 
    #+BEGIN_SRC emacs-lisp
      (setq org-todo-state-tags-triggers
@@ -579,7 +611,15 @@
               ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+   #+end_src
+*** Tags
+    The tags I'm currently using have gone through a few iterations
+    and probably will a few more times until I settle on a structure I
+    like.  I am not religious about using tags but some of them allow
+    me better filtering for clock reports, which I use for billing and
+    for narrowing agendas.
 
+   #+BEGIN_SRC emacs-lisp
      (setq org-tag-alist '((:startgroup)
                            ("client" . ?c)
                            ("home" . ?h)
@@ -598,35 +638,6 @@
                            ("FLAGGED" . ?F)
                            ("WAITING" . ?W)
                            ("watch" . ?w)))
-
-     ;; efforts
-     (add-to-list 'org-global-properties
-        '("Effort_ALL". "0:05 0:15 0:30 0:45 1:00 2:00 3:00 4:00 6:00 7:00 8:00 9:00 10:00 0:00"))
-
-     ;; agenda files
-     (setq org-agenda-files '("~/Dropbox/Org/"))
-
-     ;; agenda
-     ;; Start the weekly agenda on Monday
-     (setq org-agenda-start-on-weekday 1)
-
-     ;; Display tags farther right
-     (setq org-agenda-tags-column -102)
-
-     (setq org-agenda-span 5)
-     (setq org-agenda-tags-column -100) ; take advantage of the screen width
-     (setq org-agenda-sticky nil)
-     (setq org-agenda-inhibit-startup t)
-     (setq org-agenda-use-tag-inheritance t)
-     (setq org-agenda-show-log t)
-     (setq org-agenda-skip-scheduled-if-done t)
-     (setq org-agenda-skip-deadline-if-done t)
-     (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-     (setq org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS")
-
-     ;; The following lines are always needed.  Choose your own keys.
-     (global-set-key "\C-cl" 'org-store-link)
-     (global-set-key "\C-ca" 'org-agenda)
    #+end_src
 ** Sticky agendas allow you to have more than one agenda view created simultaneously.
    You can quickly switch to the view without incurring an agenda
@@ -675,19 +686,18 @@
 ** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
+   (setq org-hide-leading-stars t)
+
+   ;; Org bullets for prettier org files
+   (use-package org-bullets
+     :commands org-bullets-mode
+     nnn:init
+     (add-hook 'org-mode-hook 'org-bullets-mode)
+     (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•")))
+
    ;(setq org-blank-before-new-entry '((heading . t) (plain-list-item . nil)))
    ;(setq org-insert-heading-respect-content nil)
    ;(setq org-cycle-separator-lines 1)
-
-   (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "lime green" :weight bold)
-              ("NEXT" :foreground "cyan" :weight bold)
-              ("DONE" :foreground "dim gray" :weight bold)
-              ("WAITING" :foreground "tomato" :weight bold)
-              ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "dim gray" :weight bold)
-              ("MEETING" :foreground "orange2" :weight bold)
-              ("PHONE" :foreground "yellow2" :weight bold))))
 
     (setq org-fontify-done-headline t)
     (custom-set-faces
