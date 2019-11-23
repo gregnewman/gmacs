@@ -252,7 +252,6 @@
    (eval-after-load 'org
      '(org-load-modules-maybe t))
    #+end_src
-
 ** Org Setup
    #+BEGIN_SRC emacs-lisp
      ;; respects splits
@@ -285,7 +284,6 @@
      (setq org-fontify-done-headline t)
      (setq org-startup-folded t)
    #+end_src
-
 ** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -316,25 +314,22 @@
    ;; efforts
    (add-to-list 'org-global-properties
         '("Effort_ALL". "0:05 0:15 0:30 0:45 1:00 2:00 3:00 4:00 6:00 7:00 8:00 9:00 10:00 0:00"))
-   #+end_src
-
+   #+end_scr
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
        'org-babel-load-languages
        '(
-       (python . t)
-       (emacs-lisp . t)
-       (org . t)
-       (sql . t)
+        (python . t)
+        (emacs-lisp . t)
+        (org . t)
+        (sql . t)
      ))
      ;; Syntax highlight in #+BEGIN_SRC blocks
      (setq org-src-fontify-natively t)
      ;; Don't prompt before running code in org
      (setq org-confirm-babel-evaluate nil)
-
    #+end_src
-
 ** Keywords and Tags
 *** Todo Keywords
     Setting up my todo keywords which are global and their relative colors.
@@ -475,35 +470,67 @@
                 "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
 ** Org faces and styling
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (setq org-hide-leading-stars t)
 
    ;; Org bullets for prettier org files
    (use-package org-bullets
      :commands org-bullets-mode
-     nnn:init
+     :init
      (add-hook 'org-mode-hook 'org-bullets-mode)
      (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•")))
-
-   (setq org-fontify-done-headline t)
-     (custom-set-faces
-       '(org-block-begin-line
-         ((t ( :foreground "#eeeeee"   :background "#56595e"))))
-       '(org-block
-         ((t ( :foreground "#d3d3d3" :background "#303236"))))
-       '(org-block-end-line
-         ((t ( :foreground "#eeeeee"   :background "#56595e"))))
-       '(org-done
-         ((t (:foreground "PaleGreen"))))
-       '(org-headline-done
-         ((t (:foreground "olive drab"))))
-
 
    ;; enable indent mode
    (setq org-indent-mode t)
    (setq org-fontify-whole-heading-line t)
-   (setq org-fontify-done-headline t)
    (setq org-fontify-quote-and-verse-blocks t)
+
+   (setq org-fontify-done-headline t)
+   (custom-set-faces
+    '(org-block-begin-line
+      ((t ( :foreground "#eeeeee"   :background "#56595e"))))
+    '(org-block
+      ((t ( :foreground "#d3d3d3" :background "#303236"))))
+    '(org-block-end-line
+      ((t ( :foreground "#eeeeee"   :background "#56595e"))))
+    '(org-done
+      ((t (:foreground "PaleGreen"))))
+    '(org-headline-done
+      ((t (:foreground "olive drab")))))
+   #+end_src
+* iBuffer-mode
+
+   #+Begin_SRC emacs-lisp :tangle yes
+   (global-set-key (kbd "C-x C-b") 'ibuffer)
+      (autoload 'ibuffer "ibuffer" "List buffers." t)
+
+   (setq ibuffer-saved-filter-groups
+     (quote (("default"
+            ("RJ2" (filename . "/code/rejoiner/"))
+            ("TIP" (filename . "/code/tip/"))
+            ("Python"
+                (mode . python-mode))
+            ("HTML"
+                (mode . web-mode))
+            ("JS"
+                (mode . js-mode))
+            ("Org" ;; all org-related buffers
+                 (mode . org-mode))
+            ("Lisp"
+                (mode . emacs-lisp-mode)
+                )))))
+
+   ;; don't show empty groups
+   (setq ibuffer-show-empty-filter-groups nil)
+
+   (add-hook 'ibuffer-mode-hook
+     (lambda ()
+       (ibuffer-switch-to-saved-filter-groups "default")))
+
+   ;; Add full path to buffer title
+   (setq frame-title-format
+      (list (format "%s %%S: %%j " (system-name))
+        '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
    #+end_src
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
@@ -737,8 +764,6 @@
                              '((:name "All Tasks" :auto-category t)))))))))
    #+end_src
 
-   #+RESULTS:
-   : t
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
     (use-package org-pomodoro
@@ -761,41 +786,6 @@
 
       :bind (:map org-agenda-mode-map
       ("p" . org-pomodoro)))
-   #+end_src
-
-* iBuffer-mode
-
-   #+Begin_SRC emacs-lisp :tangle yes
-   (global-set-key (kbd "C-x C-b") 'ibuffer)
-      (autoload 'ibuffer "ibuffer" "List buffers." t)
-
-   (setq ibuffer-saved-filter-groups
-     (quote (("default"
-            ("RJ2" (filename . "/code/rejoiner/"))
-            ("TIP" (filename . "/code/tip/"))
-            ("Python"
-                (mode . python-mode))
-            ("HTML"
-                (mode . web-mode))
-            ("JS"
-                (mode . js-mode))
-            ("Org" ;; all org-related buffers
-                 (mode . org-mode))
-            ("Lisp"
-                (mode . emacs-lisp-mode)
-                )))))
-
-   ;; don't show empty groups
-   (setq ibuffer-show-empty-filter-groups nil)
-
-   (add-hook 'ibuffer-mode-hook
-     (lambda ()
-       (ibuffer-switch-to-saved-filter-groups "default")))
-
-   ;; Add full path to buffer title
-   (setq frame-title-format
-      (list (format "%s %%S: %%j " (system-name))
-        '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
    #+end_src
 
 * Reverting buffers
