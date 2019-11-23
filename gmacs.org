@@ -691,7 +691,6 @@
                 "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
 ** Org faces and styling
-   Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-hide-leading-stars t)
 
@@ -702,12 +701,8 @@
      (add-hook 'org-mode-hook 'org-bullets-mode)
      (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•")))
 
-   ;(setq org-blank-before-new-entry '((heading . t) (plain-list-item . nil)))
-   ;(setq org-insert-heading-respect-content nil)
-   ;(setq org-cycle-separator-lines 1)
-
-    (setq org-fontify-done-headline t)
-    (custom-set-faces
+   (setq org-fontify-done-headline t)
+     (custom-set-faces
        '(org-block-begin-line
          ((t ( :foreground "#eeeeee"   :background "#56595e"))))
        '(org-block
@@ -717,11 +712,15 @@
        '(org-done
          ((t (:foreground "PaleGreen"))))
        '(org-headline-done
-         ((t (:foreground "olive drab")))))
+         ((t (:foreground "olive drab"))))
+
+
+   ;; enable indent mode
+   (setq org-indent-mode t)
+   (setq org-fontify-whole-heading-line t)
+   (setq org-fontify-done-headline t)
+   (setq org-fontify-quote-and-verse-blocks t)
    #+end_src
-
-   #+RESULTS:
-
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
@@ -978,13 +977,6 @@
 
       :bind (:map org-agenda-mode-map
       ("p" . org-pomodoro)))
-
-   ;; enable indent mode
-   (setq org-indent-mode t)
-   (setq org-fontify-whole-heading-line t)
-   (setq org-fontify-done-headline t)
-   (setq org-fontify-quote-and-verse-blocks t)
-
    #+end_src
 
 * Deft
