@@ -468,7 +468,7 @@
    (eval-after-load 'org
      '(org-load-modules-maybe t))
    #+end_src
-** Estimates
+** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
 
@@ -515,12 +515,6 @@
 
    #+end_src
 
-** Text files
-    I also work on these notes in Notesy on the iphone so I have set txt filesto open as org.
-
-   #+BEGIN_SRC emacs-lisp
-   (add-to-list 'auto-mode-alist '("\\.txt$" . org-mode))
-   #+end_src
 ** Misc Org settings
    Org-mode is ugly with all the leading stars.  I'm going to turn those off
    and use org-bullets for a much cleaner presentation.
