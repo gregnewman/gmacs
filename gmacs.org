@@ -326,9 +326,7 @@
        '(
        (python . t)
        (emacs-lisp . t)
-       (js . t)
        (org . t)
-       (sass . t)
        (sql . t)
      ))
      ;; Syntax highlight in #+BEGIN_SRC blocks
