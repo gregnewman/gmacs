@@ -453,7 +453,7 @@
    #+end_src
 
 * Org-mode
-
+** Installation via Git repo
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
    notes.
