@@ -15,10 +15,7 @@
 
 * About
   This is my personal config for Emacs.  It is constructed in literate
-  programming using Org-mode for a much cleaner and readable configuration.
-
-  If you are borrowing or using pieces of this config you can copy pieces of it
-  into a scratch file and run `M-x eval-buffer` to try them out.
+  programming using Org-mode for a documented configuration.
 
   If you’re viewing the Org file, you can open source code blocks (those are the
   ones in begin_src) in a separate buffer by moving your point inside them and
@@ -255,6 +252,7 @@
    (eval-after-load 'org
      '(org-load-modules-maybe t))
    #+end_src
+
 ** Org Setup
    #+BEGIN_SRC emacs-lisp
      ;; respects splits
@@ -287,6 +285,7 @@
      (setq org-fontify-done-headline t)
      (setq org-startup-folded t)
    #+end_src
+
 ** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -996,7 +995,6 @@
 * Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist
    lightweight solution in Ivy.
-
    #+BEGIN_SRC emacs-lisp
    (use-package ivy
      :ensure t
