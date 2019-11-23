@@ -491,6 +491,14 @@
      ;; The following lines are always needed.  Choose your own keys.
      (global-set-key "\C-cl" 'org-store-link)
      (global-set-key "\C-ca" 'org-agenda)
+     ;; enable line breaks
+     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+
+     ;; Don't allow parent to be marked done unless children are done
+     (setq org-enforce-todo-dependencies t)
+     (setq org-enforce-todo-checkbox-dependencies t)
+     (setq org-fontify-done-headline t)
+     (setq org-startup-folded t)
    #+end_src
 ** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
@@ -639,7 +647,8 @@
                            ("WAITING" . ?W)
                            ("watch" . ?w)))
    #+end_src
-** Sticky agendas allow you to have more than one agenda view created simultaneously.
+** Sticky agendas
+   Allow you to have more than one agenda view created simultaneously.
    You can quickly switch to the view without incurring an agenda
    rebuild by invoking the agenda custom command key that normally
    generates the agenda. If it already exists it will display the
@@ -651,15 +660,23 @@
    ;; Use sticky agenda's so they persist
    (setq org-agenda-sticky t)
    #+end_src
-
 ** Org-capture
+   Capture helps me stay on track during my day.  As distraction and
+   thoughts try to steal my time, I can quickly add a note or task to
+   be refiled and dealt with later.  The same goes for phone calls and
+   meetings.
+*** Directories and files
    #+BEGIN_SRC emacs-lisp :tangle yes
    (setq org-directory "~/Dropbox/Org")
-   (setq org-default-notes-file "~/Dropbox/Org/refile.org")
-
-   ;; I use C-c c to start capture mode
+   (setq org-default-notes-file "~/Dropbox/Org/inbox.org")
+   #+end_src
+*** Capture mode keybinding
+   I use C-c c to start capture mode
+   #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-c c") 'org-capture)
-
+   #+end_src
+*** Capture templates
+   #+BEGIN_SRC emacs-lisp
    ;; Capture templates
    (setq org-capture-templates
        (quote (("t" "todo" entry (file "~/Dropbox/Org/inbox.org")
@@ -672,17 +689,7 @@
                 "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
                ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                 "* PHONE %? :PHONE:\n%U" :clock-keep t))))
-
-   ;; enable line breaks
-   (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
-
-   ;; Don't allow parent to be marked done unless children are done
-   (setq org-enforce-todo-dependencies t)
-   (setq org-enforce-todo-checkbox-dependencies t)
-   (setq org-fontify-done-headline t)
-   (setq org-startup-folded t)
    #+end_src
-
 ** Org faces and styling
    Customizing the font sizes due to the theme I'm using making them HUGE
    #+BEGIN_SRC emacs-lisp :tangle yes
