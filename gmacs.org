@@ -284,6 +284,264 @@
      (setq org-fontify-done-headline t)
      (setq org-startup-folded t)
    #+end_src
+** GTD
+   These are functions for use in Agenda commands for stuck projects.
+   Attribution: [[http://doc.norang.ca/org-mode.html#GTD][Bernt Hansen - Norang]]
+   #+BEGIN_SRC emacs-lisp
+(defun gn/is-project-p ()
+  "Any task with a todo keyword subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task has-subtask))))
+
+(defun gn/is-project-subtree-p ()
+  "Any task with a todo keyword that is in a project subtree.
+Callers of this function already widen the buffer view."
+  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                              (point))))
+    (save-excursion
+      (gn/find-project-task)
+      (if (equal (point) task)
+          nil
+        t))))
+
+(defun gn/is-task-p ()
+  "Any task with a todo keyword and no subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task (not has-subtask)))))
+
+(defun gn/is-subproject-p ()
+  "Any task which is a subtask of another project"
+  (let ((is-subproject)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject) (org-up-heading-safe))
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq is-subproject t))))
+    (and is-a-task is-subproject)))
+
+(defun gn/list-sublevels-for-projects-indented ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels 'indented)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defun gn/list-sublevels-for-projects ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels t)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defvar gn/hide-scheduled-and-waiting-next-tasks t)
+
+(defun gn/toggle-next-task-display ()
+  (interactive)
+  (setq gn/hide-scheduled-and-waiting-next-tasks (not gn/hide-scheduled-and-waiting-next-tasks))
+  (when  (equal major-mode 'org-agenda-mode)
+    (org-agenda-redo))
+  (message "%s WAITING and SCHEDULED NEXT Tasks" (if gn/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+
+(defun gn/skip-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (gn/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                nil
+              next-headline)) ; a stuck project, has subtasks but no next task
+        nil))))
+
+(defun gn/skip-non-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  ;; (gn/list-sublevels-for-projects-indented)
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (gn/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                next-headline
+              nil)) ; a stuck project, has subtasks but no next task
+        next-headline))))
+
+(defun gn/skip-non-projects ()
+  "Skip trees that are not projects"
+  ;; (gn/list-sublevels-for-projects-indented)
+  (if (save-excursion (gn/skip-non-stuck-projects))
+      (save-restriction
+        (widen)
+        (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+          (cond
+           ((gn/is-project-p)
+            nil)
+           ((and (gn/is-project-subtree-p) (not (gn/is-task-p)))
+            nil)
+           (t
+            subtree-end))))
+    (save-excursion (org-end-of-subtree t))))
+
+(defun gn/skip-non-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((gn/is-task-p)
+        nil)
+       (t
+        next-headline)))))
+
+(defun gn/skip-project-trees-and-habits ()
+  "Skip trees that are projects"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((gn/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun gn/skip-projects-and-habits-and-single-tasks ()
+  "Skip trees that are projects, tasks that are habits, single non-project tasks"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((org-is-habit-p)
+        next-headline)
+       ((and gn/hide-scheduled-and-waiting-next-tasks
+             (member "WAITING" (org-get-tags-at)))
+        next-headline)
+       ((gn/is-project-p)
+        next-headline)
+       ((and (gn/is-task-p) (not (gn/is-project-subtree-p)))
+        next-headline)
+       (t
+        nil)))))
+
+(defun gn/skip-project-tasks-maybe ()
+  "Show tasks related to the current restriction.
+When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
+When not restricted, skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max))))
+           (limit-to-project (marker-buffer org-agenda-restrict-begin)))
+      (cond
+       ((gn/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (not limit-to-project)
+             (gn/is-project-subtree-p))
+        subtree-end)
+       ((and limit-to-project
+             (gn/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun gn/skip-project-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((gn/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       ((gn/is-project-subtree-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun gn/skip-non-project-tasks ()
+  "Show project tasks.
+Skip project and sub-project tasks, habits, and loose non-project tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((gn/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (gn/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       ((not (gn/is-project-subtree-p))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun gn/skip-projects-and-habits ()
+  "Skip trees that are projects and tasks that are habits"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((gn/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun gn/skip-non-subprojects ()
+  "Skip trees that are not projects"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (gn/is-subproject-p)
+        nil
+      next-headline)))
+   #+end_src
 ** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -528,6 +786,77 @@
              '("b" "Agenda" gn/org-agenda-with-tip))
 
    (add-to-list 'org-agenda-custom-commands
+        '("N" "Notes" tags "NOTE"
+               ((org-agenda-overriding-header "Notes")
+                (org-tags-match-list-sublevels t))))
+
+   (add-to-list 'org-agenda-custom-commands
+        '(" " "Agenda"
+               ((agenda "" nil)
+                (tags "REFILE"
+                      ((org-agenda-overriding-header "Tasks to Refile")
+                       (org-tags-match-list-sublevels nil)))
+                (tags-todo "-CANCELLED/!"
+                           ((org-agenda-overriding-header "Stuck Projects")
+                            (org-agenda-skip-function 'gn/skip-non-stuck-projects)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-HOLD-CANCELLED/!"
+                           ((org-agenda-overriding-header "Projects")
+                            (org-agenda-skip-function 'gn/skip-non-projects)
+                            (org-tags-match-list-sublevels 'indented)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header (concat "Project Next Tasks"
+                                                                  (if gn/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'gn/skip-projects-and-habits-and-single-tasks)
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Project Subtasks"
+                                                                  (if gn/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'gn/skip-non-project-tasks)
+                            (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                           ((org-agenda-overriding-header (concat "Standalone Tasks"
+                                                                  (if gn/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'gn/skip-project-tasks)
+                            (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-sorting-strategy
+                             '(category-keep))))
+                (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                           ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+                                                                  (if gn/hide-scheduled-and-waiting-next-tasks
+                                                                      ""
+                                                                    " (including WAITING and SCHEDULED tasks)")))
+                            (org-agenda-skip-function 'gn/skip-non-tasks)
+                            (org-tags-match-list-sublevels nil)
+                            (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks)
+                            (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks)))
+                (tags "-REFILE/"
+                      ((org-agenda-overriding-header "Tasks to Archive")
+                       (org-agenda-skip-function 'gn/skip-non-archivable-tasks)
+                       (org-tags-match-list-sublevels nil))))
+               nil))
+
+   (add-to-list 'org-agenda-custom-commands
         '("1" "Clients"
              ((tags "PRIORITY=\"A\""
                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
@@ -715,6 +1044,11 @@
                         "Candidates to be archived"))))))
 
    #+end_src
+
+   #+RESULTS:
+   : ((rw Weekly review ((tags CATEGORY={@REFILE}&LEVEL<=2 ((org-agenda-overriding-header NEW TASKS))) (agenda  ((org-agenda-clockreport-mode t) (org-agenda-format-date (concat
+   :  %Y-%m-%d  %a  (make-string (window-width) 95))) (org-agenda-overriding-header PAST WEEK) (org-agenda-prefix-format  %?-11t %i %-12:c% s) (org-agenda-show-log (quote clockcheck)) (org-agenda-span 7) (org-agenda-start-day -1w) (org-deadline-warning-days 0))) (agenda  ((org-agenda-overriding-header NEXT MONTH) (org-agenda-span (quote month)) (org-agenda-start-day +0d) (org-deadline-warning-days 0))) (todo PROJECT ((org-agenda-overriding-header PROJECT LIST))) (todo DONE|PROJECTDONE ((org-agenda-overriding-header Candidates to be archived))))) (2b CollectBox ((alltodo ))) (c Simple agenda view ((tags PRIORITY="A" ((org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote todo) (quote done)))) (org-agenda-overriding-header HIGH PRIORITY ITEMS))) (agenda ) (alltodo  ((org-agenda-skip-function (quote (or (gn/org-skip-subtree-if-priority 65) (org-agenda-skip-if nil (quote (scheduled deadline)))))))))) (1 Clients ((tags PRIORITY="A" ((org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote todo) (quote done)))) (org-agenda-overriding-header HIGH PRIORITY ITEMS))) (agenda ) (tags-todo client ((org-agenda-skip-function (quote (or (gn/org-skip-subtree-if-priority 65) (org-agenda-skip-if nil (quote (scheduled deadline)))))))))) (  Agenda ((agenda  nil) (tags REFILE ((org-agenda-overriding-header Tasks to Refile) (org-tags-match-list-sublevels nil))) (tags-todo -CANCELLED/! ((org-agenda-overriding-header Stuck Projects) (org-agenda-skip-function (quote gn/skip-non-stuck-projects)) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo -HOLD-CANCELLED/! ((org-agenda-overriding-header Projects) (org-agenda-skip-function (quote gn/skip-non-projects)) (org-tags-match-list-sublevels (quote indented)) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo -CANCELLED/!NEXT ((org-agenda-overriding-header (concat Project Next Tasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function (quote gn/skip-projects-and-habits-and-single-tasks)) (org-tags-match-list-sublevels t) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy (quote (todo-state-down effort-up category-keep))))) (tags-todo -REFILE-CANCELLED-WAITING-HOLD/! ((org-agenda-overriding-header (concat Project Subtasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function (quote gn/skip-non-project-tasks)) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo -REFILE-CANCELLED-WAITING-HOLD/! ((org-agenda-overriding-header (concat Standalone Tasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function (quote gn/skip-project-tasks)) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo -CANCELLED+WAITING|HOLD/! ((org-agenda-overriding-header (concat Waiting and Postponed Tasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function (quote gn/skip-non-tasks)) (org-tags-match-list-sublevels nil) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks))) (tags -REFILE/ ((org-agenda-overriding-header Tasks to Archive) (org-agenda-skip-function (quote gn/skip-non-archivable-tasks)) (org-tags-match-list-sublevels nil)))) nil) (N Notes tags NOTE ((org-agenda-overriding-header Notes) (org-tags-match-list-sublevels t))) (b Agenda gn/org-agenda-with-tip) (2 . COLLECT...) (f . FOCUS...) (rad All Tasks (grouped by Due Date) ((tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notdeadline)))))) (tags-todo DEADLINE="<+0d>" ((org-agenda-overriding-header DUE TODAY) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notdeadline)))))) (tags-todo DEADLINE="<+1d>" ((org-agenda-overriding-header DUE TOMORROW) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notdeadline)))))) (tags-todo DEADLINE>"<+1d>"+DEADLINE<="<+7d>" ((org-agenda-overriding-header DUE WITHIN A WEEK) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notdeadline)))))) (tags-todo DEADLINE>"<+7d>"+DEADLINE<="<+28d>" ((org-agenda-overriding-header DUE WITHIN A MONTH) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notdeadline)))))) (tags-todo DEADLINE>"<+28d>" ((org-agenda-overriding-header DUE LATER) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notdeadline)))))) (tags-todo TODO={WAIT} ((org-agenda-overriding-header WAITING FOR) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote deadline)))))) (todo  ((org-agenda-overriding-header WAITING FOR) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote deadline))))))) ((org-agenda-sorting-strategy (quote (priority-down))) (org-agenda-write-buffer-name All Tasks (grouped by Due Date))) ~/Dropbox/Org/all-tasks-by-due-date.pdf) (f. Today ((agenda  ((org-agenda-entry-types (quote (:timestamp :sexp))) (org-agenda-overriding-header (concat CALENDAR Today:  (format-time-string %a %d (current-time)))) (org-agenda-span (quote day)))) (tags-todo LEVEL=1+REFILE ((org-agenda-overriding-header COLLECTBOX (Unscheduled)))) (tags-todo DEADLINE="<+0d>" ((org-agenda-overriding-header DUE TODAY) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote notedeadline)))) (org-agenda-sorting-strategy (quote (priority-down))))) (tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE) (org-qagenda-skip-function (quote (org-agenda-skip-entry-if (quote notedeadline)))) (org-agenda-sorting-strategy (quote (priority-down))))) (agenda  ((org-agenda-entry-types (quote (:scheduled))) (org-agenda-overriding-header SCHEDULED) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote todo) (quote done)))) (org-agenda-sorting-strategy (quote (priority-down time-down))) (org-agenda-span (quote day)) (org-agenda-start-on-weekday nil) (org-agenda-time-grid nil))) (todo DONE ((org-agenda-overriding-header COMPLETED)))) ((org-agenda-format-date ) (org-agenda-start-with-clockreport-mode nil))) (fh Hotlist ((tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE))) (tags-todo DEADLINE>="<+0d>"+DEADLINE<="<+1w>" ((org-agenda-overriding-header DUE IN NEXT 7 DAYS))) (tags-todo DEADLINE=""+FLAGGED|DEADLINE>"<+1w>"+FLAGGED ((org-agenda-overriding-header FLAGGED)))) ((org-agenda-todo-ignore-scheduled (quote future)))) (r . REVIEW...) (ra . All Tasks...) (rt . Timesheet...) (rtd Daily Timesheet ((agenda )) ((org-agenda-log-mode-items (quote (clock closed))) (org-agenda-overriding-header DAILY TIMESHEET) (org-agenda-show-log (quote clockcheck)) (org-agenda-span (quote day)) (org-agenda-start-with-clockreport-mode t) (org-agenda-time-grid nil))) (rtw Weekly Timesheet ((agenda )) ((org-agenda-overriding-header WEEKLY TIMESHEET) (org-agenda-skip-function (quote (org-agenda-skip-entry-if (quote timestamp)))) (org-agenda-span (quote week)) (org-agenda-start-on-weekday 1) (org-agenda-start-with-clockreport-mode t) (org-agenda-time-grid nil))) (rc . Calendar...) (rc7 Events and appointments for 7 days ((agenda )) ((org-agenda-entry-types (quote (:timestamp :sexp))) (org-agenda-span (quote week)) (org-agenda-format-date
+   : %a %d) (org-agenda-time-grid nil))))
 
    Org-Super-Agenda commands
 
