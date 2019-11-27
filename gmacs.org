@@ -1240,8 +1240,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         (expand-file-name "~/code/python-language-server/output/bin/Release/"))
      ;; for executable of language server
      (setq lsp-python-ms-executable
-        "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")
-     (setq lsp-pyls-plugins-pylint-enabled nil))
+        "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+     ;;(setq lsp-pyls-plugins-pylint-enabled nil))
 
    (provide 'init-python)
 
@@ -1355,7 +1355,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    ;(setq ivy-count-format "(%d/%d) ")
    ;; Ivy-based interface to standard commands
    (global-set-key (kbd "C-s") 'swiper)
-   (global-set-key (kbd "M-x") 'counsel-M-x)
+   ; (global-set-key (kbd "M-x") 'counsel-M-x)
    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
@@ -1369,13 +1369,13 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (global-set-key (kbd "C-x l") 'counsel-locate)
    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 
-   (use-package ivy-rich
-     :ensure t
-     :after (ivy)
-     :init
-     (setq ivy-rich-path-style 'abbrev
-        ivy-virtual-abbreviate 'full)
-     :config (ivy-rich-mode 1))
+   ;(use-package ivy-rich
+   ;  :ensure t
+   ;  :after (ivy)
+   ;  :init
+   ;  (setq ivy-rich-path-style 'abbrev
+   ;     ivy-virtual-abbreviate 'full)
+   ;  :config (ivy-rich-mode 1))
    #+end_src
 
 * iMenu
