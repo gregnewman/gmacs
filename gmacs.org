@@ -1119,8 +1119,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    (setq ibuffer-saved-filter-groups
      (quote (("default"
-            ("RJ2" (filename . "/code/rejoiner/"))
-            ("TIP" (filename . "/code/tip/"))
             ("Python"
                 (mode . python-mode))
             ("HTML"
@@ -1187,7 +1185,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :ensure t
      :config
      (setq flycheck-flake8rc "~/.config/flake8")
-     (setq flycheck-python-flake8-executable "~/.pyenv/versions/rejoiner2/bin/flake8")
+     (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8")
      :init (global-flycheck-mode))
 
    #+end_src
