@@ -1273,7 +1273,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        ("C-c s"   . lsp-ui-sideline-mode)
        ("C-c d"   . ladicle/toggle-lsp-ui-doc))
      :config
-       (add-hook 'lsp-ui-mode-hook #'(lambda() (setq-local flycheck-checker 'python-pylint))))
+       (add-hook 'lsp-ui-mode-hook #'(lambda() (setq-local flycheck-checker 'python-flake8))))
 
    (use-package company
      :ensure t
