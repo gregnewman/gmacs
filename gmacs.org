@@ -180,11 +180,10 @@
      (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
      (guide-key-mode 1)))
 
-   (defun guide-key/my-hook-function-for-org-mode ()
-     (guide-key/add-local-guide-key-sequence "C-c")
-     (guide-key/add-local-guide-key-sequence "C-c C-x")
-     (guide-key/add-local-highlight-command-regexp "org-"))
-   (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+;;   (defun guide-key/my-hook-function-for-org-mode ()
+;;     (guide-key/add-local-guide-key-sequence "C-c")
+;;     (guide-key/add-local-highlight-command-regexp "org-"))
+;;   (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
 
    ;; Move to beginning of line.
    ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
@@ -248,6 +247,7 @@
 
    (setq org-modules '(org-info
                       org-panel
+                      org-protocol
                       org-toc))
    (eval-after-load 'org
      '(org-load-modules-maybe t))
@@ -1111,6 +1111,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       ("p" . org-pomodoro)))
    #+end_src
 
+** Org-protocol
+   #+BEGIN_SRC emacs-lisp
+   (server-start)
+   (require 'org-protocol)
+   #+end_src
 * iBuffer-mode
 
    #+Begin_SRC emacs-lisp :tangle yes
