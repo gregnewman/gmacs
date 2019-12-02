@@ -763,7 +763,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :commands org-bullets-mode
      :init
      (add-hook 'org-mode-hook 'org-bullets-mode)
-     (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•")))
+     (setq org-bullets-bullet-list '("•" "►" "•" "►" "•")))
 
    ;; enable indent mode
    (setq org-indent-mode t)
@@ -1169,32 +1169,27 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 * Python
+  This seems to be an evolving config for Python.  I've tried a few variations of lsp-python-ms
+  without much stability.
+** Path from shell
    When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
    (use-package exec-path-from-shell
      :ensure t)
+
+   ;; Configure where TAGS are stored
+   (setq tags-table-list (list "~/.emacs.d/TAGS"))
    #+end_src
-
-   Configure the LSP server and UI
-   Taken from https://github.com/xhcoding/ms-python
-
+** Projectile
    #+BEGIN_SRC emacs-lisp
-   (use-package flycheck
-     :ensure t
-     :config
-     (setq flycheck-flake8rc "~/.config/flake8")
-     (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8")
-     :init (global-flycheck-mode))
-
-   #+end_src
-
-   #+BEGIN_SRC emacs-lisp
-   (require 'pyenv-mode-auto)
-   (require 'yasnippet)
-
    (use-package projectile
+     :ensure t)
+   #+end_src
+** Pyenv
+   #+BEGIN_SRC emacs-lisp
+   (use-package pyenv-mode-auto
      :ensure t)
 
    (defun pyenv-activate-current-project ()
@@ -1227,30 +1222,33 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :bind
      ("C-c p" . pyenv-activate-current-project))
 
-   (use-package lsp-python-ms
-     :demand
-     :load-path "~/code/lsp-python-ms"
-     :ensure nil
-     :hook (python-mode . lsp)
-     :config
-     ;; for dev build of language server
-     (setq lsp-python-ms-dir
-        (expand-file-name "~/code/python-language-server/output/bin/Release/"))
-     ;; for executable of language server
-     (setq lsp-python-ms-executable
-        "~/code/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
-     ;;(setq lsp-pyls-plugins-pylint-enabled nil))
-
-   (provide 'init-python)
-
-   (use-package lsp-mode
+   ;; Fixes an issue where pyenv conflicts with org-mode
+   (eval-after-load 'pyenv-mode
+     '(progn
+      (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
+   #+end_src
+** YASnippet
+   #+BEGIN_SRC emacs-lisp
+   (use-package yasnippet
+     :ensure t)
+   #+end_src
+** Flycheck
+   #+BEGIN_SRC emacs-lisp
+   (use-package flycheck
      :ensure t
-     :commands lsp
-     :custom
-     (setq lsp-prefer-flymake nil)
-     (setq lsp-enable-snippet nil)
-     :hook
-     (python-mode . lsp))
+     :config
+     (setq flycheck-flake8rc "~/.config/flake8")
+     (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8")
+     :init (global-flycheck-mode))
+
+   (add-hook 'python-mode-hook 'flycheck-mode)
+   #+end_src
+** LSP and Company
+   Configure the LSP server and UI
+   Taken from https://github.com/xhcoding/ms-python
+   #+BEGIN_SRC emacs-lisp
+   (use-package lsp-mode
+     :ensure t)
 
    (use-package lsp-ui
      :ensure t
@@ -1275,17 +1273,15 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        ("C-c s"   . lsp-ui-sideline-mode)
        ("C-c d"   . ladicle/toggle-lsp-ui-doc)))
 
-   (provide 'init-lsp-mode)
-
    (use-package company
      :ensure t
      :config
      (setq company-minimum-prefix-length 1
-       company-idle-delay 0
-       company-tooltip-limit 10
-       company-transformers nil
-       company-show-numbers t)
-     (global-company-mode +1))
+	    company-idle-delay 0
+	    company-tooltip-limit 10
+	    company-transformers nil
+	    company-show-numbers t)
+   (global-company-mode +1))
 
    (use-package company-lsp
      :ensure t
@@ -1294,15 +1290,14 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      (setq company-lsp-enable-snippet nil)
      :init (add-to-list 'company-backends 'company-lsp))
 
-   (add-hook 'python-mode-hook 'flycheck-mode)
+   (use-package company-box
+     :ensure t
+     :hook (company-mode . company-box-mode))
 
-   ;; Fixes an issue where pyenv conflicts with org-mode
-   (eval-after-load 'pyenv-mode
-     '(progn
-      (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
-
+   (use-package ms-python
+     :config
+     (add-hook 'python-mode-hook #'lsp))
    #+end_src
-
 * JSON
 
    #+BEGIN_SRC emacs-lisp :tangle yes
