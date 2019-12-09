@@ -749,10 +749,52 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                 "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
                ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
                "* %?\n%U\n" :clock-keep t)
-               ("m" "Meeting" entry (file "~/Dropbox/Org/inbox.org")
-                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+               ("d" "Daily Review" entry (file+olp+datetree "~/Dropbox/Org/gtd.org")
+                (file "~/Dropbox/Org/templates/daily_review.org"))
+               ("w" "Weekly Review" entry (file+olp+datetree "~/Dropbox/Org/gtd.org")
+                (file "~/Dropbox/Org/templates/weekly_review.org"))
+               ("m" "Monthly Review" entry (file+olp+datetree "~/Dropbox/Org/gtd.org")
+                (file "~/Dropbox/Org/templates/monthly_review.org"))
                ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                 "* PHONE %? :PHONE:\n%U" :clock-keep t))))
+   #+end_src
+*** Reviews
+   #+BEGIN_SRC emacs-lisp
+   (defun gn/daily-review ()
+    (interactive)
+    (let ((org-capture-templates '(("d" "Review: Daily Review" entry (file+olp+datetree "~/Dropbox/Org/gtd.org")
+                                  (file "~/Dropbox/Org/templates/daily_review.org")))))
+    (progn
+      (org-capture nil "d")
+      (org-capture-finalize t)
+      (org-speed-move-safe 'outline-up-heading)
+      (org-narrow-to-subtree))))
+
+   (defun gn/weekly-review ()
+    (interactive)
+    (let ((org-capture-templates '(("w" "Review: Weekly Review" entry (file+olp+datetree "~/Dropbox/Org/gtd.org")
+                                  (file "~/Dropbox/Org/templates/weekly_review.org")))))
+    (progn
+      (org-capture nil "w")
+      (org-capture-finalize t)
+      (org-speed-move-safe 'outline-up-heading)
+      (org-narrow-to-subtree))))
+
+   (defun gn/monthly-review ()
+    (interactive)
+    (let ((org-capture-templates '(("m" "Review: Monthly Review" entry (file+olp+datetree "~/Dropbox/Org/gtd.org")
+                                  (file "~/Dropbox/Org/templates/monthly_review.org")))))
+    (progn
+      (org-capture nil "m")
+      (org-capture-finalize t)
+      (org-speed-move-safe 'outline-up-heading)
+      (org-narrow-to-subtree))))
+
+   (bind-keys :prefix-map review-map
+           :prefix "C-c r"
+           ("d" . gn/daily-review)
+           ("w" . gn/weekly-review)
+           ("m" . gn/monthly-review))
    #+end_src
 ** Org faces and styling
    #+BEGIN_SRC emacs-lisp
