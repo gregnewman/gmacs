@@ -283,7 +283,11 @@
      (setq org-enforce-todo-checkbox-dependencies t)
      (setq org-fontify-done-headline t)
      (setq org-startup-folded t)
+
+     ;; Refiling
+     (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
    #+end_src
+
 ** GTD
    These are functions for use in Agenda commands for stuck projects.
    Attribution: [[http://doc.norang.ca/org-mode.html#GTD][Bernt Hansen - Norang]]
