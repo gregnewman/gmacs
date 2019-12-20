@@ -1387,7 +1387,41 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (use-package json-mode
      :defer t)
    #+end_src
+* Web Mode
+   #+BEGIN_SRC emacs-lisp
+   (use-package web-mode
+     :mode
+       ("\\.html$" . web-mode)
+       ("\\.js$" . web-mode)
+     :init
+       (setq web-mode-markup-indent-offset 2)
+       (setq web-mode-code-indent-offset 2)
+       (setq web-mode-css-indent-offset 2)
+       (setq web-mode-enable-auto-pairing t)
+       (setq web-mode-enable-auto-expanding t)
+       (setq web-mode-enable-css-colorization t))
+   #+end_src
 
+* Javascript
+  #+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+  :ensure t
+  :init
+  (setq js-basic-indent 2)
+  (setq-default js2-basic-indent 2
+                js2-basic-offset 2
+                js2-auto-indent-p t
+                js2-cleanup-whitespace t
+                js2-enter-indents-newline t
+                js2-indent-on-enter-key t
+                js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
+
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (push '("function" . ?ƒ) prettify-symbols-alist)))
+
+  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
+  #+end_src
 * Markdown
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1407,8 +1441,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     :commands (deft)
     :config
       (setq deft-directory "~/Dropbox/Org"
-        deft-extensions '("org" "txt"))
-      (setq deft-use-filename-as-title t)
+        deft-extensions '("org" "txt" "md"))
+      (setq deft-default-extension "org")
+      (setq deft-use-filename-as-title nil)
+      (setq deft-use-filter-string-for-filename t)
       (setq deft-file-naming-rules
       '((noslash . "_")
         (nospace . "_")
@@ -1516,7 +1552,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   End of configs
 
 * Highlight Indentation
-   #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
   (use-package highlight-indent-guides
     :diminish
     :functions (ivy-cleanup-string
