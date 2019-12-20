@@ -1168,7 +1168,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    Invocation taken from [[https://github.com/Kungsgeten/org-brain][https://github.com/Kungsgeten/org-brain]]
 
    #+BEGIN_SRC emacs-lisp
-   (use-package org-brain :ensure t
+   (use-package org-brain
      :init
      (setq org-brain-path "~/Dropbox/Org")
      :config
