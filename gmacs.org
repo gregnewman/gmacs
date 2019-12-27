@@ -236,6 +236,17 @@
    #+end_src
 
 * Org-mode
+  [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
+
+  * Capture - Everything in your mind needs to be captured because your mind is "a horrible office".  This is typically the inbox.org file in my setup but is also done in analog notebooks, email and voice memos.
+  * Clarify - Every task that doesn't take two minutes to do should be broken down into actionable tasks that simplify the larger scope of the project.
+  * Organize - All projects and next actions are organized into areas, assigned due dates if needed, prioritized and effort estimates added to them.  If the tasks/projects are not something to do right now they are still organized for later consumption.  Anything that needs to be on the calendar should be added but keep the calendar sacred.  Calendars should only be for appointments or hard-carved blocks of time.
+  * Reviews - Reviews should be handled on a regular basis.  I do a daily review of what should be the priorities for the day but I also do weekly and monthly reviews to keep my systems from getting stale and/or stuck.
+  * Engage - Choose the next action and get to work.
+
+  As a software craftsman I spend my days in Emacs. [[https://orgmode.org/][Orgmode]] is a perfect solution for keeping me honest with my system(s) and having it ready at a keystroke.  My files are plain text files with the .org extenstion and synced between my laptops and mobile devices using Dropbox.
+
+
 ** Installation via Git repo
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
