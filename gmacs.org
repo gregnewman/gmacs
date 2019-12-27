@@ -246,6 +246,16 @@
 
   As a software craftsman I spend my days in Emacs. [[https://orgmode.org/][Orgmode]] is a perfect solution for keeping me honest with my system(s) and having it ready at a keystroke.  My files are plain text files with the .org extenstion and synced between my laptops and mobile devices using Dropbox.
 
+  My org file structure is as follows:
+  * gtd.org - Where my personal areas live. Personal, Finance, House, Cars, Wife, Dog, etc.
+  * books.org - A record of the books I read and related notes.
+  * classical_guitar.org - This file tracks my course work for the classical guitar school and my studies.
+  * computer.org - Notes related to my Linux setup and the programming languages I use.
+  * journal.org - just that.
+  * learning.org - any courses I take, typically CS related live here.
+  * reviews.org - I use templates to guide the daily, weekly and monthly reviews.  The results of those are in this file.
+  * studio.org - All tasks and notes regarding my art studio, projects and client commissions.
+  * Each software related client gets a file of their own where I track time, tasks and notes.  Each file is named after the client.
 
 ** Installation via Git repo
    This will be a expanding collection of org customization.  I live in text
