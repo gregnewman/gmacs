@@ -1543,7 +1543,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (global-set-key (kbd "C-x g") 'magit-status)
    #+end_src
 
-* Highlight TODOs
+   TODO: Fix magit-todo-exclude-globs for index.map that keeps throwing warnings.
    #+BEGIN_SRC emacs-lisp
    (use-package hl-todo
      :config
