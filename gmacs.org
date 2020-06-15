@@ -137,8 +137,8 @@
    (setq desktop-load-locked-desktop t)
 
    ; Font
-   (set-frame-font "Office Code Pro 10")
-
+   (set-frame-font "Office Code Pro 13")
+   (setq line-spacing 0.3)
    ; Projectile
    (use-package projectile
      :bind-keymap
@@ -1300,7 +1300,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
    (use-package exec-path-from-shell
-     :ensure t)
+     :ensure t
+     :config
+     (when (memq window-system '(mac ns x))
+     (exec-path-from-shell-initialize)))
 
    ;; Configure where TAGS are stored
    (setq tags-table-list (list "~/.emacs.d/TAGS"))
@@ -1337,13 +1340,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (add-hook 'after-init-hook 'pyenv-init)
 
    (use-package pyenv-mode
-     :init
-     (add-to-list 'exec-path "~/.pyenv/shims")
-     (setenv "WORKON_HOME" "~/.pyenv/versions/")
-     :config
-     (pyenv-mode)
-     :bind
-     ("C-c p" . pyenv-activate-current-project))
+     :ensure t)
 
    ;; Fixes an issue where pyenv conflicts with org-mode
    (eval-after-load 'pyenv-mode
@@ -1371,7 +1368,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    Taken from https://github.com/xhcoding/ms-python
    #+BEGIN_SRC emacs-lisp
    (use-package lsp-mode
-     :ensure t)
+     :ensure t
+     :config
+       (setq lsp-restart 'ignore)
+     :hook (python-mode . lsp-deferred)
+     :commands (lsp lsp-deferred))
 
    (use-package lsp-ui
      :ensure t
@@ -1419,9 +1420,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :ensure t
      :hook (company-mode . company-box-mode))
 
-   (use-package ms-python
-     :config
-     (add-hook 'python-mode-hook #'lsp))
    #+end_src
 * JSON
 
@@ -1561,6 +1559,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :after hl-todo
      :config
      (magit-todos-mode))
+
+   (setq magit-todos-exlude-globs '("*.map"))
    #+end_src
 
 * Terraform
