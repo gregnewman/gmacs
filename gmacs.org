@@ -172,20 +172,6 @@
      :config
      (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
 
-   ; Because i forget keyboard shortcuts
-   (use-package guide-key
-     :defer t
-     :diminish guide-key-mode
-     :config
-     (progn
-     (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
-     (guide-key-mode 1)))
-
-;;   (defun guide-key/my-hook-function-for-org-mode ()
-;;     (guide-key/add-local-guide-key-sequence "C-c")
-;;     (guide-key/add-local-highlight-command-regexp "org-"))
-;;   (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
-
    ;; Move to beginning of line.
    ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
    (defun my/smarter-move-beginning-of-line (arg)
@@ -235,6 +221,21 @@
     ;; javascript indents
     (setq js-indent-level 2)
    #+end_src
+* Which-key
+  #+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :ensure t
+    :init
+    (which-key-mode)
+    :config
+    (which-key-setup-side-window-right-bottom)
+    (setq which-key-sort-order 'which-key-key-order-alpha
+      which-key-side-window-max-width 0.33
+      which-key-idle-delay 0.05)
+    :diminish which-key-mode)
+
+  (provide 'init-which-key)
+  #+end_src
 
 * Org-mode
   [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
@@ -1409,6 +1410,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Web Mode
    #+BEGIN_SRC emacs-lisp
    (use-package web-mode
+     :ensure t
      :mode
        ("\\.html$" . web-mode)
        ("\\.js$" . web-mode)
