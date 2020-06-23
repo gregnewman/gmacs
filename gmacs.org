@@ -54,6 +54,7 @@
 
    (use-package quelpa)
    (use-package quelpa-use-package :ensure t)
+   (use-package use-package-ensure-system-package :ensure t)
 
    ;; Handle the `use-package-always-ensure' setting
    (quelpa-use-package-activate-advice)
@@ -231,7 +232,7 @@
     (which-key-setup-side-window-right-bottom)
     (setq which-key-sort-order 'which-key-key-order-alpha
       which-key-side-window-max-width 0.33
-      which-key-idle-delay 0.05)
+      which-key-idle-delay 0.5)
     :diminish which-key-mode)
 
   (provide 'init-which-key)
@@ -1345,14 +1346,23 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 ** LSP and Company
    Configure the LSP server and UI
-   Taken from https://github.com/xhcoding/ms-python
+
    #+BEGIN_SRC emacs-lisp
+
+   (use-package yaml-mode
+     :ensure t)
+
    (use-package lsp-mode
-     :ensure t
-     :config
-       (setq lsp-restart 'ignore)
-     :hook (python-mode . lsp-deferred)
-     :commands (lsp lsp-deferred))
+     :init (setq lsp-keymap-prefix "C-;")
+     :hook ((js2-mode . lsp)
+            (yaml-mode . lsp)
+            (lsp-mode . lsp-enable-which-key-integration))
+     :commands lsp lsp-deferred
+     :ensure-system-package
+       ((typescript-language-server . "npm install -g typescript-language-server")
+        (javascript-typescript-langserver . "npm install -g javascript-typescript-langserver")
+        (yaml-language-server . "npm install -g yaml-language-server")
+        (tsc . "npm install -g typescript")))
 
    (use-package lsp-ui
      :ensure t
@@ -1401,6 +1411,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :hook (company-mode . company-box-mode))
 
    #+end_src
+
 * JSON
 
    #+BEGIN_SRC emacs-lisp :tangle yes
