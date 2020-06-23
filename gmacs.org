@@ -1492,11 +1492,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :ensure t
      :diminish ivy-mode
      :config
+     (setq ivy-count-format ""  ; Slim down ivy display
+        ivy-display-style nil
+        ivy-minibuffer-faces nil)
+     (setq projectile-completion-system 'ivy) ; Let projectile use ivy
      (ivy-mode 1))
 
-   ;(ivy-mode 1)
-   ;(setq ivy-use-virtual-buffers t)
-   ;(setq ivy-count-format "(%d/%d) ")
    ;; Ivy-based interface to standard commands
    (global-set-key (kbd "C-s") 'swiper)
    ; (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -1513,13 +1514,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (global-set-key (kbd "C-x l") 'counsel-locate)
    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 
-   ;(use-package ivy-rich
-   ;  :ensure t
-   ;  :after (ivy)
-   ;  :init
-   ;  (setq ivy-rich-path-style 'abbrev
-   ;     ivy-virtual-abbreviate 'full)
-   ;  :config (ivy-rich-mode 1))
    #+end_src
 
 * iMenu
