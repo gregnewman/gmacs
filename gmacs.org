@@ -1272,10 +1272,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (use-package pass
      :ensure t)
    #+end_src
-* Python
-  This seems to be an evolving config for Python.  I've tried a few variations of lsp-python-ms
-  without much stability.
-** Path from shell
+* Path from shell
    When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
 
@@ -1289,12 +1286,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    ;; Configure where TAGS are stored
    (setq tags-table-list (list "~/.emacs.d/TAGS"))
    #+end_src
-** Projectile
+* Projectile
    #+BEGIN_SRC emacs-lisp
    (use-package projectile
      :ensure t)
    #+end_src
-** Pyenv
+* Pyenv
    #+BEGIN_SRC emacs-lisp
    (use-package pyenv-mode-auto
      :ensure t)
@@ -1328,12 +1325,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      '(progn
       (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
    #+end_src
-** YASnippet
+* YASnippet
    #+BEGIN_SRC emacs-lisp
    (use-package yasnippet
      :ensure t)
    #+end_src
-** Flycheck
+* Flycheck
    #+BEGIN_SRC emacs-lisp
    (use-package flycheck
      :ensure t
@@ -1344,7 +1341,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    (add-hook 'python-mode-hook 'flycheck-mode)
    #+end_src
-** LSP and Company
+* LSP and Company
    Configure the LSP server and UI
 
    #+BEGIN_SRC emacs-lisp
@@ -1547,16 +1544,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      (magit-todos-mode))
 
    #+end_src
-
-* Terraform
-  #+BEGIN_SRC emacs-lisp
-  (use-package terraform-mode
-    :ensure t
-    :mode "\\.tf$"
-    :config (setq terraform-indent-level 2)
-    :hook
-      (terraform-mode . company-mode))
-  #+end_src
 
 * Eyebrowse
   For saving window configs because I bounce around from project to
