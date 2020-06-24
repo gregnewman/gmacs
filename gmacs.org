@@ -1351,7 +1351,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    (use-package lsp-mode
      :init (setq lsp-keymap-prefix "C-;")
-     :hook ((js2-mode . lsp)
+     :hook ((python-mode . lsp)
+            (js2-mode . lsp)
             (yaml-mode . lsp)
             (lsp-mode . lsp-enable-which-key-integration))
      :commands lsp lsp-deferred
