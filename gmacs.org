@@ -1341,7 +1341,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    (add-hook 'python-mode-hook 'flycheck-mode)
    #+end_src
-* LSP and Company
+* LSP
    Configure the LSP server and UI
 
    #+BEGIN_SRC emacs-lisp
@@ -1387,6 +1387,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :config
        (add-hook 'lsp-ui-mode-hook #'(lambda() (setq-local flycheck-checker 'python-flake8))))
 
+   #+end_src
+
+** Company
+
+   #+BEGIN_SRC emacs-lisp
    (use-package company
      :ensure t
      :config
