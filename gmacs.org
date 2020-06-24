@@ -1389,7 +1389,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+end_src
 
-** Company
+* Company
 
    #+BEGIN_SRC emacs-lisp
    (use-package company
