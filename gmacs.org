@@ -1402,15 +1402,21 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :commands lsp-ui-mode
      :custom
        (lsp-ui-doc-enable nil)
-       (lsp-ui-doc-position 'at-point)
+       (lsp-ui-doc-position 'top)
        (lsp-ui-doc-use-childframe t)
        (lsp-ui-doc-use-webkit t)
+       (lsp-ui-doc-include-signature t)
        (lsp-ui-sideline-enable nil)
        ;; flycheck
        (lsp-ui-flycheck-enable t)
+       (lsp-ui-flycheck-list-position 'right)
+       (lsp-ui-flycheck-live-reporting t)
        ;; lsp-ui-imenu
        (lsp-ui-imenu-enable t)
        (lsp-ui-imenu-kind-position 'top) ;; top, bottom, or at-point
+       (lsp-ui-peek-enable t)
+       (lsp-ui-peek-list-width 60)
+       (lsp-ui-peek-peek-height 25)
      :bind
        (:map lsp-mode-map
        ("C-c C-r" . lsp-ui-peek-find-references)
