@@ -1272,6 +1272,17 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (use-package pass
      :ensure t)
    #+end_src
+* Hydra
+   #+BEGIN_SRC  emacs-lisp
+   (use-package hydra
+     :ensure t)
+
+   (defhydra hydra-zoom (global-map "<f2>")
+     "zoom"
+     ("g" text-scale-increase "in")
+     ("l" text-scale-decrease "out"))
+   #+end_src
+
 * Path from shell
    When starting emacs gui on Mac OS, the paths are not read from .zshrc
    Using `exec-path-from-shell` fixes this.
