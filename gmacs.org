@@ -23,9 +23,10 @@
   so you can use M-x eval-buffer to load the changes. If you want to explore how
   functions work, use M-x edebug-defun to set up debugging for that function,
   and then call it.
+
 * Packages
-   `use-package` so that all packages are automatically installed if cloning this repo for another machine.
-   [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github).
+   I use `use-package` so that all packages are automatically installed if cloning
+   this repo for another machine. [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github).
    Along with the quelpa package, quelpa-use-package adds a handler to use-package.
 
    #+BEGIN_SRC emacs-lisp
@@ -56,7 +57,9 @@
    #+END_SRC
 
 * Theme
-   Configuration for my dark theme using solarized-gruvbox-dark because it is easy on my eyes and works great with lsp-ui
+   Configuration for my dark theme using solarized-gruvbox-dark because it is
+   easy on my eyes and works great with lsp-ui and org.
+
    #+BEGIN_SRC emacs-lisp
      (use-package solarized-theme
        :config
@@ -218,6 +221,8 @@
     (setq js-indent-level 2)
    #+end_src
 * Which-key
+  I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
+
   #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :ensure t
