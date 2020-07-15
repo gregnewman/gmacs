@@ -19,3 +19,7 @@
 /eshell
 /session*
 /#recentf#
+/.cache
+TAGS
+/quelpa
+/transient
