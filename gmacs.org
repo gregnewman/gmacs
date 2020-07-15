@@ -1274,8 +1274,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 * Hydra
    #+BEGIN_SRC  emacs-lisp
-   (use-package hydra
-     :ensure t)
+   (use-package hydra)
 
    (defhydra hydra-zoom (global-map "<f2>")
      "zoom"
@@ -1362,6 +1361,31 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    (use-package lsp-mode
      :init (setq lsp-keymap-prefix "C-;")
+     (defhydra hydra-lsp (:exit t :hint nil)
+      "
+      Buffer^^               Server^^                   Symbol
+      -------------------------------------------------------------------------------------
+      [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
+      [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
+      [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
+      ("d" lsp-find-declaration)
+      ("D" lsp-ui-peek-find-definitions)
+      ("R" lsp-ui-peek-find-references)
+      ("i" lsp-ui-peek-find-implementation)
+      ("t" lsp-find-type-definition)
+      ("s" lsp-signature-help)
+      ("o" lsp-describe-thing-at-point)
+      ("r" lsp-rename)
+
+      ("f" lsp-format-buffer)
+      ("m" lsp-ui-imenu)
+      ("x" lsp-execute-code-action)
+
+      ("M-s" lsp-describe-session)
+      ("M-r" lsp-restart-workspace)
+      ("S" lsp-shutdown-workspace))
+     :config
+      (define-key lsp-mode-map (kbd "C-c h") 'hydra-lsp/body)
      :hook ((python-mode . lsp)
             (js2-mode . lsp)
             (yaml-mode . lsp)
