@@ -24,13 +24,9 @@
   functions work, use M-x edebug-defun to set up debugging for that function,
   and then call it.
 * Packages
-   Use `use-package` so that all packages are automatically installed if cloning
-   this repo for another machine.
-
+   `use-package` so that all packages are automatically installed if cloning this repo for another machine.
    [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github).
-
-   Along with the quelpa package, quelpa-use-package adds a handler to
-   use-package.
+   Along with the quelpa package, quelpa-use-package adds a handler to use-package.
 
    #+BEGIN_SRC emacs-lisp
    (require 'package)
@@ -38,7 +34,6 @@
    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
    (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
    (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
-   (add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
    (setq package-check-signature nil)
    (package-initialize)
@@ -1663,3 +1658,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                 (remove-text-properties next pos '(display nil face nil) str))))))
       (advice-add #'ivy-cleanup-string :after #'my-ivy-cleanup-indentation)))
    #+end_src
+* Ace Window
+  #+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :config
+    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+  (global-set-key (kbd "M-o") 'ace-window)
+  #+end_src
