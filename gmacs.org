@@ -756,7 +756,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    be refiled and dealt with later.  The same goes for phone calls and
    meetings.
 *** Directories and files
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (setq org-directory "~/Dropbox/Org")
    (setq org-default-notes-file "~/Dropbox/Org/inbox.org")
    #+end_src
@@ -855,7 +855,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (defun gn/org-skip-subtree-if-priority (priority)
    "Skip an agenda subtree if it has a priority of PRIORITY.
 
@@ -1187,7 +1187,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * iBuffer-mode
 
-   #+Begin_SRC emacs-lisp :tangle yes
+   #+Begin_SRC emacs-lisp
    (global-set-key (kbd "C-x C-b") 'ibuffer)
       (autoload 'ibuffer "ibuffer" "List buffers." t)
 
@@ -1221,21 +1221,21 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Reverting buffers
    Very useful if dealing with git repos and also files that can change from Dropbox
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (global-auto-revert-mode t)
    #+end_src
 
 * Saveplace
    Remember my place in files across sessions
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (save-place-mode +1)
    (setq-default save-place t)
    #+end_src
 
 * Remember recent files
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (setq recentf-save-file (concat user-emacs-directory "recentf")
          recentf-max-saved-items 200
          recentf-max-menu-items 15)
@@ -1428,7 +1428,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * JSON
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (use-package json-mode
      :defer t)
    #+end_src
@@ -1470,7 +1470,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   #+end_src
 * Markdown
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
+   #+BEGIN_SRC emacs-lisp
    (use-package markdown-mode
      :commands (markdown-mode gfm-mode)
      :mode ("\\.md\\'"
