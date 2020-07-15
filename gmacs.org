@@ -1351,8 +1351,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    (add-hook 'python-mode-hook 'flycheck-mode)
    #+end_src
-* LSP
-   Configure the LSP server and UI
+* Lsp-mode and lsp-ui
+  Lsp-mode has gotten a lot better and I think I have it working really well for python development.
+  `pip install python-language-server[all]` needs to be installed into each project in the virtualenvs for completions to work properly.
+  I had tried to use a global shim but that would fail on any declaration in a project dependency.
 
    #+BEGIN_SRC emacs-lisp
 
