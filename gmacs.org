@@ -61,11 +61,11 @@
    #+END_SRC
 
 * Theme
-   Back to dracula with some modifications to face for orgmode
-   #+BEGIN_SRC emacs-lisp :tangle yes
-     (use-package solarized-gruvbox-dark
-       :if (not window-system)
-       :ensure t)
+   Configuration for my dark theme using solarized-gruvbox-dark because it is easy on my eyes and works great with lsp-ui
+   #+BEGIN_SRC emacs-lisp
+     (use-package solarized-theme
+       :config
+       (load-theme 'solarized-gruvbox-dark t))
    #+end_src
 
 * Windows Configuration
