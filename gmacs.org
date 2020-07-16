@@ -634,6 +634,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         (emacs-lisp . t)
         (org . t)
         (sql . t)
+        (ditaa . t)
      ))
      ;; Syntax highlight in #+BEGIN_SRC blocks
      (setq org-src-fontify-natively t)
