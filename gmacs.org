@@ -830,8 +830,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (use-package org-bullets
      :commands org-bullets-mode
      :init
-     (add-hook 'org-mode-hook 'org-bullets-mode)
-     (setq org-bullets-bullet-list '("•" "►" "•" "►" "•")))
+     (add-hook 'org-mode-hook 'org-bullets-mode))
 
    ;; enable indent mode
    (setq org-indent-mode t)
