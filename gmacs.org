@@ -61,9 +61,13 @@
    easy on my eyes and works great with lsp-ui and org.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package solarized-theme
-       :config
-       (load-theme 'solarized-gruvbox-dark t))
+       ;(use-package solarized-theme
+       ;  :config
+       ;  (load-theme 'solarized-gruvbox-dark t))
+     (use-package modus-operandi-theme
+        :ensure t
+        :config
+          (load-theme 'modus-operandi t))
    #+end_src
 
 * Windows Configuration
@@ -99,7 +103,7 @@
 
    ; highlight current line
    (global-hl-line-mode 1)
-   (set-face-background 'hl-line "gray15")
+   ;; (set-face-background 'hl-line "gray15")
 
    ; default tab width
    (setq-default default-tab-width 4)
@@ -824,7 +828,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
            ("m" . gn/monthly-review))
    #+end_src
 ** Org faces and styling
-   #+BEGIN_SRC emacs-lisp
+
    (setq org-hide-leading-stars t)
 
    ;; Org bullets for prettier org files
@@ -850,7 +854,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       ((t (:foreground "PaleGreen"))))
     '(org-headline-done
       ((t (:foreground "olive drab")))))
-   #+end_src
+
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
