@@ -1172,37 +1172,38 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 * iBuffer-mode
+  I use ibuffer a lot for switching between buffers from a list of available open buffers.
+  These settings help to organize that list.
 
-   #+Begin_SRC emacs-lisp
-   (global-set-key (kbd "C-x C-b") 'ibuffer)
-      (autoload 'ibuffer "ibuffer" "List buffers." t)
+  #+Begin_SRC emacs-lisp
+    (global-set-key (kbd "C-x C-b") 'ibuffer)
+    (autoload 'ibuffer "ibuffer" "List buffers." t)
 
-   (setq ibuffer-saved-filter-groups
-     (quote (("default"
-            ("Python"
-                (mode . python-mode))
-            ("HTML"
-                (mode . web-mode))
-            ("JS"
-                (mode . js-mode))
-            ("Org" ;; all org-related buffers
-                 (mode . org-mode))
-            ("Lisp"
-                (mode . emacs-lisp-mode)
-                )))))
+    (setq ibuffer-saved-filter-groups
+          (quote (("default"
+                   ("Python"
+                    (mode . python-mode))
+                   ("HTML"
+                    (mode . web-mode))
+                   ("JS"
+                    (mode . js-mode))
+                   ("Org" ;; all org-related buffers
+                    (mode . org-mode))
+                   ("Lisp"
+                    (mode . emacs-lisp-mode))))))
 
-   ;; don't show empty groups
-   (setq ibuffer-show-empty-filter-groups nil)
+    ;; don't show empty groups
+    (setq ibuffer-show-empty-filter-groups nil)
 
-   (add-hook 'ibuffer-mode-hook
-     (lambda ()
-       (ibuffer-switch-to-saved-filter-groups "default")))
+    (add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
 
-   ;; Add full path to buffer title
-   (setq frame-title-format
-      (list (format "%s %%S: %%j " (system-name))
-        '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-   #+end_src
+    ;; Add full path to buffer title
+    (setq frame-title-format
+          (list (format "%s %%S: %%j " (system-name))
+                '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+  #+end_src
 
 * Reverting buffers
    Very useful if dealing with git repos and also files that can change from Dropbox
