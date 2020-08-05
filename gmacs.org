@@ -13,6 +13,11 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 
+* Cleanup and changes to make
+** TODO Clean up each section and add more descriptive context.
+** TODO Fix lsp mode when restarting server
+   This does not recognize Y or N as a confirmation
+
 * About
   This is my personal config for Emacs.  It is constructed in literate
   programming using Org-mode for a documented configuration.
@@ -90,28 +95,31 @@
    Mark the column at 80 for python.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package emacs
-       :config
-       (setq user-full-name "Greg Newman"
-             user-mail-address "greg@gregnewman.org")
-       (setq-default indent-tabs-mode nil)
-       (setq column-number-mode t)
-       (setq-default default-tab-width 4)
-       (setq ring-bell-function (lambda ()))
-       (setq confirm-kill-emacs 'yes-or-no-p)
-       (fset 'yes-or-no-p 'y-or-n-p)
-       (setq require-final-newline t)
-       (set-frame-font "Office Code Pro 13")
-       (setq line-spacing 0.3)
-       (setq explicit-shell-file-name "/bin/zsh")
-       (setq backup-directory-alist `(("." . "~/.saves")))
-       (setq backup-by-copying t)
-       (setq delete-old-versions t)
-       (setq kept-new-versions 6)
-       (setq kept-old-versions 2)
-       (setq version-control t)
-       )
-     ; line numbers
+       (use-package emacs
+         :config
+         (setq user-full-name "Greg Newman"
+               user-mail-address "greg@gregnewman.org")
+         (setq-default indent-tabs-mode nil)
+         (setq column-number-mode t)
+         (setq-default default-tab-width 4)
+         (setq ring-bell-function (lambda ()))
+         (setq confirm-kill-emacs 'yes-or-no-p)
+         (fset 'yes-or-no-p 'y-or-n-p)
+         (setq require-final-newline t)
+         (set-frame-font "Office Code Pro 13")
+         (setq line-spacing 0.3)
+         (setq explicit-shell-file-name "/bin/zsh")
+         (setq backup-directory-alist `(("." . "~/.saves")))
+         (setq backup-by-copying t)
+         (setq delete-old-versions t)
+         (setq kept-new-versions 6)
+         (setq kept-old-versions 2)
+         (setq version-control t)
+         )
+   #+end_src
+
+* Misc general settings to clean
+   #+BEGIN_SRC emacs-lisp
      (global-display-line-numbers-mode)
      (setq-default display-line-numbers-width 3)
 
