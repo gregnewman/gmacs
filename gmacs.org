@@ -73,14 +73,14 @@
    #+BEGIN_SRC emacs-lisp
      (use-package emacs
        :init
-       (menu-bar-mode -1)
-       (tool-bar-mode -1)
-       (scroll-bar-mode -1)
-       (tooltip-mode -1)
-       :config
-       (setq inhibit-splash-screen t)
-       :bind (("C-z" . nil)
-              ("C-x C-z" . nil)))
+         (menu-bar-mode -1)
+         (tool-bar-mode -1)
+         (scroll-bar-mode -1)
+         (tooltip-mode -1)
+         :config
+         (setq inhibit-splash-screen t)
+         :bind (("C-z" . nil)
+                ("C-x C-z" . nil)))
    #+end_src
 
 * Basics and general settings
@@ -90,142 +90,124 @@
    Mark the column at 80 for python.
 
    #+BEGIN_SRC emacs-lisp
-   ; Set user full name
-   (setq user-full-name "Greg Newman"
-         user-mail-address "greg@gregnewman.org")
+     (use-package emacs
+       :config
+       (setq user-full-name "Greg Newman"
+             user-mail-address "greg@gregnewman.org")
+       (setq-default indent-tabs-mode nil)
+       (setq column-number-mode t)
+       (setq-default default-tab-width 4)
+       (setq ring-bell-function (lambda ()))
+       (setq confirm-kill-emacs 'yes-or-no-p)
+       (fset 'yes-or-no-p 'y-or-n-p)
+       (setq require-final-newline t)
+       (set-frame-font "Office Code Pro 13")
+       (setq line-spacing 0.3)
+       (setq explicit-shell-file-name "/bin/zsh")
+       (setq backup-directory-alist `(("." . "~/.saves")))
+       (setq backup-by-copying t)
+       (setq delete-old-versions t)
+       (setq kept-new-versions 6)
+       (setq kept-old-versions 2)
+       (setq version-control t)
+       )
+     ; line numbers
+     (global-display-line-numbers-mode)
+     (setq-default display-line-numbers-width 3)
 
-   ; line numbers
-   (global-display-line-numbers-mode)
-   (setq-default display-line-numbers-width 3)
 
-   ; no hate tabs
-   (setq-default indent-tabs-mode nil)
 
-   ; column numbers
-   (setq column-number-mode  t)
+     ; highlight current line
+     (global-hl-line-mode 1)
+     ; show lines that are longer than 79 columns
+     (use-package whitespace
+       :init
+       (dolist (hook '(prog-mode-hook text-mode-hook))
+         (add-hook hook #'whitespace-mode))
+       (add-hook 'before-save-hook #'whitespace-cleanup)
+       :config
+         (setq whitespace-global-modes '(not org-mode))
+         (setq whitespace-line-column 80) ;; limit line length
+         (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
-   ; highlight current line
-   (global-hl-line-mode 1)
-   ;; (set-face-background 'hl-line "gray15")
 
-   ; default tab width
-   (setq-default default-tab-width 4)
+     ; Desktop setup.
+     (desktop-save-mode 1)
+     (setq desktop-dirname "~/.emacs.d/desktops/")
+     (setq desktop-base-file-name (concat ".desktop." (system-name)))
+     (setq desktop-path (list desktop-dirname))
+     (setq desktop-base-lock-name "lock")
+     (setq desktop-load-locked-desktop t)
 
-   ; show lines that are longer than 79 columns
-   (use-package whitespace
-     :init
-     (dolist (hook '(prog-mode-hook text-mode-hook))
-       (add-hook hook #'whitespace-mode))
-     (add-hook 'before-save-hook #'whitespace-cleanup)
-     :config
-       (setq whitespace-global-modes '(not org-mode))
-       (setq whitespace-line-column 80) ;; limit line length
-       (setq whitespace-style '(face tabs empty trailing lines-tail)))
+     ; Projectile
+     (use-package projectile
+       :bind-keymap
+       ("C-c p" . projectile-command-map))
 
-   ; dont friggin beep at me!
-   (setq ring-bell-function (lambda ()))
-
-   ; confirm when killing emacs.
-   (when (window-system)
-     (setq confirm-kill-emacs 'yes-or-no-p))
-
-   ; only type y instead of yes
-   (fset 'yes-or-no-p 'y-or-n-p)
-
-   ; require a new line at the end of files
-   (setq require-final-newline t)
-
-   ; Desktop setup.
-   (desktop-save-mode 1)
-   (setq desktop-dirname "~/.emacs.d/desktops/")
-   (setq desktop-base-file-name (concat ".desktop." (system-name)))
-   (setq desktop-path (list desktop-dirname))
-   (setq desktop-base-lock-name "lock")
-   (setq desktop-load-locked-desktop t)
-
-   ; Font
-   (set-frame-font "Office Code Pro 13")
-   (setq line-spacing 0.3)
-   ; Projectile
-   (use-package projectile
-     :bind-keymap
-     ("C-c p" . projectile-command-map))
-
-   ; Git Gutter
-   (use-package git-gutter
-     :ensure t
-     :diminish git-gutter-mode
-     :config (global-git-gutter-mode)
-     :init
-     (progn
-       (setq git-gutter:separator-sign " "
-           git-gutter:lighter " GG"))
-     :config
+     ; Git Gutter
+     (use-package git-gutter
+       :ensure t
+       :diminish git-gutter-mode
+       :config (global-git-gutter-mode)
+       :init
        (progn
-         (set-face-background 'git-gutter:deleted "#990A1B")
-         (set-face-foreground 'git-gutter:deleted "#990A1B")
-         (set-face-background 'git-gutter:modified "#00736F")
-         (set-face-foreground 'git-gutter:modified "#00736F")
-         (set-face-background 'git-gutter:added "#546E00")
-         (set-face-foreground 'git-gutter:added "#546E00"))
-     :bind (("C-x p" . git-gutter:previous-hunk)
-       ("C-x n" . git-gutter:next-hunk)
-       ("C-x v =" . git-gutter:popup-hunk)
-       ("C-x v r" . git-gutter:revert-hunk)))
+         (setq git-gutter:separator-sign " "
+             git-gutter:lighter " GG"))
+       :config
+         (progn
+           (set-face-background 'git-gutter:deleted "#990A1B")
+           (set-face-foreground 'git-gutter:deleted "#990A1B")
+           (set-face-background 'git-gutter:modified "#00736F")
+           (set-face-foreground 'git-gutter:modified "#00736F")
+           (set-face-background 'git-gutter:added "#546E00")
+           (set-face-foreground 'git-gutter:added "#546E00"))
+       :bind (("C-x p" . git-gutter:previous-hunk)
+         ("C-x n" . git-gutter:next-hunk)
+         ("C-x v =" . git-gutter:popup-hunk)
+         ("C-x v r" . git-gutter:revert-hunk)))
 
-   ; Browse Dash documentation
-   (use-package counsel-dash
-     :config
-     (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
+     ; Browse Dash documentation
+     (use-package counsel-dash
+       :config
+       (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
 
-   ;; Move to beginning of line.
-   ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-   (defun my/smarter-move-beginning-of-line (arg)
-   "Move point back to indentation of beginning of line.
+     ;; Move to beginning of line.
+     ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+     (defun my/smarter-move-beginning-of-line (arg)
+     "Move point back to indentation of beginning of line.
 
-   Move point to the first non-whitespace character on this line.
-   If point is already there, move to the beginning of the line.
-   Effectively toggle between the first non-whitespace character and
-   the beginning of the line.
+     Move point to the first non-whitespace character on this line.
+     If point is already there, move to the beginning of the line.
+     Effectively toggle between the first non-whitespace character and
+     the beginning of the line.
 
-   If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-   point reaches the beginning or end of the buffer, stop there."
-    (interactive "^p")
-    (setq arg (or arg 1))
+     If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+     point reaches the beginning or end of the buffer, stop there."
+      (interactive "^p")
+      (setq arg (or arg 1))
 
-    ;; Move lines first
-    (when (/= arg 1)
-      (let ((line-move-visual nil))
-        (forward-line (1- arg))))
+      ;; Move lines first
+      (when (/= arg 1)
+        (let ((line-move-visual nil))
+          (forward-line (1- arg))))
 
-    (let ((orig-point (point)))
-      (back-to-indentation)
-      (when (= orig-point (point))
-        (move-beginning-of-line 1))))
+      (let ((orig-point (point)))
+        (back-to-indentation)
+        (when (= orig-point (point))
+          (move-beginning-of-line 1))))
 
-    ;; remap C-a to `smarter-move-beginning-of-line'
-    (global-set-key [remap move-beginning-of-line]
-                    'my/smarter-move-beginning-of-line)
+      ;; remap C-a to `smarter-move-beginning-of-line'
+      (global-set-key [remap move-beginning-of-line]
+                      'my/smarter-move-beginning-of-line)
 
-    ;; set shell to zsh
-    (setq explicit-shell-file-name "/bin/zsh")
+      ;; always how paren highlights
+      (show-paren-mode 1)
 
-    ;; control backups
-    (setq backup-directory-alist `(("." . "~/.saves")))
-    (setq backup-by-copying t)
-    (setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
+      ;; icons
+      (use-package all-the-icons)
 
-    ;; always how paren highlights
-    (show-paren-mode 1)
-
-    ;; icons
-    (use-package all-the-icons)
-
-    ;; javascript indents
-    (setq js-indent-level 2)
+      ;; javascript indents
+      (setq js-indent-level 2)
    #+end_src
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
