@@ -1321,11 +1321,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      '(progn
       (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
    #+end_src
-* YASnippet
-   #+BEGIN_SRC emacs-lisp
-   (use-package yasnippet
-     :ensure t)
-   #+end_src
 * Flycheck
    #+BEGIN_SRC emacs-lisp
    (use-package flycheck
