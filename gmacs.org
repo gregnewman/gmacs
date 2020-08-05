@@ -68,7 +68,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package solarized-theme
        :config
-       (load-theme 'solarized-gruvbox-dark t))
+       (load-theme 'solarized-dark t))
    #+end_src
 
 * Windows Configuration
@@ -88,134 +88,123 @@
                 ("C-x C-z" . nil)))
    #+end_src
 
-* Basics and general settings
-   Set default tabs to 4.  Highlight line.  There are a number of
-   packages for highlighting the current line but hi-line is already
-   included and works fine.  No more cruft than needed.
-   Mark the column at 80 for python.
+* One liners and tiny packages
 
-   #+BEGIN_SRC emacs-lisp
-       (use-package emacs
-         :config
-         (setq user-full-name "Greg Newman"
-               user-mail-address "greg@gregnewman.org")
-         (setq-default indent-tabs-mode nil)
-         (setq column-number-mode t)
-         (setq-default default-tab-width 4)
-         (setq ring-bell-function (lambda ()))
-         (setq confirm-kill-emacs 'yes-or-no-p)
-         (fset 'yes-or-no-p 'y-or-n-p)
-         (setq require-final-newline t)
-         (set-frame-font "Office Code Pro 13")
-         (setq line-spacing 0.3)
-         (setq explicit-shell-file-name "/bin/zsh")
-         (setq backup-directory-alist `(("." . "~/.saves")))
-         (setq backup-by-copying t)
-         (setq delete-old-versions t)
-         (setq kept-new-versions 6)
-         (setq kept-old-versions 2)
-         (setq version-control t)
-         )
+  Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
+  These are important in how I like my emacs to perform.
+
+  #+BEGIN_SRC emacs-lisp
+    (fset 'yes-or-no-p 'y-or-n-p)
+    (set-frame-font "Office Code Pro 13")
+
+    (setq user-full-name "Greg Newman"
+          user-mail-address "greg@gregnewman.org")
+    (setq-default indent-tabs-mode nil)
+    (setq column-number-mode t)
+    ;; (setq-default default-tab-width 4)
+    (setq ring-bell-function (lambda ()))
+    (setq confirm-kill-emacs 'yes-or-no-p)
+    (setq require-final-newline t)
+    (setq line-spacing 0.3)
+    (setq explicit-shell-file-name "/bin/zsh")
+    (setq backup-directory-alist `(("." . "~/.saves")))
+    (setq backup-by-copying t)
+    (setq delete-old-versions t)
+    (setq kept-new-versions 6)
+    (setq kept-old-versions 2)
+    (setq version-control t)
+    (global-display-line-numbers-mode)
+    (setq-default display-line-numbers-width 3)
+    ;; always how paren highlights
+    (show-paren-mode 1)
+    ; highlight current line
+    (global-hl-line-mode 1)
+    ;; javascript indents
+    (setq js-indent-level 2)
+    ; Desktop setup.
+    (desktop-save-mode 1)
+    (setq desktop-dirname "~/.emacs.d/desktops/")
+    (setq desktop-base-file-name (concat ".desktop." (system-name)))
+    (setq desktop-path (list desktop-dirname))
+    (setq desktop-base-lock-name "lock")
+    (setq desktop-load-locked-desktop t)
    #+end_src
 
-* Misc general settings to clean
+   Small packages that are just modifying or spicing up some of emacs for me.
    #+BEGIN_SRC emacs-lisp
-     (global-display-line-numbers-mode)
-     (setq-default display-line-numbers-width 3)
+    ;; icons - I'm not sure why i have this installed and might remove it.
+    (use-package all-the-icons)
 
+    (use-package whitespace
+      :init
+      (dolist (hook '(prog-mode-hook text-mode-hook))
+        (add-hook hook #'whitespace-mode))
+      (add-hook 'before-save-hook #'whitespace-cleanup)
+      :config
+        (setq whitespace-global-modes '(not org-mode))
+        (setq whitespace-line-column 80) ;; limit line length
+        (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
+    ; Projectile
+    (use-package projectile
+      :bind-keymap
+      ("C-c p" . projectile-command-map))
 
-     ; highlight current line
-     (global-hl-line-mode 1)
-     ; show lines that are longer than 79 columns
-     (use-package whitespace
-       :init
-       (dolist (hook '(prog-mode-hook text-mode-hook))
-         (add-hook hook #'whitespace-mode))
-       (add-hook 'before-save-hook #'whitespace-cleanup)
-       :config
-         (setq whitespace-global-modes '(not org-mode))
-         (setq whitespace-line-column 80) ;; limit line length
-         (setq whitespace-style '(face tabs empty trailing lines-tail)))
+    ; Git Gutter
+    (use-package git-gutter
+      :ensure t
+      :diminish git-gutter-mode
+      :config (global-git-gutter-mode)
+      :init
+      (progn
+        (setq git-gutter:separator-sign " "
+            git-gutter:lighter " GG"))
+      :config
+        (progn
+          (set-face-background 'git-gutter:deleted "#990A1B")
+          (set-face-foreground 'git-gutter:deleted "#990A1B")
+          (set-face-background 'git-gutter:modified "#00736F")
+          (set-face-foreground 'git-gutter:modified "#00736F")
+          (set-face-background 'git-gutter:added "#546E00")
+          (set-face-foreground 'git-gutter:added "#546E00"))
+      :bind (("C-x p" . git-gutter:previous-hunk)
+        ("C-x n" . git-gutter:next-hunk)
+        ("C-x v =" . git-gutter:popup-hunk)
+        ("C-x v r" . git-gutter:revert-hunk)))
 
+    ; Browse Dash documentation
+    (use-package counsel-dash
+      :config
+      (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
 
-     ; Desktop setup.
-     (desktop-save-mode 1)
-     (setq desktop-dirname "~/.emacs.d/desktops/")
-     (setq desktop-base-file-name (concat ".desktop." (system-name)))
-     (setq desktop-path (list desktop-dirname))
-     (setq desktop-base-lock-name "lock")
-     (setq desktop-load-locked-desktop t)
+    ;; Move to beginning of line.
+    ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+    (defun my/smarter-move-beginning-of-line (arg)
+    "Move point back to indentation of beginning of line.
 
-     ; Projectile
-     (use-package projectile
-       :bind-keymap
-       ("C-c p" . projectile-command-map))
+    Move point to the first non-whitespace character on this line.
+    If point is already there, move to the beginning of the line.
+    Effectively toggle between the first non-whitespace character and
+    the beginning of the line.
 
-     ; Git Gutter
-     (use-package git-gutter
-       :ensure t
-       :diminish git-gutter-mode
-       :config (global-git-gutter-mode)
-       :init
-       (progn
-         (setq git-gutter:separator-sign " "
-             git-gutter:lighter " GG"))
-       :config
-         (progn
-           (set-face-background 'git-gutter:deleted "#990A1B")
-           (set-face-foreground 'git-gutter:deleted "#990A1B")
-           (set-face-background 'git-gutter:modified "#00736F")
-           (set-face-foreground 'git-gutter:modified "#00736F")
-           (set-face-background 'git-gutter:added "#546E00")
-           (set-face-foreground 'git-gutter:added "#546E00"))
-       :bind (("C-x p" . git-gutter:previous-hunk)
-         ("C-x n" . git-gutter:next-hunk)
-         ("C-x v =" . git-gutter:popup-hunk)
-         ("C-x v r" . git-gutter:revert-hunk)))
+    If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+    point reaches the beginning or end of the buffer, stop there."
+     (interactive "^p")
+     (setq arg (or arg 1))
 
-     ; Browse Dash documentation
-     (use-package counsel-dash
-       :config
-       (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
+     ;; Move lines first
+     (when (/= arg 1)
+       (let ((line-move-visual nil))
+         (forward-line (1- arg))))
 
-     ;; Move to beginning of line.
-     ;; Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-     (defun my/smarter-move-beginning-of-line (arg)
-     "Move point back to indentation of beginning of line.
+     (let ((orig-point (point)))
+       (back-to-indentation)
+       (when (= orig-point (point))
+         (move-beginning-of-line 1))))
 
-     Move point to the first non-whitespace character on this line.
-     If point is already there, move to the beginning of the line.
-     Effectively toggle between the first non-whitespace character and
-     the beginning of the line.
-
-     If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-     point reaches the beginning or end of the buffer, stop there."
-      (interactive "^p")
-      (setq arg (or arg 1))
-
-      ;; Move lines first
-      (when (/= arg 1)
-        (let ((line-move-visual nil))
-          (forward-line (1- arg))))
-
-      (let ((orig-point (point)))
-        (back-to-indentation)
-        (when (= orig-point (point))
-          (move-beginning-of-line 1))))
-
-      ;; remap C-a to `smarter-move-beginning-of-line'
-      (global-set-key [remap move-beginning-of-line]
-                      'my/smarter-move-beginning-of-line)
-
-      ;; always how paren highlights
-      (show-paren-mode 1)
-
-      ;; icons
-      (use-package all-the-icons)
-
-      ;; javascript indents
-      (setq js-indent-level 2)
+     ;; remap C-a to `smarter-move-beginning-of-line'
+     (global-set-key [remap move-beginning-of-line]
+                     'my/smarter-move-beginning-of-line)
    #+end_src
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
