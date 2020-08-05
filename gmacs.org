@@ -33,8 +33,8 @@
    (require 'package)
    (setq package-enable-at-startup nil)
    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
    (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
    (setq package-check-signature nil)
    (package-initialize)
@@ -61,23 +61,26 @@
    easy on my eyes and works great with lsp-ui and org.
 
    #+BEGIN_SRC emacs-lisp
-       ;(use-package solarized-theme
-       ;  :config
-       ;  (load-theme 'solarized-gruvbox-dark t))
-     (use-package modus-operandi-theme
-        :ensure t
-        :config
-          (load-theme 'modus-operandi t))
+     (use-package solarized-theme
+       :config
+       (load-theme 'solarized-gruvbox-dark t))
    #+end_src
 
 * Windows Configuration
    Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
+   Also set `C-z` and `C-x C-z` to nil.  `C-z` minimizes/hides emacs and it's enfuriating when I accidently hit that key combo.
 
    #+BEGIN_SRC emacs-lisp
-   (tooltip-mode -1)
-   (tool-bar-mode -1)
-   (menu-bar-mode -1)
-   (scroll-bar-mode -1)
+     (use-package emacs
+       :init
+       (menu-bar-mode -1)
+       (tool-bar-mode -1)
+       (scroll-bar-mode -1)
+       (tooltip-mode -1)
+       :config
+       (setq inhibit-splash-screen t)
+       :bind (("C-z" . nil)
+              ("C-x C-z" . nil)))
    #+end_src
 
 * Basics and general settings
