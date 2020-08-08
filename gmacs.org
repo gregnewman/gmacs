@@ -62,13 +62,13 @@
    #+END_SRC
 
 * Theme
-   Configuration for my dark theme using solarized-gruvbox-dark because it is
-   easy on my eyes and works great with lsp-ui and org.
+   Configuration for my dark-ish theme using zenburn.  It just works well for my eyes and for code + org.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package solarized-theme
+     (use-package zenburn-theme
+       :ensure t
        :config
-       (load-theme 'solarized-dark t))
+       (load-theme 'zenburn t))
    #+end_src
 
 * Windows Configuration
@@ -107,17 +107,6 @@
     ;; Set default font faces for Info and ERC modes
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
     (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
-  #+end_src
-
-  For Org mode tables and code blocks I want to use Fira Code
-  #+BEGIN_SRC
-    (use-package face-remap
-      :custom-face
-      (fixed-pitch ((t (:family "Fira Code" :height 120))))
-      (org-table ((t (:inherit fixed-pitch))))
-      (org-block ((t (:inherit fixed-pitch))))
-      :hook
-      (org-mode-hook . variable-pitch-mode))
   #+end_src
 
 * One liners and tiny packages
@@ -1239,6 +1228,18 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         :ensure t
         :after ox)
    #+end_src
+
+** Fonts in orgmode
+  For Org mode tables and code blocks I want to use Fira Code
+  #+BEGIN_SRC emacs-lisp
+    (use-package face-remap
+      :custom-face
+      (fixed-pitch ((t (:family "Fira Code" :height 120))))
+      (org-table ((t (:inherit fixed-pitch))))
+      (org-block ((t (:inherit fixed-pitch))))
+      :hook
+      (org-mode-hook . variable-pitch-mode))
+  #+end_src
 
 * iBuffer
   I use ibuffer a lot for switching between buffers from a list of available open buffers.
