@@ -88,6 +88,33 @@
                 ("C-x C-z" . nil)))
    #+end_src
 
+* Font handling
+  #+BEGIN_SRC emacs-lisp
+      ;; Use variable width font faces in buffer
+      (defun my-buffer-face-mode-variable ()
+        "Set font to a variable width (proportional) fonts in current buffer"
+        (interactive)
+        (setq buffer-face-mode-face '(:family "Avenir" :height 140 :width semi-condensed))
+        (buffer-face-mode))
+      ;; Use monospaced font faces in buffer
+      (defun my-buffer-face-mode-fixed ()
+        "Sets a fixed width (monospace) font in current buffer"
+        (interactive)
+        (setq buffer-face-mode-face '(:family "Fira Code" :height 120))
+        (buffer-face-mode))
+      ;; Set default font faces for Info and ERC modes
+      (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
+      (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
+
+      (use-package face-remap
+        :custom-face
+        (fixed-pitch ((t (:family "Fira Code" :height 120))))
+        (org-table ((t (:inherit fixed-pitch))))
+        (org-block ((t (:inherit fixed-pitch))))
+        :hook
+        (org-mode-hook . variable-pitch-mode))
+  #+end_src
+
 * One liners and tiny packages
 
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
@@ -95,7 +122,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (fset 'yes-or-no-p 'y-or-n-p)
-    (set-frame-font "Office Code Pro 13")
+    (set-frame-font "Fira Code Medium 13")
 
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
@@ -310,6 +337,7 @@
      (setq org-enforce-todo-checkbox-dependencies t)
      (setq org-fontify-done-headline t)
      (setq org-startup-folded t)
+     (setq org-src-fontify-natively nil)
 
      ;; Refiling
      (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
@@ -832,7 +860,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
            ("m" . gn/monthly-review))
    #+end_src
 ** Org faces and styling
+   A little styling for how headlines are displayed.
 
+   #+BEGIN_SRC emacs-lisp
    (setq org-hide-leading-stars t)
 
    ;; Org bullets for prettier org files
@@ -845,8 +875,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (setq org-indent-mode t)
    (setq org-fontify-whole-heading-line t)
    (setq org-fontify-quote-and-verse-blocks t)
-
    (setq org-fontify-done-headline t)
+   #+end_src
+
+   I'm not using these right now but might later.  I know I can get these from git logs.
+
    (custom-set-faces
     '(org-block-begin-line
       ((t ( :foreground "#eeeeee"   :background "#56595e"))))
