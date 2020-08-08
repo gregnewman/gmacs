@@ -1463,27 +1463,26 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Company
 
    #+BEGIN_SRC emacs-lisp
-   (use-package company
-     :ensure t
-     :config
-     (setq company-minimum-prefix-length 1
-            company-idle-delay 0
-            company-tooltip-limit 10
-            company-transformers nil
-            company-show-numbers t)
-     (global-company-mode +1))
+     (use-package company
+       :ensure t
+       :config
+       (setq company-minimum-prefix-length 1
+             company-idle-delay 0
+             company-tooltip-limit 10
+             company-transformers nil
+             company-show-numbers t)
+       (global-company-mode +1))
 
-   (use-package company-lsp
-     :ensure t
-     :after company
-     :config
-     (setq company-lsp-enable-snippet nil)
-     :init (add-to-list 'company-backends 'company-capf))
+     (use-package company-lsp
+       :ensure t
+       :after company
+       :config
+       (setq company-lsp-enable-snippet nil)
+       :init (add-to-list 'company-backends 'company-capf))
 
-   (use-package company-box
-     :ensure t
-     :hook (company-mode . company-box-mode))
-
+     (use-package company-box
+       :ensure t
+       :hook (company-mode . company-box-mode))
    #+end_src
 
 * JSON
