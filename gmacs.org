@@ -782,10 +782,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (setq org-agenda-sticky t)
    #+end_src
 ** Org-capture
-   Capture helps me stay on track during my day.  As distraction and
-   thoughts try to steal my time, I can quickly add a note or task to
-   be refiled and dealt with later.  The same goes for phone calls and
-   meetings.
+   Capture helps me stay on track during my day.  As distraction and thoughts try to steal my time, I can quickly add a note or task to
+   be refiled and dealt with later.  The same goes for phone calls and meetings.
 *** Directories and files
    #+BEGIN_SRC emacs-lisp
    (setq org-directory "~/Dropbox/Org")
@@ -828,44 +826,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
 
-*** Reviews
-   #+BEGIN_SRC emacs-lisp
-   (defun gn/daily-review ()
-    (interactive)
-    (let ((org-capture-templates '(("d" "Review: Daily Review" entry (file+olp+datetree "~/Dropbox/Org/reviews.org")
-                                  (file "~/Dropbox/Org/templates/daily_review.org")))))
-    (progn
-      (org-capture nil "d")
-      (org-capture-finalize t)
-      (org-speed-move-safe 'outline-up-heading)
-      (org-narrow-to-subtree))))
-
-   (defun gn/weekly-review ()
-    (interactive)
-    (let ((org-capture-templates '(("w" "Review: Weekly Review" entry (file+olp+datetree "~/Dropbox/Org/reviews.org")
-                                  (file "~/Dropbox/Org/templates/weekly_review.org")))))
-    (progn
-      (org-capture nil "w")
-      (org-capture-finalize t)
-      (org-speed-move-safe 'outline-up-heading)
-      (org-narrow-to-subtree))))
-
-   (defun gn/monthly-review ()
-    (interactive)
-    (let ((org-capture-templates '(("m" "Review: Monthly Review" entry (file+olp+datetree "~/Dropbox/Org/reviews.org")
-                                  (file "~/Dropbox/Org/templates/monthly_review.org")))))
-    (progn
-      (org-capture nil "m")
-      (org-capture-finalize t)
-      (org-speed-move-safe 'outline-up-heading)
-      (org-narrow-to-subtree))))
-
-   (bind-keys :prefix-map review-map
-           :prefix "C-c r"
-           ("d" . gn/daily-review)
-           ("w" . gn/weekly-review)
-           ("m" . gn/monthly-review))
-   #+end_src
 ** Org faces and styling
    A little styling for how headlines are displayed.
 
