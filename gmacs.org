@@ -799,6 +799,17 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 *** Capture templates
     Capture template are critical for keeping focused on the current work and not getting sent down the proverbial rabbit hole.  It's also handy for knowledge investements while working.  For instance, a method in a python library I need to understand more deeply, I can trigger the capture template for Knowledge Investements with `C=c c k`, add some context and with `C=c C=c` close and save the capture without leaving my position in the file.  The link to where I found the method is captured in the template and I can visit that later in the day when I have time to dive deep.
 
+    For my reference the syntax is as follows
+    ("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
+                 "* TODO %?\n%U\n%a\n" :clock-keep t)
+    t is the trigger key for Todo.
+    Todo entry is layman's term for the capture followed by what file to store it in.
+    The instruction regex starts with the tag or keyword then [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][template expansions]].
+       - %? Position the cursor where I was
+       - %u, %U Inactive timestamp
+       - %a annotation, normally the linnk created with org-store-link
+       - :clock-keep keeps the clock running if I'm clocking a task
+
    #+BEGIN_SRC emacs-lisp
      ;; Capture templates
      (setq org-capture-templates
