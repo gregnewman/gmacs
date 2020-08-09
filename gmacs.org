@@ -826,39 +826,20 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
 
-** Org faces and styling
-   A little styling for how headlines are displayed.
-
+** Org bullets and misc settings
+   Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
    #+BEGIN_SRC emacs-lisp
-   (setq org-hide-leading-stars t)
+     (use-package org-bullets
+       :commands org-bullets-mode
+       :init
+       (add-hook 'org-mode-hook 'org-bullets-mode))
 
-   ;; Org bullets for prettier org files
-   (use-package org-bullets
-     :commands org-bullets-mode
-     :init
-     (add-hook 'org-mode-hook 'org-bullets-mode))
-
-   ;; enable indent mode
-   (setq org-indent-mode t)
-   (setq org-fontify-whole-heading-line t)
-   (setq org-fontify-quote-and-verse-blocks t)
-   (setq org-fontify-done-headline t)
+     (setq org-hide-leading-stars t)
+     (setq org-indent-mode t)
+     (setq org-fontify-whole-heading-line t)
+     (setq org-fontify-quote-and-verse-blocks t)
+     (setq org-fontify-done-headline t)
    #+end_src
-
-   I'm not using these right now but might later.  I know I can get these from git logs.
-
-   (custom-set-faces
-    '(org-block-begin-line
-      ((t ( :foreground "#eeeeee"   :background "#56595e"))))
-    '(org-block
-      ((t ( :foreground "#d3d3d3" :background "#303236"))))
-    '(org-block-end-line
-      ((t ( :foreground "#eeeeee"   :background "#56595e"))))
-    '(org-done
-      ((t (:foreground "PaleGreen"))))
-    '(org-headline-done
-      ((t (:foreground "olive drab")))))
-
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
