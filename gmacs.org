@@ -741,11 +741,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
    #+end_src
 *** Tags
-    The tags I'm currently using have gone through a few iterations
-    and probably will a few more times until I settle on a structure I
-    like.  I am not religious about using tags but some of them allow
-    me better filtering for clock reports, which I use for billing and
-    for narrowing agendas.
+    The tags I'm currently using have gone through a few iterations and probably will a few more times until I settle on a structure I like.  I am not religious about using tags but some of them allow me better filtering for clock reports, which I use for billing and for narrowing agendas.
 
    #+BEGIN_SRC emacs-lisp
      (setq org-tag-alist '((:startgroup)
