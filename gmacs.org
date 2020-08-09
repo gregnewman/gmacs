@@ -757,6 +757,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                            ("agenda" . ?a)
                            ("errands" . ?e)
                            ("learning" . ?l)
+                           ("KI" . ?k) ;; knowledge investment used in capture templates
                            (:endgroup)
                            ("PROJECT" . ?p)
                            ("phone" . ?t)
