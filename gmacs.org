@@ -797,24 +797,23 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (global-set-key (kbd "C-c c") 'org-capture)
    #+end_src
 *** Capture templates
+    Capture template are critical for keeping focused on the current work and not getting sent down the proverbial rabbit hole.  It's also handy for knowledge investements while working.  For instance, a method in a python library I need to understand more deeply, I can trigger the capture template for Knowledge Investements with `C=c c k`, add some context and with `C=c C=c` close and save the capture without leaving my position in the file.  The link to where I found the method is captured in the template and I can visit that later in the day when I have time to dive deep.
+
    #+BEGIN_SRC emacs-lisp
-   ;; Capture templates
-   (setq org-capture-templates
-       (quote (("t" "todo" entry (file "~/Dropbox/Org/inbox.org")
-               "* TODO %?\n%U\n%a\n" :clock-keep t)
-               ("n" "note" entry (file "~/Dropbox/Org/inbox.org")
-                "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
-               ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
-               "* %?\n%U\n" :clock-keep t)
-               ("d" "Daily Review" entry (file+olp+datetree "~/Dropbox/Org/reviews.org")
-                (file "~/Dropbox/Org/templates/daily_review.org"))
-               ("w" "Weekly Review" entry (file+olp+datetree "~/Dropbox/Org/reviews.org")
-                (file "~/Dropbox/Org/templates/weekly_review.org"))
-               ("m" "Monthly Review" entry (file+olp+datetree "~/Dropbox/Org/reviews.org")
-                (file "~/Dropbox/Org/templates/monthly_review.org"))
-               ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
-                "* PHONE %? :PHONE:\n%U" :clock-keep t))))
+     ;; Capture templates
+     (setq org-capture-templates
+         (quote (("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
+                 "* TODO %?\n%U\n%a\n" :clock-keep t)
+                 ("k" "Knowledge Investment" entry (file "~/Dropbox/Org/inbox.org")
+                  "* %? :KI:\n%U\n%a\n" :clock-keep t)
+                 ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")
+                  "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
+                 ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
+                 "* %?\n%U\n" :clock-keep t)
+                 ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
+                  "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
+
 *** Reviews
    #+BEGIN_SRC emacs-lisp
    (defun gn/daily-review ()
