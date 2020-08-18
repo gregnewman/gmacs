@@ -15,9 +15,6 @@
 
 * Cleanup and changes to make
 ** TODO Clean up each section and add more descriptive context.
-** TODO Fix lsp mode when restarting server
-   This does not recognize Y or N as a confirmation
-
 * About
   This is my personal config for Emacs.  It is constructed in literate
   programming using Org-mode for a documented configuration.
