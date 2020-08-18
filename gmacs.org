@@ -162,7 +162,6 @@
            (add-hook hook #'whitespace-mode))
          (add-hook 'before-save-hook #'whitespace-cleanup)
          :config
-           (setq whitespace-global-modes '(not org-mode))
            (setq whitespace-line-column 80) ;; limit line length
            (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
@@ -339,6 +338,13 @@
 
      ;; Visual Line Mode
      (add-hook 'org-mode-hook 'visual-line-mode)
+
+     (defun gn/orgmode-ignore-whitespace-mode ()
+        (interactive)
+        "turns off whitespace mode in org buffers"
+        (whitespace-mode -1))
+       ;; Set default font faces for Info and ERC modes
+     (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
    #+end_src
 
 ** GTD
@@ -1515,8 +1521,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   #+end_src
 
 * Ivy, Swiper and Counsel
-   I went from IDO to Helm and now going for a more minimalist
-   lightweight solution in Ivy.
+   I went from IDO to Helm and now going for a more minimalist lightweight solution in Ivy.
    #+BEGIN_SRC emacs-lisp
    (use-package ivy
      :ensure t
