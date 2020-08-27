@@ -1467,6 +1467,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * Javascript
   Thanks to Chad Stovern for writing up what is working for him for React development.  It gave me some ideas to add to my configuration.  I am not yet going to try rjsx-mode.
+  [[https://www.chadstovern.com/javascript-in-emacs-revisited/][Chad's writeup]]
 
   #+BEGIN_SRC emacs-lisp
     (use-package js2-mode
