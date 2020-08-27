@@ -625,9 +625,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       next-headline)))
    #+end_src
 
-   #+RESULTS:
-   : gn/skip-non-subprojects
-
 ** Estimates and clocking
    I need to track time for clients and projects.  This nudges me when I clock in
    to make sure I have an estimate set.
@@ -827,9 +824,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                  ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
-
-   #+RESULTS:
-   | t | Todo | entry | (file ~/Dropbox/Org/inbox.org) | * TODO %? |
 
 ** Org bullets and misc settings
    Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
