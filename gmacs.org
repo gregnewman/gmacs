@@ -809,11 +809,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     The instruction regex starts with the tag or keyword then [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][template expansions]].
        - %? Position the cursor where I was
        - %u, %U Inactive timestamp
-       - %a annotation, normally the linnk created with org-store-link
+       - %a annotation, normally the link created with org-store-link
        - :clock-keep keeps the clock running if I'm clocking a task
 
    #+BEGIN_SRC emacs-lisp
      ;; Capture templates
+     (setq org-indent-indentation-per-level 2)
      (setq org-capture-templates
          (quote (("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
                  "* TODO %?\n%U\n%a\n" :clock-keep t)
@@ -821,11 +822,14 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                   "* %? :KI:\n%U\n%a\n" :clock-keep t)
                  ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")
                   "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
-                 ("j" "Journal" entry (file+datetree "~/Dropbox/Org/journal.org")
-                 "* %?\n%U\n" :clock-keep t)
+                 ("j" "Journal" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
+                  "* %?" :clock-keep t)
                  ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
+
+   #+RESULTS:
+   | t | Todo | entry | (file ~/Dropbox/Org/inbox.org) | * TODO %? |
 
 ** Org bullets and misc settings
    Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
@@ -1468,25 +1472,37 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 * Javascript
+  Thanks to Chad Stovern for writing up what is working for him for React development.  It gave me some ideas to add to my configuration.  I am not yet going to try rjsx-mode.
+
   #+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-  :ensure t
-  :init
-  (setq js-basic-indent 2)
-  (setq-default js2-basic-indent 2
-                js2-basic-offset 2
-                js2-auto-indent-p t
-                js2-cleanup-whitespace t
-                js2-enter-indents-newline t
-                js2-indent-on-enter-key t
-                js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
+    (use-package js2-mode
+      :ensure t
+      :init
+      (setq js-basic-indent 2)
+      (setq-default js2-basic-indent 2
+                    js2-basic-offset 2
+                    js2-auto-indent-p t
+                    js2-cleanup-whitespace t
+                    js2-enter-indents-newline t
+                    js2-indent-on-enter-key t
+                    js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
 
-  (add-hook 'js2-mode-hook
-            (lambda ()
-              (push '("function" . ?ƒ) prettify-symbols-alist)))
+    (add-hook 'js2-mode-hook
+              (lambda ()
+                (push '("function" . ?ƒ) prettify-symbols-alist)))
 
-  (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
+
+    (use-package add-node-modules-path
+      :defer t
+      :hook (((js2-mode rjsx-mode) . add-node-modules-path)))
+
+    (use-package prettier-js
+      :defer t
+      :diminish prettier-js-mode
+      :hook (((js2-mode rjsx-mode) . prettier-js-mode)))
   #+end_src
+
 * Markdown
 
    #+BEGIN_SRC emacs-lisp
