@@ -104,6 +104,8 @@
     ;; Set default font faces for Info and ERC modes
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
     (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
+    (add-hook 'js2-mode 'my-buffer-face-mode-fixed)
+    (add-hook 'web-mode 'my-buffer-face-mode-fixed)
   #+end_src
 
 * One liners and tiny packages
@@ -1666,4 +1668,16 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     :config
     (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
   (global-set-key (kbd "M-o") 'ace-window)
+  #+end_src
+* Mode Line
+  Customizing the mode line...
+  #+BEGIN_SRC emacs-lisp
+    (use-package smart-mode-line-powerline-theme
+      :ensure t)
+
+    (use-package smart-mode-line
+      :ensure t
+      :config
+      (setq sml/theme 'powerline)
+      (add-hook 'after-init-hook 'sml/setup))
   #+end_src
