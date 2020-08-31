@@ -62,10 +62,10 @@
    Configuration for my dark-ish theme using zenburn.  It just works well for my eyes and for code + org.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package zenburn-theme
+     (use-package nord-theme
        :ensure t
        :config
-       (load-theme 'zenburn t))
+       (load-theme 'nord t))
    #+end_src
 
 * Windows Configuration
