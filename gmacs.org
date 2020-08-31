@@ -339,6 +339,9 @@
      ;; Visual Line Mode
      (add-hook 'org-mode-hook 'visual-line-mode)
 
+     ;; Line numbers
+     (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
+
      (defun gn/orgmode-ignore-whitespace-mode ()
         (interactive)
         "turns off whitespace mode in org buffers"
