@@ -262,18 +262,6 @@
 
   (provide 'init-which-key)
   #+end_src
-* Smart parenthesis
-  SmartParens is a useful package for dealing with any paired characters like parenthesis, quotes, brackets etc.
-
-  #+BEGIN_SRC emacs-lisp
-    (use-package smartparens-config
-      :ensure smartparens
-      :config (progn (show-smartparens-global-mode t)))
-
-    (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
-    (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
-  #+end_src
-
 * Org-mode
   [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
 
@@ -290,7 +278,7 @@
   * books.org - A record of the books I read and related notes.
   * classical_guitar.org - This file tracks my course work for the classical guitar school and my studies.
   * computer.org - Notes related to my Linux setup and the programming languages I use.
-  * journal.org - just that.
+  * daybook.org - A living notebook that I append to during the day with notes about projects or KI's
   * learning.org - any courses I take, typically CS related live here.
   * reviews.org - I use templates to guide the daily, weekly and monthly reviews.  The results of those are in this file.
   * studio.org - All tasks and notes regarding my art studio, projects and client commissions.
@@ -836,7 +824,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                   "* %? :KI:\n%U\n%a\n" :clock-keep t)
                  ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")
                   "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
-                 ("j" "Journal" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
+                 ("d" "Daybook" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
                   "* %?" :clock-keep t)
                  ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
