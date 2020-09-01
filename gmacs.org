@@ -262,6 +262,17 @@
 
   (provide 'init-which-key)
   #+end_src
+* Smart parenthesis
+  SmartParens is a useful package for dealing with any paired characters like parenthesis, quotes, brackets etc.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package smartparens-config
+      :ensure smartparens
+      :config (progn (show-smartparens-global-mode t)))
+
+    (add-hook 'prog-mode-hook 'turn-on-smartparens-strict-mode)
+    (add-hook 'markdown-mode-hook 'turn-on-smartparens-strict-mode)
+  #+end_src
 
 * Org-mode
   [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
