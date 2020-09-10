@@ -1684,3 +1684,16 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       (setq sml/theme 'powerline)
       (add-hook 'after-init-hook 'sml/setup))
   #+end_src
+* Alerts
+  Using Jweigly's [[https://github.com/jwiegley/alert][Alert]] to pipe alerts to mac os x notifications
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package alert
+      :defer t
+      :ensure t
+      :commands (alert)
+      :custom
+      (alert-default-style 'osx-notifier))
+  #+end_src
+
+  #+RESULTS:
