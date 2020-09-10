@@ -1695,5 +1695,3 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       :custom
       (alert-default-style 'osx-notifier))
   #+end_src
-
-  #+RESULTS:
