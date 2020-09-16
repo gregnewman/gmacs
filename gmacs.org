@@ -1517,21 +1517,25 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * Deft
   #+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :bind ("<f8>" . deft)
-    :commands (deft)
-    :config
-      (setq deft-directory "~/Dropbox/Org"
-        deft-extensions '("org" "txt" "md"))
-      (setq deft-default-extension "org")
-      (setq deft-use-filename-as-title nil)
-      (setq deft-use-filter-string-for-filename t)
-      (setq deft-file-naming-rules
-      '((noslash . "_")
-        (nospace . "_")
-        (case-fn . downcase)))
-   )
+    (use-package deft
+      :ensure t
+      :bind ("<f8>" . deft)
+      :commands (deft)
+      :config
+        (setq deft-directory "~/Dropbox/Org"
+          deft-extensions '("org" "txt" "md"))
+        (setq deft-default-extension "org")
+        (setq deft-use-filename-as-title t)
+        (setq deft-use-filter-string-for-filename t)
+        (setq deft-file-naming-rules
+        '((noslash . "_")
+          (nospace . "_")
+          (case-fn . downcase)))
+     )
   #+end_src
+
+  #+RESULTS:
+  : deft
 
 * Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist lightweight solution in Ivy.
