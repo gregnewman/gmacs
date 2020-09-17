@@ -59,13 +59,21 @@
    #+END_SRC
 
 * Theme
-   Configuration for my dark-ish theme using zenburn.  It just works well for my eyes and for code + org.
+   Configuration for doom-theme, specifically doom-gruvbox and some default settings.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package nord-theme
-       :ensure t
-       :config
-       (load-theme 'nord t))
+           (use-package doom-themes
+             :config
+             ;; Global settings (defaults)
+             (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+                   doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+             ;; Enable flashing mode-line on errors
+             (doom-themes-visual-bell-config)
+
+             ;; Corrects (and improves) org-mode's native fontification.
+             (doom-themes-org-config)
+             (load-theme 'doom-gruvbox))
    #+end_src
 
 * Windows Configuration
@@ -1678,15 +1686,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   #+end_src
 * Mode Line
   Customizing the mode line...
+  I was using powerline mode but I kind of like the doom modeline better.
   #+BEGIN_SRC emacs-lisp
-    (use-package smart-mode-line-powerline-theme
-      :ensure t)
-
-    (use-package smart-mode-line
+    (use-package doom-modeline
       :ensure t
-      :config
-      (setq sml/theme 'powerline)
-      (add-hook 'after-init-hook 'sml/setup))
+      ;; if the icon fonts are broken, run `M-x all-the-icons-install-fonts`
+      :init (doom-modeline-mode 1))
   #+end_src
 * Alerts
   Using Jweigly's [[https://github.com/jwiegley/alert][Alert]] to pipe alerts to mac os x notifications
