@@ -303,7 +303,7 @@
      ;; respects splits
      (setq org-agenda-window-setup 'current-window)
      ;; agenda files
-     (setq org-agenda-files (list "~/Dropbox/Org/" "~/Dropbox/Org/clients/"))
+     (setq org-agenda-files (list "~/Dropbox/Org/"))
      ;; Start the weekly agenda on Monday
      (setq org-agenda-start-on-weekday 1)
      ;; Display tags farther right
