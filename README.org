@@ -3,9 +3,11 @@
 ** What To Expect
 
 I am using:
-- Python (as a freelance developer) using LSP-mode and the python-language-server
-- Javascript/React
 - Org mode
+- Python (as a freelance developer) using LSP-mode and the python-language-server
+- Racket, Lisp, Emacs Lisp, Scheme
+- Javascript/React
+- HTML/CSS/SASS
 
 I was using emacs on Pop-OS Linux after leaving Apple in early 2019 but have since gone back to Mac as my primary machine of choice.
 
@@ -15,15 +17,8 @@ I was using emacs on Pop-OS Linux after leaving Apple in early 2019 but have sin
 
 ** General Structure
 
-Now, my Emacs configuration is in a file named =gmacs.org=. My
-=init.el= got some nifty Elisp code that converts/tangles (only) the
-Elisp blocks into the =gmacs.el=. This generated file is interpreted
-by my GNU/Emacs on startup.  Thanks to Karl Voit for ideas to get this
-working properly; mainly with using org from git instead of packaged.
+Now, my Emacs configuration is in a file named =gmacs.org=. My =init.el= got some nifty Elisp code that converts/tangles (only) the Elisp blocks into the =gmacs.el=. This generated file is interpreted by my GNU/Emacs on startup.  Thanks to Karl Voit for ideas to get this working properly; mainly with using org from git instead of packaged.
 
 ** License
 
-The code provided here is licensed under a GPL v3 license: see
-=license.txt= for details. Some smaller parts from other authors but
-included in my configuration might have a different license. Please
-check the source - it's included in the comments.
+The code provided here is licensed under a GPL v3 license: see =license.txt= for details. Some smaller parts from other authors but included in my configuration might have a different license. Please check the source - it's included in the comments.
