@@ -62,18 +62,18 @@
    Configuration for doom-theme, specifically doom-gruvbox and some default settings.
 
    #+BEGIN_SRC emacs-lisp
-           (use-package doom-themes
-             :config
-             ;; Global settings (defaults)
-             (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-                   doom-themes-enable-italic t) ; if nil, italics is universally disabled
+     (use-package doom-themes
+       :config
+       ;; Global settings (defaults)
+       (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+             doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-             ;; Enable flashing mode-line on errors
-             (doom-themes-visual-bell-config)
+       ;; Enable flashing mode-line on errors
+       (doom-themes-visual-bell-config)
 
-             ;; Corrects (and improves) org-mode's native fontification.
-             (doom-themes-org-config)
-             (load-theme 'doom-one))
+       ;; Corrects (and improves) org-mode's native fontification.
+       (doom-themes-org-config)
+       (load-theme 'doom-one))
    #+end_src
 
 * Windows Configuration
