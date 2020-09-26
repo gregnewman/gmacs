@@ -1528,6 +1528,34 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      (setq mardown-command "multimarkdown"))
    #+end_src
 
+* Racket
+  For documentation on Racket, visit [[https://docs.racket-lang.org/index.html][the docs]].
+  To install on Mac, `brew install cask racket` for the full install.  `brew install racket` is a minimal install.
+
+  #+BEGIN_SRC emacs-lisp
+ (use-package racket-mode
+   :ensure t)
+  #+end_src
+
+* Paredit
+
+  #+BEGIN_SRC emacs-lisp
+ (use-package paredit
+  :ensure t
+  :config
+  (dolist (m '(emacs-lisp-mode-hook
+	       racket-mode-hook
+	       racket-repl-mode-hook))
+    (add-hook m #'paredit-mode))
+  (bind-keys :map paredit-mode-map
+	     ("{"   . paredit-open-curly)
+	     ("}"   . paredit-close-curly))
+  (unless terminal-frame
+    (bind-keys :map paredit-mode-map
+	       ("M-[" . paredit-wrap-square)
+	       ("M-{" . paredit-wrap-curly))))
+  #+end_src
+
 * Deft
   #+BEGIN_SRC emacs-lisp
     (use-package deft
