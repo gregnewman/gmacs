@@ -1163,27 +1163,31 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
-    (use-package org-pomodoro
-      :after org-agenda
-      :custom
-        (org-pomodoro-ask-upon-killing t)
-        (org-pomodoro-format "%s")  ;;     
-        (org-pomodoro-short-break-format "%s")
-        (org-pomodoro-long-break-format  "%s")
-      :custom-face
-        (org-pomodoro-mode-line ((t (:foreground "#ff5555"))))
-        (org-pomodoro-mode-line-break   ((t (:foreground "#50fa7b"))))
-      :hook
-        (org-pomodoro-started . (lambda () (notifications-notify
-          :title "org-pomodoro"
-          :body "Let's focus for 25 minutes!")))
-        (org-pomodoro-finished . (lambda () (notifications-notify
-          :title "org-pomodoro"
-          :body "Well done! Take a break.")))
+     (use-package org-pomodoro
+       :ensure t
+       :after org-agenda
+       :custom
+         (org-pomodoro-ask-upon-killing t)
+         (org-pomodoro-format "%s")  ;;     
+         (org-pomodoro-short-break-format "%s")
+         (org-pomodoro-long-break-format  "%s")
+       :custom-face
+         (org-pomodoro-mode-line ((t (:foreground "#ff5555"))))
+         (org-pomodoro-mode-line-break   ((t (:foreground "#50fa7b"))))
+       :hook
+         (org-pomodoro-started . (lambda () (notifications-notify
+           :title "org-pomodoro"
+           :body "Let's focus for 25 minutes!")))
+         (org-pomodoro-finished . (lambda () (notifications-notify
+           :title "org-pomodoro"
+           :body "Well done! Take a break.")))
 
-      :bind (:map org-agenda-mode-map
-      ("p" . org-pomodoro)))
+       :bind (:map org-agenda-mode-map
+       ("p" . org-pomodoro)))
    #+end_src
+
+   #+RESULTS:
+   : org-pomodoro
 
 ** Org-protocol
    #+BEGIN_SRC emacs-lisp
