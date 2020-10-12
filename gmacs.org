@@ -317,7 +317,7 @@
      ;; Display tags farther right
      (setq org-agenda-tags-column -102)
      (setq org-agenda-span 5)
-     (setq org-agenda-tags-column -100) ; take advantage of the screen width
+     (setq org-tags-column 150)
      (setq org-agenda-sticky nil)
      (setq org-agenda-inhibit-startup t)
      (setq org-agenda-use-tag-inheritance t)
@@ -1403,6 +1403,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        :hook ((python-mode . lsp)
               (js2-mode . lsp)
               (yaml-mode . lsp)
+              (vue-mode . lsp)
               (lsp-mode . lsp-enable-which-key-integration))
        :commands lsp lsp-deferred
        :ensure-system-package
@@ -1525,6 +1526,14 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       :defer t
       :diminish prettier-js-mode
       :hook (((js2-mode rjsx-mode) . prettier-js-mode)))
+  #+end_src
+
+* Vue
+  Basic setup for working with Vue.js
+  #+BEGIN_SRC emacs-lisp
+    (use-package vue-mode
+      :ensure t
+      :mode "\\.vue\\'")
   #+end_src
 
 * Markdown
