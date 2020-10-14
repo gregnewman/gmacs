@@ -1705,7 +1705,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                 my-ivy-cleanup-indentation)
     :commands highlight-indent-guides--highlighter-default
     :functions my-indent-guides-for-all-but-first-column
-    :hook (prog-mode . highlight-indent-guides-mode)
+    :hook ((prog-mode vue-mode vue-html-mode vue-javascript-mode) . highlight-indent-guides-mode)
     :init (setq highlight-indent-guides-method 'character
                 highlight-indent-guides-responsive 'top)
     :config
@@ -1713,7 +1713,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (with-eval-after-load 'company
       (add-hook 'company-completion-started-hook
                 (lambda (&rest _)
-                  "Trun off indentation highlighting."
+                  "Turn off indentation highlighting."
                   (when highlight-indent-guides-mode
                     (highlight-indent-guides-mode -1))))
       (add-hook 'company-after-completion-hook
@@ -1747,6 +1747,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                 (remove-text-properties next pos '(display nil face nil) str))))))
       (advice-add #'ivy-cleanup-string :after #'my-ivy-cleanup-indentation)))
    #+end_src
+
 * Ace Window
   #+BEGIN_SRC emacs-lisp
   (use-package ace-window
