@@ -1,4 +1,4 @@
-#+TITLE: Emacs Configuration
+hhhh#+TITLE: Emacs Configuration
 #+LANGUAGE:  en
 #+AUTHOR: Greg Newman
 #+EMAIL: greg@gregnewman.org
@@ -133,7 +133,7 @@
     (setq ring-bell-function (lambda ()))
     (setq confirm-kill-emacs 'yes-or-no-p)
     (setq require-final-newline t)
-    (setq line-spacing 0.3)
+    (setq-default line-spacing 0.35)
     (setq explicit-shell-file-name "/bin/zsh")
     (setq backup-directory-alist `(("." . "~/.saves")))
     (setq backup-by-copying t)
@@ -158,7 +158,7 @@
     (setq desktop-load-locked-desktop t)
    #+end_src
 
-   Small packages that are just modifying or spicing up some of emacs for me.
+  Small packages that are just modifying or spicing up some of emacs for me.
    #+BEGIN_SRC emacs-lisp
        ;; icons - I'm not sure why i have this installed and might remove it.
        (use-package all-the-icons)
@@ -1214,6 +1214,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       :hook
       (org-mode-hook . variable-pitch-mode))
   #+end_src
+
+  #+RESULTS:
+  | variable-pitch-mode |
 
 * iBuffer
   I use ibuffer a lot for switching between buffers from a list of available open buffers.
