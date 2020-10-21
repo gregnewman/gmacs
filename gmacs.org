@@ -1233,7 +1233,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                            ("HTML"
                             (mode . web-mode))
                            ("JS"
-                            (or (mode . js-mode)
+                            (or (mode . js2-mode)
                             (filename . ".js")))
                            ("Vue"
                             (or (mode . vue-mode)
@@ -1484,59 +1484,60 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 * Web Mode
    #+BEGIN_SRC emacs-lisp
-   (use-package web-mode
-     :ensure t
-     :mode
-       ("\\.html$" . web-mode)
-       ("\\.js$" . web-mode)
-     :init
-       (setq web-mode-markup-indent-offset 2)
-       (setq web-mode-code-indent-offset 2)
-       (setq web-mode-css-indent-offset 2)
-       (setq web-mode-enable-auto-pairing t)
-       (setq web-mode-enable-auto-expanding t)
-       (setq web-mode-enable-css-colorization t))
+     (use-package web-mode
+       :ensure t
+       :mode
+         ("\\.html$" . web-mode)
+         ("\\.js$" . web-mode)
+         ("\\.vue$" . web-mode)
+         ("\\.css$" . web-mode)
+       :init
+         (setq web-mode-markup-indent-offset 2)
+         (setq web-mode-code-indent-offset 2)
+         (setq web-mode-css-indent-offset 2)
+         (setq web-mode-enable-auto-pairing t)
+         (setq web-mode-enable-auto-expanding t)
+         (setq web-mode-enable-css-colorization t))
    #+end_src
 
 * Javascript
-  Thanks to Chad Stovern for writing up what is working for him for React development.  It gave me some ideas to add to my configuration.  I am not yet going to try rjsx-mode.
-  [[https://www.chadstovern.com/javascript-in-emacs-revisited/][Chad's writeup]]
-
+  Getting a working Javascript environment proves to be difficult in Emacs.  I keep reading js-mode in Emacs 27 is really good but I can't find good documentation on what needs to be done.  js2-mode and web-mode are close but I still run into issue with React and Vue buffers.
   #+BEGIN_SRC emacs-lisp
     (use-package js2-mode
       :ensure t
       :init
       (setq js-basic-indent 2)
-      (setq-default js2-basic-indent 2
-                    js2-basic-offset 2
-                    js2-auto-indent-p t
-                    js2-cleanup-whitespace t
-                    js2-enter-indents-newline t
-                    js2-indent-on-enter-key t
-                    js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
+      :config
+      (setq-default js2-basic-offset 2)
+      (setq js2-basic-indent 2
+            js2-basic-offset 2
+            js2-auto-indent-p t
+            js2-cleanup-whitespace t
+            js2-enter-indents-newline t
+            js2-indent-on-enter-key t
+            js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$")))
 
-    (add-hook 'js2-mode-hook
-              (lambda ()
-                (push '("function" . ?ƒ) prettify-symbols-alist)))
-
-    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+    (add-to-list 'auto-mode-alist '("\\.vue$" . js2-mode))
 
     (use-package add-node-modules-path
+      :ensure t
       :defer t
-      :hook (((js2-mode rjsx-mode) . add-node-modules-path)))
+      :hook ((js2-mode . add-node-modules-path)))
 
-    (use-package prettier-js
-      :defer t
-      :diminish prettier-js-mode
-      :hook (((js2-mode rjsx-mode) . prettier-js-mode)))
+    ;; (use-package prettier-js
+    ;;   :ensure t
+    ;;   :defer t
+    ;;   :diminish prettier-js-mode
+    ;;   :hook ((js2-mode . prettier-js-mode)))
   #+end_src
 
 * Vue
   Basic setup for working with Vue.js
   #+BEGIN_SRC emacs-lisp
-    (use-package vue-mode
-      :ensure t
-      :mode "\\.vue\\'")
+    ;; (use-package vue-mode
+    ;;   :ensure t
+    ;;   :mode "\\.vue\\'")
   #+end_src
 
 * Markdown
