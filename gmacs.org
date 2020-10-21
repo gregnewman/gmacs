@@ -1355,15 +1355,17 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 * Flycheck
    #+BEGIN_SRC emacs-lisp
-   (use-package flycheck
-     :ensure t
-     :config
-     (setq flycheck-flake8rc "~/.config/flake8")
-     (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8"))
-;;     :init (global-flycheck-mode))
+     (use-package flycheck
+       :ensure t
+       :config
+       (setq flycheck-flake8rc "~/.config/flake8")
+       (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8")
+       (flycheck-add-mode 'javascript-eslint 'js2-mode))
+     ;;     :init (global-flycheck-mode))
 
-   (add-hook 'python-mode-hook 'flycheck-mode)
+     (add-hook 'python-mode-hook 'flycheck-mode)
    #+end_src
+
 * Lsp-mode and lsp-ui
   Lsp-mode has gotten a lot better and I think I have it working really well for python development.
   `pip install python-language-server[all]` needs to be installed into each project in the virtualenvs for completions to work properly.
@@ -1406,7 +1408,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        :hook ((python-mode . lsp)
               (js2-mode . lsp)
               (yaml-mode . lsp)
-              (vue-mode . lsp)
               (lsp-mode . lsp-enable-which-key-integration))
        :commands lsp lsp-deferred
        :ensure-system-package
@@ -1503,41 +1504,37 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Javascript
   Getting a working Javascript environment proves to be difficult in Emacs.  I keep reading js-mode in Emacs 27 is really good but I can't find good documentation on what needs to be done.  js2-mode and web-mode are close but I still run into issue with React and Vue buffers.
   #+BEGIN_SRC emacs-lisp
-    (use-package js2-mode
-      :ensure t
-      :init
-      (setq js-basic-indent 2)
-      :config
-      (setq-default js2-basic-offset 2)
-      (setq js2-basic-indent 2
-            js2-basic-offset 2
-            js2-auto-indent-p t
-            js2-cleanup-whitespace t
-            js2-enter-indents-newline t
-            js2-indent-on-enter-key t
-            js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$")))
+        (use-package js2-mode
+          :ensure t
+          :init
+          (setq js-basic-indent 2)
+          :config
+          (setq-default js2-basic-offset 2)
+          (setq js2-basic-indent 2
+                js2-basic-offset 2
+                js2-auto-indent-p t
+                js2-cleanup-whitespace t
+                js2-enter-indents-newline t
+                js2-indent-on-enter-key t
+                js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$")))
 
-    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-    (add-to-list 'auto-mode-alist '("\\.vue$" . js2-mode))
+        (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
-    (use-package add-node-modules-path
-      :ensure t
-      :defer t
-      :hook ((js2-mode . add-node-modules-path)))
+        (use-package add-node-modules-path
+          :ensure t
+          :defer t
+          :hook ((js2-mode . add-node-modules-path)))
 
-    ;; (use-package prettier-js
-    ;;   :ensure t
-    ;;   :defer t
-    ;;   :diminish prettier-js-mode
-    ;;   :hook ((js2-mode . prettier-js-mode)))
-  #+end_src
-
-* Vue
-  Basic setup for working with Vue.js
-  #+BEGIN_SRC emacs-lisp
-    ;; (use-package vue-mode
-    ;;   :ensure t
-    ;;   :mode "\\.vue\\'")
+        (use-package prettier-js
+          :ensure t
+          :after js2-mode
+          :defer t
+          ;; :diminish prettier-js-mode
+          :hook ((js2-mode . prettier-js-mode)))
+          :config
+          (setq prettier-js-args '("--trailing-comma" "all"
+                                   "--bracket-spacing" "false"
+                                   "--single-quotes" "true"))
   #+end_src
 
 * Markdown
