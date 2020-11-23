@@ -707,18 +707,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
               ("PHONE" :foreground "yellow2" :weight bold))))
    #+end_src
 *** Fast todo selection
-     Fast todo selection allows changing from any task todo state to any
-     other state directly by selecting the appropriate key from the fast
-     todo selection key menu. This is a great feature!
+     Fast todo selection allows changing from any task todo state to any other state directly by selecting the appropriate key from the fast todo selection key menu. This is a great feature!
    #+BEGIN_SRC emacs-lisp
      (setq org-use-fast-todo-selection t)
    #+end_src
 
-     Allows changing todo states with S-left and S-right skipping all of
-     the normal processing when entering or leaving a todo state. This
-     cycles through the todo states but skips setting timestamps and
-     entering notes which is very convenient when all you want to do is
-     fix up the status of an entry.
+     Allows changing todo states with S-left and S-right skipping all of the normal processing when entering or leaving a todo state. This cycles through the todo states but skips setting timestamps and entering notes which is very convenient when all you want to do is fix up the status of an entry.
    #+BEGIN_SRC emacs-lisp
      (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
