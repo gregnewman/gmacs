@@ -155,7 +155,7 @@ hhhh#+TITLE: Emacs Configuration
     (setq tags-table-list (list "~/.emacs.d/TAGS"))
    #+end_src
 
-* Icons, Whitespace, Projectile, Git Gutter, Dash and Recent files
+* Icons, Whitespace, Git Gutter, Dash and Recent files
    #+BEGIN_SRC emacs-lisp
      ;; icons
      (use-package all-the-icons)
@@ -168,11 +168,6 @@ hhhh#+TITLE: Emacs Configuration
        :config
        (setq whitespace-line-column 80) ;; limit line length
        (setq whitespace-style '(face tabs empty trailing lines-tail)))
-
-     ;; Projectile
-     (use-package projectile
-       :bind-keymap
-       ("C-c p" . projectile-command-map))
 
      ;; Git Gutter
      (use-package git-gutter
@@ -1292,8 +1287,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * Projectile
    #+BEGIN_SRC emacs-lisp
-   (use-package projectile
-     :ensure t)
+      (use-package projectile
+        :ensure t
+        :bind-keymap
+        ("C-c p" . projectile-command-map))
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
