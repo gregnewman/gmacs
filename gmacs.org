@@ -1476,6 +1476,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * Javascript
   Getting a working Javascript environment proves to be difficult in Emacs.  I keep reading js-mode in Emacs 27 is really good but I can't find good documentation on what needs to be done.  js2-mode and web-mode are close but I still run into issue with React and Vue buffers.
+  <2020-11-24 Tue> This is still not ideal.  Vue is a damn mess and javascript is just ok.  I need to spend more time with this configuration!
+
   #+BEGIN_SRC emacs-lisp
         (use-package js2-mode
           :ensure t
