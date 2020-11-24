@@ -1657,9 +1657,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 * Eyebrowse
-  For saving window configs because I bounce around from project to
-  project and org files a lot it's handy to save configs of windows
-  instead of changing them constantly.
+  For saving window configs because I bounce around from project to project and org files a lot it's handy to save configs of windows instead of changing them constantly.
+  <2020-11-24 Tue> For now this is working fine but Alphapapa has encouraged me to try out [[https://github.com/alphapapa/bufler.el][Bufler]], therefore I'm leaving this dev note here.
 
   #+BEGIN_SRC emacs-lisp
     (use-package eyebrowse
@@ -1675,9 +1674,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
       (eyebrowse-mode t)
       (setq eyebrowse-new-workspace t)))
   #+end_src
-
-
-  End of configs
 
 * Highlight Indentation
   #+BEGIN_SRC emacs-lisp
