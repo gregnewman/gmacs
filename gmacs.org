@@ -13,8 +13,6 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 
-* Cleanup and changes to make
-** TODO Clean up each section and add more descriptive context.
 * About
   This is my personal config for Emacs.  It is constructed in literate programming using Org-mode for a documented configuration.
 
