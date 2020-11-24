@@ -1248,16 +1248,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   #+end_src
 
 * Passwords
-  The "pass" program, aka "password-store", is a password manager that
-  uses GPG and standand UNIX tools to handle passwords. Encrypted
-  files are stored in a plain directory structure. Very simple, very
-  nice: now all data is available with a variety of interfaces, such
-  as standard CLI, a dmenu interface, a graphical front-end like
-  qtpass, etc. Install it on Void Linux with xbps-install -S pass.
-  The package below provides an Emacs interface to some of the most
-  common actions, in the form of a list of candidates that can be
-  narrowed down (such as with Ido). I use it to quickly store a
-  password to the kill ring.
+  The "pass" program, aka "password-store", is a password manager that uses GPG and standand UNIX tools to handle passwords. Encrypted files are stored in a plain directory structure. Very simple, very nice: now all data is available with a variety of interfaces, such as standard CLI, a dmenu interface, a graphical front-end like qtpass, etc. Install it on Void Linux with xbps-install -S pass. The package below provides an Emacs interface to some of the most common actions, in the form of a list of candidates that can be narrowed down (such as with Ido). I use it to quickly store a password to the kill ring.
 
    #+BEGIN_SRC emacs-lisp
    (use-package password-store
@@ -1269,9 +1260,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        (password-store-time-before-clipboard-restore 30))
    #+end_src
 
-   And this one adds a major mode for browsing the pass keychain. Call
-   it with M-x pass. There is a helpful section at the top with key
-   bindings and their functions.
+   And this one adds a major mode for browsing the pass keychain. Call it with M-x pass. There is a helpful section at the top with key bindings and their functions.
 
    #+BEGIN_SRC emacs-lisp
    (use-package pass
