@@ -1210,41 +1210,41 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   These settings help to organize that list.
 
   #+Begin_SRC emacs-lisp
-            (global-set-key (kbd "C-x C-b") 'ibuffer)
-            (autoload 'ibuffer "ibuffer" "List buffers." t)
+    (global-set-key (kbd "C-x C-b") 'ibuffer)
+    (autoload 'ibuffer "ibuffer" "List buffers." t)
 
-            (setq ibuffer-saved-filter-groups
-                  (quote (("default"
-                           ("Python"
-                            (mode . python-mode))
-                           ("HTML"
-                            (mode . web-mode))
-                           ("JS"
-                            (or (mode . js2-mode)
-                            (filename . ".js")))
-                           ("Vue"
-                            (or (mode . vue-mode)
-                            (filename . ".vue")))
-                           ("TXT"
-                            (mode . text-mode))
-                           ("YAML"
-                            (filename . "yaml"))
-                           ("Org" ;; all org-related buffers
-                            (mode . org-mode))
-                           ("Lisp"
-                            (mode . emacs-lisp-mode))))))
+    (setq ibuffer-saved-filter-groups
+          (quote (("default"
+                   ("Python"
+                    (mode . python-mode))
+                   ("HTML"
+                    (mode . web-mode))
+                   ("JS"
+                    (or (mode . js2-mode)
+                        (filename . ".js")))
+                   ("Vue"
+                    (or (mode . vue-mode)
+                        (filename . ".vue")))
+                   ("TXT"
+                    (mode . text-mode))
+                   ("YAML"
+                    (filename . "yaml"))
+                   ("Org" ;; all org-related buffers
+                    (mode . org-mode))
+                   ("Lisp"
+                    (mode . emacs-lisp-mode))))))
 
-            ;; don't show empty groups
-            (setq ibuffer-show-empty-filter-groups nil)
+    ;; don't show empty groups
+    (setq ibuffer-show-empty-filter-groups nil)
 
-            (add-hook 'ibuffer-mode-hook
-                      (lambda ()
-                        (ibuffer-switch-to-saved-filter-groups "default")))
+    (add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
 
-            ;; Add full path to buffer title
-            (setq frame-title-format
-                  (list (format "%s %%S: %%j " (system-name))
-                        '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+    ;; Add full path to buffer title
+    (setq frame-title-format
+          (list (format "%s %%S: %%j " (system-name))
+                '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
   #+end_src
 
 * Passwords
