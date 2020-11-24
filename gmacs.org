@@ -110,7 +110,7 @@ hhhh#+TITLE: Emacs Configuration
     (add-hook 'web-mode 'my-buffer-face-mode-fixed)
   #+end_src
 
-* One liners and tiny packages
+* One liners preferences
 
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
   These are important in how I like my emacs to perform.
@@ -153,53 +153,53 @@ hhhh#+TITLE: Emacs Configuration
     (global-auto-revert-mode t)
    #+end_src
 
-  Small packages that are just modifying or spicing up some of emacs for me.
+* Icons, Whitespace, Projectile, Git Gutter, Dash and Recent files
    #+BEGIN_SRC emacs-lisp
-       ;; icons
-       (use-package all-the-icons)
+     ;; icons
+     (use-package all-the-icons)
 
-       (use-package whitespace
-         :init
-         (dolist (hook '(prog-mode-hook text-mode-hook))
-           (add-hook hook #'whitespace-mode))
-         (add-hook 'before-save-hook #'whitespace-cleanup)
-         :config
-           (setq whitespace-line-column 80) ;; limit line length
-           (setq whitespace-style '(face tabs empty trailing lines-tail)))
+     (use-package whitespace
+       :init
+       (dolist (hook '(prog-mode-hook text-mode-hook))
+         (add-hook hook #'whitespace-mode))
+       (add-hook 'before-save-hook #'whitespace-cleanup)
+       :config
+       (setq whitespace-line-column 80) ;; limit line length
+       (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
-       ; Projectile
-       (use-package projectile
-         :bind-keymap
-         ("C-c p" . projectile-command-map))
+     ;; Projectile
+     (use-package projectile
+       :bind-keymap
+       ("C-c p" . projectile-command-map))
 
-       ; Git Gutter
-       (use-package git-gutter
-         :ensure t
-         :diminish git-gutter-mode
-         :config (global-git-gutter-mode)
-         :init
-         (progn
-           (setq git-gutter:separator-sign " "
+     ;; Git Gutter
+     (use-package git-gutter
+       :ensure t
+       :diminish git-gutter-mode
+       :config (global-git-gutter-mode)
+       :init
+       (progn
+         (setq git-gutter:separator-sign " "
                git-gutter:lighter " GG"))
-         :config
-           (progn
-             (set-face-background 'git-gutter:deleted "#990A1B")
-             (set-face-foreground 'git-gutter:deleted "#990A1B")
-             (set-face-background 'git-gutter:modified "#00736F")
-             (set-face-foreground 'git-gutter:modified "#00736F")
-             (set-face-background 'git-gutter:added "#546E00")
-             (set-face-foreground 'git-gutter:added "#546E00"))
-         :bind (("C-x p" . git-gutter:previous-hunk)
-           ("C-x n" . git-gutter:next-hunk)
-           ("C-x v =" . git-gutter:popup-hunk)
-           ("C-x v r" . git-gutter:revert-hunk)))
+       :config
+       (progn
+         (set-face-background 'git-gutter:deleted "#990A1B")
+         (set-face-foreground 'git-gutter:deleted "#990A1B")
+         (set-face-background 'git-gutter:modified "#00736F")
+         (set-face-foreground 'git-gutter:modified "#00736F")
+         (set-face-background 'git-gutter:added "#546E00")
+         (set-face-foreground 'git-gutter:added "#546E00"))
+       :bind (("C-x p" . git-gutter:previous-hunk)
+              ("C-x n" . git-gutter:next-hunk)
+              ("C-x v =" . git-gutter:popup-hunk)
+              ("C-x v r" . git-gutter:revert-hunk)))
 
-       ; Browse Dash documentation
-       (use-package counsel-dash
-         :config
-         (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
+     ;; Browse Dash documentation
+     (use-package counsel-dash
+       :config
+       (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
 
-     ; Remember recent files
+     ;; Recent files
      (setq recentf-save-file (concat user-emacs-directory "recentf")
            recentf-max-saved-items 200
            recentf-max-menu-items 15)
@@ -214,9 +214,9 @@ hhhh#+TITLE: Emacs Configuration
    (setq-default save-place t)
    #+end_src
 
-* Move to beginning of
-     Move to beginning of line.
+* Custom function to move to beginning of line
      Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+
      #+BEGIN_SRC emacs-lisp
      (defun my/smarter-move-beginning-of-line (arg)
      "Move point back to indentation of beginning of line.
