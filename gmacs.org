@@ -1736,6 +1736,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Mode Line
   Customizing the mode line...
   I was using powerline mode but I kind of like the doom modeline better.
+
   #+BEGIN_SRC emacs-lisp
     (use-package doom-modeline
       :ensure t
