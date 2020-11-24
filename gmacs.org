@@ -1,4 +1,4 @@
-hhhh#+TITLE: Emacs Configuration
+#+TITLE: Emacs Configuration
 #+LANGUAGE:  en
 #+AUTHOR: Greg Newman
 #+EMAIL: greg@gregnewman.org
