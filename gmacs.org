@@ -16,20 +16,14 @@ hhhh#+TITLE: Emacs Configuration
 * Cleanup and changes to make
 ** TODO Clean up each section and add more descriptive context.
 * About
-  This is my personal config for Emacs.  It is constructed in literate
-  programming using Org-mode for a documented configuration.
+  This is my personal config for Emacs.  It is constructed in literate programming using Org-mode for a documented configuration.
 
-  If you’re viewing the Org file, you can open source code blocks (those are the
-  ones in begin_src) in a separate buffer by moving your point inside them and
-  typing C-c ’ (org-edit-special). This opens another buffer in emacs-lisp-mode,
-  so you can use M-x eval-buffer to load the changes. If you want to explore how
-  functions work, use M-x edebug-defun to set up debugging for that function,
-  and then call it.
+  If you’re viewing the Org file, you can open source code blocks (those are the ones in begin_src) in a separate buffer by moving your point inside them and
+  typing C-c ’ (org-edit-special). This opens another buffer in emacs-lisp-mode, so you can use M-x eval-buffer to load the changes. If you want to explore how
+  functions work, use M-x edebug-defun to set up debugging for that function, and then call it.
 
 * Packages
-   I use `use-package` so that all packages are automatically installed if cloning
-   this repo for another machine. [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github).
-   Along with the quelpa package, quelpa-use-package adds a handler to use-package.
+   I use `use-package` so that all packages are automatically installed if cloning this repo for another machine. [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github). Along with the quelpa package, quelpa-use-package adds a handler to use-package.
 
    #+BEGIN_SRC emacs-lisp
    (require 'package)
@@ -59,7 +53,7 @@ hhhh#+TITLE: Emacs Configuration
    #+END_SRC
 
 * Theme
-   Configuration for doom-theme, specifically doom-gruvbox and some default settings.
+   My current configuration uses doom-theme, specifically doom-gruvbox and some default settings.
 
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
@@ -77,24 +71,24 @@ hhhh#+TITLE: Emacs Configuration
    #+end_src
 
 * Windows Configuration
-   Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
-   Also set `C-z` and `C-x C-z` to nil.  `C-z` minimizes/hides emacs and it's enfuriating when I accidently hit that key combo.
+  Hide things when emacs starts up, namely the tooltips, toolbar and scrollbar.
+  Also set `C-z` and `C-x C-z` to nil.  `C-z` minimizes/hides emacs and it's enfuriating when I accidently hit that key combo.
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package emacs
-       :init
-         (menu-bar-mode -1)
-         (tool-bar-mode -1)
-         (scroll-bar-mode -1)
-         (tooltip-mode -1)
-         :config
-         (setq inhibit-splash-screen t)
-         :bind (("C-z" . nil)
-                ("C-x C-z" . nil)))
-   #+end_src
+  #+BEGIN_SRC emacs-lisp
+    (use-package emacs
+      :init
+      (menu-bar-mode -1)
+      (tool-bar-mode -1)
+      (scroll-bar-mode -1)
+      (tooltip-mode -1)
+      :config
+      (setq inhibit-splash-screen t)
+      :bind (("C-z" . nil)
+             ("C-x C-z" . nil)))
+  #+end_src
 
 * Font handling
-  For a more asthetically pleasing experience I'm changing up how I use fonts in emacs.  For buffers related to code I want Fira Code and for writing in org-mode buffers I want Avenir.  The following functions allow me to change based on the modes.
+  For a more asthetically pleasing experience I'm changing how I use fonts in emacs.  For buffers related to code I want Fira Code and for writing in org-mode buffers I want Avenir.  The following functions allow me to change based on the detected modes.
 
   #+BEGIN_SRC emacs-lisp
     ;; Use variable width font faces in buffer
@@ -124,7 +118,6 @@ hhhh#+TITLE: Emacs Configuration
   #+BEGIN_SRC emacs-lisp
     (fset 'yes-or-no-p 'y-or-n-p)
     (set-frame-font "Fira Code Medium 13")
-
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
@@ -143,11 +136,11 @@ hhhh#+TITLE: Emacs Configuration
     (setq version-control t)
     (global-display-line-numbers-mode)
     (setq-default display-line-numbers-width 3)
-    ;; always how paren highlights
+    ;; always show paren highlights
     (show-paren-mode 1)
     ; highlight current line
     (global-hl-line-mode 1)
-    ;; javascript indents
+    ;; javascript indents.  This can probably be removed once I settle on a "good" js config
     (setq js-indent-level 2)
     ; Desktop setup.
     (desktop-save-mode 1)
@@ -156,11 +149,13 @@ hhhh#+TITLE: Emacs Configuration
     (setq desktop-path (list desktop-dirname))
     (setq desktop-base-lock-name "lock")
     (setq desktop-load-locked-desktop t)
+    ; Very useful if dealing with git repos and also files that can change from Dropbox
+    (global-auto-revert-mode t)
    #+end_src
 
   Small packages that are just modifying or spicing up some of emacs for me.
    #+BEGIN_SRC emacs-lisp
-       ;; icons - I'm not sure why i have this installed and might remove it.
+       ;; icons
        (use-package all-the-icons)
 
        (use-package whitespace
@@ -203,9 +198,6 @@ hhhh#+TITLE: Emacs Configuration
        (use-package counsel-dash
          :config
          (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
-
-       ; Very useful if dealing with git repos and also files that can change from Dropbox
-       (global-auto-revert-mode t)
 
      ; Remember recent files
      (setq recentf-save-file (concat user-emacs-directory "recentf")
