@@ -766,9 +766,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    You can quickly switch to the view without incurring an agenda
    rebuild by invoking the agenda custom command key that normally
    generates the agenda. If it already exists it will display the
-   existing view. g forces regeneration of the agenda view.  I
-   normally have two views displayed (F12 a for the daily/weekly
-   agenda and F12 SPC for my project management view)
+   existing view. g forces regeneration of the agenda view.
 
    #+BEGIN_SRC emacs-lisp
    ;; Use sticky agenda's so they persist
