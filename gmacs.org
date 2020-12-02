@@ -752,6 +752,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                            (:endgroup)
                            ("PROJECT" . ?p)
                            ("phone" . ?t)
+                           ("meeting" . ?M)
                            ("email" . ?m)
                            ("read" . ?r)
                            ("NOTE" . ?n)
@@ -1004,7 +1005,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                               (org-agenda-skip-function
                                '(org-agenda-skip-entry-if 'deadline))))
                   (todo ""
-                        ((org-agenda-overriding-header "WAITING FOR")
+                        ((org-agenda-overriding-header "UNSCHEDULED")
                          (org-agenda-skip-function
                           '(org-agenda-skip-entry-if 'deadline)))))
                  ((org-agenda-sorting-strategy '(priority-down))
