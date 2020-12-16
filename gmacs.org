@@ -680,8 +680,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+BEGIN_SRC emacs-lisp
     ;; Keywords
     (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+      (quote ((sequence "NEXT(n)" "TODO(t)" "PROJ(p)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
     (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "lime green" :weight bold)
@@ -689,10 +689,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
               ("DONE" :foreground "dim gray" :weight bold)
               ("WAITING" :foreground "tomato" :weight bold)
               ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "dim gray" :weight bold)
-              ("MEETING" :foreground "orange2" :weight bold)
-              ("PHONE" :foreground "yellow2" :weight bold))))
+              ("CANCELLED" :foreground "dim gray" :weight bold))))
    #+end_src
+
 *** Fast todo selection
      Fast todo selection allows changing from any task todo state to any other state directly by selecting the appropriate key from the fast todo selection key menu. This is a great feature!
    #+BEGIN_SRC emacs-lisp
@@ -887,8 +886,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                               (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks)
                               (org-agenda-sorting-strategy
                                '(todo-state-down effort-up category-keep))))
-                  (tags "REFILE"
-                        ((org-agenda-overriding-header "Tasks to Refile")
+                  (tags "INBOX"
+                        ((org-agenda-overriding-header "Tasks from Inbox to refile")
                          (org-tags-match-list-sublevels nil)))
                   (tags-todo "-CANCELLED/!"
                              ((org-agenda-overriding-header "Stuck Projects")
@@ -1129,6 +1128,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
                           "Candidates to be archived"))))))
 
    #+end_src
+
+   #+RESULTS:
+   : ((rw Weekly review ((tags CATEGORY={@REFILE}&LEVEL<=2 ((org-agenda-overriding-header NEW TASKS))) (agenda  ((org-agenda-clockreport-mode t) (org-agenda-format-date (concat
+   :  %Y-%m-%d  %a  (make-string (window-width) 95))) (org-agenda-overriding-header PAST WEEK) (org-agenda-prefix-format  %?-11t %i %-12:c% s) (org-agenda-show-log 'clockcheck) (org-agenda-span 7) (org-agenda-start-day -1w) (org-deadline-warning-days 0))) (agenda  ((org-agenda-overriding-header NEXT MONTH) (org-agenda-span 'month) (org-agenda-start-day +0d) (org-deadline-warning-days 0))) (todo PROJECT ((org-agenda-overriding-header PROJECT LIST))) (todo DONE|PROJECTDONE ((org-agenda-overriding-header Candidates to be archived))))) (2b CollectBox ((alltodo ))) (c Simple agenda view ((tags PRIORITY="A" ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)) (org-agenda-overriding-header HIGH PRIORITY ITEMS))) (agenda ) (alltodo  ((org-agenda-skip-function '(or (gn/org-skip-subtree-if-priority 65) (org-agenda-skip-if nil '(scheduled deadline)))))))) (1 Clients ((agenda ) (tags PRIORITY="A" ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)) (org-agenda-overriding-header HIGH PRIORITY ITEMS))) (tags-todo client ((org-agenda-skip-function '(or (gn/org-skip-subtree-if-priority 65) (org-agenda-skip-if nil '(scheduled deadline)))))))) (  Agenda ((agenda  nil) (tags-todo -CANCELLED/!NEXT ((org-agenda-overriding-header (concat Project Next Tasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function 'gn/skip-projects-and-habits-and-single-tasks) (org-tags-match-list-sublevels t) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy '(todo-state-down effort-up category-keep)))) (tags -INBOX ((org-agenda-overriding-header Tasks from Inbox to refile) (org-tags-match-list-sublevels nil))) (tags-todo -CANCELLED/! ((org-agenda-overriding-header Stuck Projects) (org-agenda-skip-function 'gn/skip-non-stuck-projects) (org-agenda-sorting-strategy '(category-keep)))) (tags-todo -HOLD-CANCELLED/! ((org-agenda-overriding-header Projects) (org-agenda-skip-function 'gn/skip-non-projects) (org-tags-match-list-sublevels 'indented) (org-agenda-sorting-strategy '(category-keep)))) (tags-todo -REFILE-CANCELLED-WAITING-HOLD/! ((org-agenda-overriding-header (concat Project Subtasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function 'gn/skip-non-project-tasks) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy '(category-keep)))) (tags-todo -REFILE-CANCELLED-WAITING-HOLD/! ((org-agenda-overriding-header (concat Standalone Tasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function 'gn/skip-project-tasks) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy '(category-keep)))) (tags-todo -CANCELLED+WAITING|HOLD/! ((org-agenda-overriding-header (concat Waiting and Postponed Tasks (if gn/hide-scheduled-and-waiting-next-tasks   (including WAITING and SCHEDULED tasks)))) (org-agenda-skip-function 'gn/skip-non-tasks) (org-tags-match-list-sublevels nil) (org-agenda-todo-ignore-scheduled gn/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines gn/hide-scheduled-and-waiting-next-tasks))) (tags -REFILE/ ((org-agenda-overriding-header Tasks to Archive) (org-agenda-skip-function 'gn/skip-non-archivable-tasks) (org-tags-match-list-sublevels nil)))) nil) (k Knowledge Investments tags KI ((org-agenda-overriding-header Knowledge Investments) (org-tags-match-list-sublevels t))) (N Notes tags NOTE ((org-agenda-overriding-header Notes) (org-tags-match-list-sublevels t))) (b Agenda gn/org-agenda-with-tip) (2 . COLLECT...) (f . FOCUS...) (rad All Tasks (grouped by Due Date) ((tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline)))) (tags-todo DEADLINE="<+0d>" ((org-agenda-overriding-header DUE TODAY) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline)))) (tags-todo DEADLINE="<+1d>" ((org-agenda-overriding-header DUE TOMORROW) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline)))) (tags-todo DEADLINE>"<+1d>"+DEADLINE<="<+7d>" ((org-agenda-overriding-header DUE WITHIN A WEEK) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline)))) (tags-todo DEADLINE>"<+7d>"+DEADLINE<="<+28d>" ((org-agenda-overriding-header DUE WITHIN A MONTH) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline)))) (tags-todo DEADLINE>"<+28d>" ((org-agenda-overriding-header DUE LATER) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notdeadline)))) (tags-todo TODO={WAIT} ((org-agenda-overriding-header WAITING FOR) (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline)))) (todo  ((org-agenda-overriding-header UNSCHEDULED) (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))) ((org-agenda-sorting-strategy '(priority-down)) (org-agenda-write-buffer-name All Tasks (grouped by Due Date))) ~/Dropbox/Org/all-tasks-by-due-date.pdf) (f. Today ((agenda  ((org-agenda-entry-types '(:timestamp :sexp)) (org-agenda-overriding-header (concat CALENDAR Today:  (format-time-string %a %d (current-time)))) (org-agenda-span 'day))) (tags-todo LEVEL=1+REFILE ((org-agenda-overriding-header COLLECTBOX (Unscheduled)))) (tags-todo DEADLINE="<+0d>" ((org-agenda-overriding-header DUE TODAY) (org-agenda-skip-function '(org-agenda-skip-entry-if 'notedeadline)) (org-agenda-sorting-strategy '(priority-down)))) (tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE) (org-qagenda-skip-function '(org-agenda-skip-entry-if 'notedeadline)) (org-agenda-sorting-strategy '(priority-down)))) (agenda  ((org-agenda-entry-types '(:scheduled)) (org-agenda-overriding-header SCHEDULED) (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done)) (org-agenda-sorting-strategy '(priority-down time-down)) (org-agenda-span 'day) (org-agenda-start-on-weekday nil) (org-agenda-time-grid nil))) (todo DONE ((org-agenda-overriding-header COMPLETED)))) ((org-agenda-format-date ) (org-agenda-start-with-clockreport-mode nil))) (fh Hotlist ((tags-todo DEADLINE<"<+0d>" ((org-agenda-overriding-header OVERDUE))) (tags-todo DEADLINE>="<+0d>"+DEADLINE<="<+1w>" ((org-agenda-overriding-header DUE IN NEXT 7 DAYS))) (tags-todo DEADLINE=""+FLAGGED|DEADLINE>"<+1w>"+FLAGGED ((org-agenda-overriding-header FLAGGED)))) ((org-agenda-todo-ignore-scheduled 'future))) (r . REVIEW...) (ra . All Tasks...) (rt . Timesheet...) (rtd Daily Timesheet ((agenda )) ((org-agenda-log-mode-items '(clock closed)) (org-agenda-overriding-header DAILY TIMESHEET) (org-agenda-show-log 'clockcheck) (org-agenda-span 'day) (org-agenda-start-with-clockreport-mode t) (org-agenda-time-grid nil))) (rtw Weekly Timesheet ((agenda )) ((org-agenda-overriding-header WEEKLY TIMESHEET) (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp)) (org-agenda-span 'week) (org-agenda-start-on-weekday 1) (org-agenda-start-with-clockreport-mode t) (org-agenda-time-grid nil))) (rc . Calendar...) (rc7 Events and appointments for 7 days ((agenda )) ((org-agenda-entry-types '(:timestamp :sexp)) (org-agenda-span 'week) (org-agenda-format-date
+   : %a %d) (org-agenda-time-grid nil))))
 
    Org-Super-Agenda commands
 
@@ -1655,7 +1659,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 * Eyebrowse
   For saving window configs because I bounce around from project to project and org files a lot it's handy to save configs of windows instead of changing them constantly.
-  <2020-11-24 Tue> For now this is working fine but Alphapapa has encouraged me to try out [[https://github.com/alphapapa/bufler.el][Bufler]], therefore I'm leaving this dev note here.
+  <2020-11-24 Tue> For now this is working fine but Alphapapa has encouraged me to try out [[https://github.com/alphapapa/burly.el][Burly]], therefore I'm leaving this dev note here.
 
   #+BEGIN_SRC emacs-lisp
     (use-package eyebrowse
