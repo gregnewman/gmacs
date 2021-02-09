@@ -119,8 +119,6 @@
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
-    (setq column-number-mode t)
-    ;; (setq-default default-tab-width 4)
     (setq ring-bell-function (lambda ()))
     (setq confirm-kill-emacs 'yes-or-no-p)
     (setq require-final-newline t)
@@ -134,6 +132,7 @@
     (setq version-control t)
     (global-display-line-numbers-mode)
     (setq-default display-line-numbers-width 3)
+    (setq-default display-fill-column-indicator-column 80)
     ;; always show paren highlights
     (show-paren-mode 1)
     ; highlight current line
@@ -162,12 +161,11 @@
        :init
        (dolist (hook '(prog-mode-hook text-mode-hook))
          (add-hook hook #'whitespace-mode))
-       (add-hook 'before-save-hook #'whitespace-cleanup)
+         (add-hook 'before-save-hook #'whitespace-cleanup)
        :config
-       (setq whitespace-line-column 80) ;; limit line length
-       (setq whitespace-style '(face tabs empty trailing lines-tail)))
+       (setq whitespace-style '(face tabs empty trailing)))
 
-     ;; Git Gutter
+     ;; ;; Git Gutter
      (use-package git-gutter
        :ensure t
        :diminish git-gutter-mode
@@ -1295,37 +1293,39 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
-   (use-package pyenv-mode-auto
-     :ensure t)
+     (use-package pyenv-mode-auto
+       :ensure t)
 
-   (defun pyenv-activate-current-project ()
-     "Automatically activates pyenv version if .python-version file exists."
-     (interactive)
-     (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
-     (if python-version-directory
-        (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
-               (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
-          (pyenv-mode-set pyenv-current-version)
-          (message (concat "Setting virtualenv to " pyenv-current-version))))))
+     (defun pyenv-activate-current-project ()
+       "Automatically activates pyenv version if .python-version file exists."
+       (interactive)
+       (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
+       (if python-version-directory
+          (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
+                 (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
+            (pyenv-mode-set pyenv-current-version)
+            (message (concat "Setting virtualenv to " pyenv-current-version))))))
 
-   (defvar pyenv-current-version nil nil)
+     (defvar pyenv-current-version nil nil)
 
-   (defun pyenv-init()
-   "Initialize pyenv's current version to the global one."
-   (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
-    (message (concat "Setting pyenv version to " global-pyenv))
-    (pyenv-mode-set global-pyenv)
-    (setq pyenv-current-version global-pyenv)))
+     (defun pyenv-init()
+     "Initialize pyenv's current version to the global one."
+     (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
+      (message (concat "Setting pyenv version to " global-pyenv))
+      (pyenv-mode-set global-pyenv)
+      (setq pyenv-current-version global-pyenv)))
 
-   (add-hook 'after-init-hook 'pyenv-init)
+     (add-hook 'after-init-hook 'pyenv-init)
 
-   (use-package pyenv-mode
-     :ensure t)
+     (use-package pyenv-mode
+       :ensure t)
 
-   ;; Fixes an issue where pyenv conflicts with org-mode
-   (eval-after-load 'pyenv-mode
-     '(progn
-      (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
+     ;; Fixes an issue where pyenv conflicts with org-mode
+     (eval-after-load 'pyenv-mode
+       '(progn
+        (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
+
+     (add-hook 'python-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 * Flycheck
    #+BEGIN_SRC emacs-lisp
