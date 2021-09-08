@@ -99,7 +99,7 @@
     (defun my-buffer-face-mode-fixed ()
       "Sets a fixed width (monospace) font in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Fira Code" :height 140))
+      (setq buffer-face-mode-face '(:family "Fira Code" :height 120))
       (buffer-face-mode))
     ;; Set default font faces for Info and ERC modes
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
