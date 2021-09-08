@@ -104,8 +104,8 @@
     ;; Set default font faces for Info and ERC modes
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
     (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
-    (add-hook 'js2-mode 'my-buffer-face-mode-fixed)
-    (add-hook 'web-mode 'my-buffer-face-mode-fixed)
+    (add-hook 'rjsx-mode 'my-buffer-face-mode-fixed)
+    ;; (add-hook 'web-mode 'my-buffer-face-mode-fixed)
   #+end_src
 
 * One liners preferences
@@ -296,7 +296,7 @@
      ;; respects splits
      (setq org-agenda-window-setup 'current-window)
      ;; agenda files
-     (setq org-agenda-files (list "~/Dropbox/Org/"))
+     (setq org-agenda-files (list "~/Documents/Org/"))
      ;; Start the weekly agenda on Monday
      (setq org-agenda-start-on-weekday 1)
      ;; Display tags farther right
@@ -1213,11 +1213,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
           (quote (("default"
                    ("Python"
                     (mode . python-mode))
-                   ("HTML"
-                    (mode . web-mode))
-                   ("JS"
-                    (or (mode . js2-mode)
-                        (filename . ".js")))
+                   ;; ("HTML"
+                   ;; (mode . web-mode))
+                   ;; ("JS"
+                   ;; (or (mode . js2-mode)
+                   ;;     (filename . ".js")))
                    ("Vue"
                     (or (mode . vue-mode)
                         (filename . ".vue")))
@@ -1333,8 +1333,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        :ensure t
        :config
        (setq flycheck-flake8rc "~/.config/flake8")
-       (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8")
-       (flycheck-add-mode 'javascript-eslint 'js2-mode))
+       (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8"))
+       ;; (flycheck-add-mode 'javascript-eslint 'js2-mode))
      ;;     :init (global-flycheck-mode))
 
      (add-hook 'python-mode-hook 'flycheck-mode)
@@ -1382,7 +1382,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        :config
         (define-key lsp-mode-map (kbd "C-c h") 'hydra-lsp/body)
        :hook ((python-mode . lsp)
-              (js2-mode . lsp)
+              ;; (js2-mode . lsp)
               (yaml-mode . lsp)
               (lsp-mode . lsp-enable-which-key-integration))
        :commands lsp lsp-deferred
@@ -1460,7 +1460,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
      :defer t)
    #+end_src
 * Web Mode
-   #+BEGIN_SRC emacs-lisp
+   BEGIN_SRC emacs-lisp
      (use-package web-mode
        :ensure t
        :mode
@@ -1475,44 +1475,26 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
          (setq web-mode-enable-auto-pairing t)
          (setq web-mode-enable-auto-expanding t)
          (setq web-mode-enable-css-colorization t))
-   #+end_src
+   end_src
 
 * Javascript
   Getting a working Javascript environment proves to be difficult in Emacs.  I keep reading js-mode in Emacs 27 is really good but I can't find good documentation on what needs to be done.  js2-mode and web-mode are close but I still run into issue with React and Vue buffers.
   <2020-11-24 Tue> This is still not ideal.  Vue is a damn mess and javascript is just ok.  I need to spend more time with this configuration!
+  <2020-09-08 Wed> Too many problems using emacs for React development so I nuked js2-mode and came up with a simpler solution.  Between ts-ls (typescript language server) and RJSX mode everything seems to be working very well right now.  I also got rid of web mode which I believe was causing so many indentation problems.
 
   #+BEGIN_SRC emacs-lisp
-        (use-package js2-mode
-          :ensure t
-          :init
-          (setq js-basic-indent 2)
-          :config
-          (setq-default js2-basic-offset 2)
-          (setq js2-basic-indent 2
-                js2-basic-offset 2
-                js2-auto-indent-p t
-                js2-cleanup-whitespace t
-                js2-enter-indents-newline t
-                js2-indent-on-enter-key t
-                js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$")))
+    (use-package rjsx-mode)
 
-        (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-
-        (use-package add-node-modules-path
+    (use-package prettier-js
           :ensure t
-          :defer t
-          :hook ((js2-mode . add-node-modules-path)))
-
-        (use-package prettier-js
-          :ensure t
-          :after js2-mode
+          :after rjsx-mode
           :defer t
           ;; :diminish prettier-js-mode
-          :hook ((js2-mode . prettier-js-mode)))
+          :hook ((rjsx-mode . prettier-js-mode)))
           :config
           (setq prettier-js-args '("--trailing-comma" "all"
-                                   "--bracket-spacing" "false"
-                                   "--single-quotes" "true"))
+                                   "--bracket-spacing" "false"))
+                                   ;; "--single-quotes" "true"))
   #+end_src
 
 * Markdown
