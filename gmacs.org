@@ -277,6 +277,8 @@
   * studio.org - All tasks and notes regarding my art studio, projects and client commissions.
   * Each software related client gets a file of their own where I track time, tasks and notes.  Each file is named after the client.
 
+    Notes:  I've moved my org directory into iCloud so I can use iA Writer on my iOS devices for editing files.  I'll try this experiment for a while and see if it's more enjoyable.
+
 ** Installation via Git repo
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
