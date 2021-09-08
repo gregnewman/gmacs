@@ -1459,24 +1459,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    (use-package json-mode
      :defer t)
    #+end_src
-* Web Mode
-   BEGIN_SRC emacs-lisp
-     (use-package web-mode
-       :ensure t
-       :mode
-         ("\\.html$" . web-mode)
-         ("\\.js$" . web-mode)
-         ("\\.vue$" . web-mode)
-         ("\\.css$" . web-mode)
-       :init
-         (setq web-mode-markup-indent-offset 2)
-         (setq web-mode-code-indent-offset 2)
-         (setq web-mode-css-indent-offset 2)
-         (setq web-mode-enable-auto-pairing t)
-         (setq web-mode-enable-auto-expanding t)
-         (setq web-mode-enable-css-colorization t))
-   end_src
-
 * Javascript
   Getting a working Javascript environment proves to be difficult in Emacs.  I keep reading js-mode in Emacs 27 is really good but I can't find good documentation on what needs to be done.  js2-mode and web-mode are close but I still run into issue with React and Vue buffers.
   <2020-11-24 Tue> This is still not ideal.  Vue is a damn mess and javascript is just ok.  I need to spend more time with this configuration!
