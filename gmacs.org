@@ -298,7 +298,7 @@
      ;; respects splits
      (setq org-agenda-window-setup 'current-window)
      ;; agenda files
-     (setq org-agenda-files (list "~/Org/"))
+     (setq org-agenda-files (list "~/Dropbox/Org/"))
      ;; Start the weekly agenda on Monday
      (setq org-agenda-start-on-weekday 1)
      ;; Display tags farther right
@@ -1209,7 +1209,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
               :init
               (setq org-roam-v2-ack t)
               :custom
-              (org-roam-directory "~/Org/Notes")
+              (org-roam-directory "~/Dropbox/Org/Notes")
               (org-roam-completion-everywhere t)
               :bind (("C-c n l" . org-roam-buffer-toggle)
                      ("C-c n f" . org-roam-node-find)
