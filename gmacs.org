@@ -1621,24 +1621,25 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   TODO: Fix this!  On large repos, magit-todos causes magit to hang on commit.
   <2020-11-24 Tue> This still needs attention. I Haven't looked at the bug since I first left the comment and unset the configuration.
 
-     (use-package magit-todos
-     :after magit
-     :after hl-todo
-     :config
-     (setq magit-todos-depth 2)
-     (magit-todos-mode))
+     #+BEGIN_SRC emacs-lisp
+       ;;   (use-package magit-todos
+       ;;   :after magit
+       ;;   :after hl-todo
+       ;;   :config
+       ;;   (setq magit-todos-depth 2)
+       ;;   (setq magit-todos-exclude-globs '("*.js.map"))
+       ;;   (magit-todos-mode))
 
-   #+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-x g") 'magit-status)
+       ;; (global-set-key (kbd "C-x g") 'magit-status)
 
-   (use-package hl-todo
-     :config
-     ;; Adding a new keyword: TEST.
-     (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
-     (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
-     :init
-     (add-hook 'python-mode-hook (lambda () (hl-todo-mode t)))
-     )
+       (itpuuse-package hl-todo
+         :config
+         ;; Adding a new keyword: TEST.
+         (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
+         (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
+         :init
+         (add-hook 'python-mode-hook (lambda () (hl-todo-mode t)))
+         )
 
    #+end_src
 
