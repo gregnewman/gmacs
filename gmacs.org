@@ -65,7 +65,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-one t))
+       (load-theme 'doom-acario-light t))
    #+end_src
 
 * Windows Configuration
@@ -1632,7 +1632,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
        ;; (global-set-key (kbd "C-x g") 'magit-status)
 
-       (itpuuse-package hl-todo
+       (use-package hl-todo
          :config
          ;; Adding a new keyword: TEST.
          (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
