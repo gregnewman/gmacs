@@ -65,7 +65,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-one t))
+       (load-theme 'doom-dracula t))
    #+end_src
 
 * Windows Configuration
@@ -279,7 +279,7 @@
 
     Notes:  I've moved my org directory into iCloud so I can use iA Writer on my iOS devices for editing files.  I'll try this experiment for a while and see if it's more enjoyable.
 
-** Installation via Git repo
+** COMMENT Installation via Git repo
    This will be a expanding collection of org customization.  I live in text
    files throughout my days and orgmode gives me a nice interface for collecting
    notes.
@@ -1446,7 +1446,16 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
          (add-hook 'lsp-ui-mode-hook #'(lambda() (setq-local flycheck-checker 'python-flake8))))
 
    #+end_src
-
+* Black
+     #+BEGIN_SRC emacs-lisp
+       (use-package python-black
+         :ensure t
+         :quelpa
+         (python-black
+           :fetcher git
+           :url "https://github.com/wbolster/emacs-python-black")
+         :after python)
+     #+end_src
 * Company
 
    #+BEGIN_SRC emacs-lisp
@@ -1460,12 +1469,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
              company-show-numbers t)
        (global-company-mode +1))
 
-     (use-package company-lsp
-       :ensure t
-       :after company
-       :config
-       (setq company-lsp-enable-snippet nil)
-       :init (add-to-list 'company-backends 'company-capf))
+     ;(use-package company-lsp
+     ;  :ensure t
+     ;  :after company
+     ;  :config
+     ;  (setq company-lsp-enable-snippet nil)
+     ;  :init (add-to-list 'company-backends 'company-capf))
 
      (use-package company-box
        :ensure t
@@ -1630,7 +1639,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        ;;   (setq magit-todos-exclude-globs '("*.js.map"))
        ;;   (magit-todos-mode))
 
-       ;; (global-set-key (kbd "C-x g") 'magit-status)
+       (global-set-key (kbd "C-x g") 'magit-status)
 
        (use-package hl-todo
          :config
