@@ -1144,15 +1144,16 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    Org-Super-Agenda commands
 
    #+BEGIN_SRC emacs-lisp
-   (use-package org-super-agenda
-     :ensure t
-     :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
-     :config
-     (org-super-agenda-mode t)
-     (add-to-list 'org-agenda-custom-commands
-               '("gt" "All Tasks - Grouped"
-                 ((todo "" ((org-super-agenda-groups
-                             '((:name "All Tasks" :auto-category t)))))))))
+     ;; TODO: Change this over to straight to install instead of quelpa
+     (use-package org-super-agenda
+       :ensure t
+       :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
+       :config
+       (org-super-agenda-mode t)
+       (add-to-list 'org-agenda-custom-commands
+                 '("gt" "All Tasks - Grouped"
+                   ((todo "" ((org-super-agenda-groups
+                               '((:name "All Tasks" :auto-category t)))))))))
    #+end_src
 
 ** Org Pomodoro
