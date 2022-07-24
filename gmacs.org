@@ -24,42 +24,37 @@
    I use `use-package` so that all packages are automatically installed if cloning this repo for another machine. [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github). Along with the quelpa package, quelpa-use-package adds a handler to use-package.
 
    #+BEGIN_SRC emacs-lisp
-     (defvar bootstrap-version)
-     (let ((bootstrap-file
-            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-           (bootstrap-version 5))
-       (unless (file-exists-p bootstrap-file)
-         (with-current-buffer
-             (url-retrieve-synchronously
-              "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-              'silent 'inhibit-cookies)
-           (goto-char (point-max))
-           (eval-print-last-sexp)))
-       (load bootstrap-file nil 'nomessage))
+      (defvar bootstrap-version)
+      (let ((bootstrap-file
+             (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+            (bootstrap-version 5))
+        (unless (file-exists-p bootstrap-file)
+          (with-current-buffer
+              (url-retrieve-synchronously
+               "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+               'silent 'inhibit-cookies)
+            (goto-char (point-max))
+            (eval-print-last-sexp)))
+        (load bootstrap-file nil 'nomessage))
 
+      (straight-use-package 'use-package)
+      (setq straight-use-package-by-default t)
+
+      ;; Disable package.el in favor of straight.el
+     (setq package-enable-at-startup nil)
+
+     ;; Install use-package
      (straight-use-package 'use-package)
-     (setq straight-use-package-by-default t)
 
-     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-     (setq package-check-signature nil)
      (package-initialize)
 
-     (unless (package-installed-p 'use-package)
-       (package-refresh-contents)
-       (package-install 'use-package))
+      ;; TODO: determine if I need or still use quelpa with straight.
+      (use-package quelpa)
+      (use-package quelpa-use-package :ensure t)
+      (use-package use-package-ensure-system-package :ensure t)
 
-     (eval-when-compile
-       (require 'use-package))
-
-     (setq custom-file (make-temp-file "emacs-custom"))
-
-     ;; TODO: determine if I need or still use quelpa with straight.
-     (use-package quelpa)
-     (use-package quelpa-use-package :ensure t)
-     (use-package use-package-ensure-system-package :ensure t)
-
-     ;; Handle the `use-package-always-ensure' setting
-     (quelpa-use-package-activate-advice)
+      ;; Handle the `use-package-always-ensure' setting
+      (quelpa-use-package-activate-advice)
    #+END_SRC
 
 * Theme
