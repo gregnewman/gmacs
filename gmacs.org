@@ -1642,13 +1642,15 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        (use-package magit
        :ensure t
        :bind ("C-x g" . magit-status))
-            ;;   (use-package magit-todos
-            ;;   :after magit
-            ;;   :after hl-todo
-            ;;   :config
-            ;;   (setq magit-todos-depth 2)
-            ;;   (setq magit-todos-exclude-globs '("*.js.map"))
-            ;;   (magit-todos-mode))
+
+       ;; TODO: This was never working before, investigate why and fix it.
+       ;;   (use-package magit-todos
+       ;;   :after magit
+       ;;   :after hl-todo
+       ;;   :config
+       ;;   (setq magit-todos-depth 2)
+       ;;   (setq magit-todos-exclude-globs '("*.js.map"))
+       ;;   (magit-todos-mode))
 
        (use-package hl-todo
          :config
