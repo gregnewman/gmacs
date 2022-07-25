@@ -279,24 +279,17 @@
   * studio.org - All tasks and notes regarding my art studio, projects and client commissions.
   * Each software related client gets a file of their own where I track time, tasks and notes.  Each file is named after the client.
 
-    Notes:  I've moved my org directory into iCloud so I can use iA Writer on my iOS devices for editing files.  I'll try this experiment for a while and see if it's more enjoyable.
+** Configuration
+   This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
+   I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
 
-** COMMENT Installation via Git repo
-   This will be a expanding collection of org customization.  I live in text
-   files throughout my days and orgmode gives me a nice interface for collecting
-   notes.
-
-   Using org from the git repo to stay up to date with fixes
    #+BEGIN_SRC emacs-lisp
-   (setq org-modules '(org-info
-                      org-panel
-                      org-protocol
-                      org-toc))
-   (eval-after-load 'org
-     '(org-load-modules-maybe t))
-   #+end_src
-** Org Setup
-   #+BEGIN_SRC emacs-lisp
+     (setq org-modules '(org-info
+                        org-panel
+                        org-protocol
+                        org-toc))
+     (eval-after-load 'org
+       '(org-load-modules-maybe t))
      ;; respects splits
      (setq org-agenda-window-setup 'current-window)
      ;; agenda files
@@ -339,10 +332,10 @@
      (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 
      (defun gn/orgmode-ignore-whitespace-mode ()
-        (interactive)
-        "turns off whitespace mode in org buffers"
-        (whitespace-mode -1))
-       ;; Set default font faces for Info and ERC modes
+       (interactive)
+       "turns off whitespace mode in org buffers"
+       (whitespace-mode -1))
+     ;; Set default font faces for Info and ERC modes
      (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
    #+end_src
 
@@ -350,327 +343,325 @@
    These are functions for use in Agenda commands for stuck projects.
    Attribution: [[http://doc.norang.ca/org-mode.html#GTD][Bernt Hansen - Norang]]
    #+BEGIN_SRC emacs-lisp
-(defun gn/skip-non-archivable-tasks ()
-  "Skip trees that are not available for archiving"
-  (save-restriction
-    (widen)
-    ;; Consider only tasks with done todo headings as archivable candidates
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
-          (subtree-end (save-excursion (org-end-of-subtree t))))
-      (if (member (org-get-todo-state) org-todo-keywords-1)
-          (if (member (org-get-todo-state) org-done-keywords)
-              (let* ((daynr (string-to-number (format-time-string "%d" (current-time))))
-                     (a-month-ago (* 60 60 24 (+ daynr 1)))
-                     (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
-                     (this-month (format-time-string "%Y-%m-" (current-time)))
-                     (subtree-is-current (save-excursion
-                                           (forward-line 1)
-                                           (and (< (point) subtree-end)
-                                                (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
-                (if subtree-is-current
-                    subtree-end ; Has a date in this month or last month, skip it
-                  nil))  ; available to archive
-            (or subtree-end (point-max)))
-        next-headline))))
+     (defun gn/skip-non-archivable-tasks ()
+       "Skip trees that are not available for archiving"
+       (save-restriction
+         (widen)
+         ;; Consider only tasks with done todo headings as archivable candidates
+         (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
+               (subtree-end (save-excursion (org-end-of-subtree t))))
+           (if (member (org-get-todo-state) org-todo-keywords-1)
+               (if (member (org-get-todo-state) org-done-keywords)
+                   (let* ((daynr (string-to-number (format-time-string "%d" (current-time))))
+                          (a-month-ago (* 60 60 24 (+ daynr 1)))
+                          (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
+                          (this-month (format-time-string "%Y-%m-" (current-time)))
+                          (subtree-is-current (save-excursion
+                                                (forward-line 1)
+                                                (and (< (point) subtree-end)
+                                                     (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
+                     (if subtree-is-current
+                         subtree-end ; Has a date in this month or last month, skip it
+                       nil))  ; available to archive
+                 (or subtree-end (point-max)))
+             next-headline))))
 
-(defun gn/find-project-task ()
-  "Move point to the parent (project) task if any"
-  (save-restriction
-    (widen)
-    (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
-      (while (org-up-heading-safe)
-        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
-          (setq parent-task (point))))
-      (goto-char parent-task)
-      parent-task)))
+     (defun gn/find-project-task ()
+       "Move point to the parent (project) task if any"
+       (save-restriction
+         (widen)
+         (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
+           (while (org-up-heading-safe)
+             (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+               (setq parent-task (point))))
+           (goto-char parent-task)
+           parent-task)))
 
-(defun gn/is-project-p ()
-  "Any task with a todo keyword subtask"
-  (save-restriction
-    (widen)
-    (let ((has-subtask)
-          (subtree-end (save-excursion (org-end-of-subtree t)))
-          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
-      (save-excursion
-        (forward-line 1)
-        (while (and (not has-subtask)
-                    (< (point) subtree-end)
-                    (re-search-forward "^\*+ " subtree-end t))
-          (when (member (org-get-todo-state) org-todo-keywords-1)
-            (setq has-subtask t))))
-      (and is-a-task has-subtask))))
+     (defun gn/is-project-p ()
+       "Any task with a todo keyword subtask"
+       (save-restriction
+         (widen)
+         (let ((has-subtask)
+               (subtree-end (save-excursion (org-end-of-subtree t)))
+               (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+           (save-excursion
+             (forward-line 1)
+             (while (and (not has-subtask)
+                         (< (point) subtree-end)
+                         (re-search-forward "^\*+ " subtree-end t))
+               (when (member (org-get-todo-state) org-todo-keywords-1)
+                 (setq has-subtask t))))
+           (and is-a-task has-subtask))))
 
-(defun gn/is-project-subtree-p ()
-  "Any task with a todo keyword that is in a project subtree.
-Callers of this function already widen the buffer view."
-  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
-                              (point))))
-    (save-excursion
-      (gn/find-project-task)
-      (if (equal (point) task)
-          nil
-        t))))
+     (defun gn/is-project-subtree-p ()
+       "Any task with a todo keyword that is in a project subtree.
+     Callers of this function already widen the buffer view."
+       (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                                   (point))))
+         (save-excursion
+           (gn/find-project-task)
+           (if (equal (point) task)
+               nil
+             t))))
 
-(defun gn/is-task-p ()
-  "Any task with a todo keyword and no subtask"
-  (save-restriction
-    (widen)
-    (let ((has-subtask)
-          (subtree-end (save-excursion (org-end-of-subtree t)))
-          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
-      (save-excursion
-        (forward-line 1)
-        (while (and (not has-subtask)
-                    (< (point) subtree-end)
-                    (re-search-forward "^\*+ " subtree-end t))
-          (when (member (org-get-todo-state) org-todo-keywords-1)
-            (setq has-subtask t))))
-      (and is-a-task (not has-subtask)))))
+     (defun gn/is-task-p ()
+       "Any task with a todo keyword and no subtask"
+       (save-restriction
+         (widen)
+         (let ((has-subtask)
+               (subtree-end (save-excursion (org-end-of-subtree t)))
+               (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+           (save-excursion
+             (forward-line 1)
+             (while (and (not has-subtask)
+                         (< (point) subtree-end)
+                         (re-search-forward "^\*+ " subtree-end t))
+               (when (member (org-get-todo-state) org-todo-keywords-1)
+                 (setq has-subtask t))))
+           (and is-a-task (not has-subtask)))))
 
-(defun gn/is-subproject-p ()
-  "Any task which is a subtask of another project"
-  (let ((is-subproject)
-        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
-    (save-excursion
-      (while (and (not is-subproject) (org-up-heading-safe))
-        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
-          (setq is-subproject t))))
-    (and is-a-task is-subproject)))
+     (defun gn/is-subproject-p ()
+       "Any task which is a subtask of another project"
+       (let ((is-subproject)
+             (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+         (save-excursion
+           (while (and (not is-subproject) (org-up-heading-safe))
+             (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+               (setq is-subproject t))))
+         (and is-a-task is-subproject)))
 
-(defun gn/list-sublevels-for-projects-indented ()
-  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
-  This is normally used by skipping functions where this variable is already local to the agenda."
-  (if (marker-buffer org-agenda-restrict-begin)
-      (setq org-tags-match-list-sublevels 'indented)
-    (setq org-tags-match-list-sublevels nil))
-  nil)
+     (defun gn/list-sublevels-for-projects-indented ()
+       "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+       This is normally used by skipping functions where this variable is already local to the agenda."
+       (if (marker-buffer org-agenda-restrict-begin)
+           (setq org-tags-match-list-sublevels 'indented)
+         (setq org-tags-match-list-sublevels nil))
+       nil)
 
-(defun gn/list-sublevels-for-projects ()
-  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
-  This is normally used by skipping functions where this variable is already local to the agenda."
-  (if (marker-buffer org-agenda-restrict-begin)
-      (setq org-tags-match-list-sublevels t)
-    (setq org-tags-match-list-sublevels nil))
-  nil)
+     (defun gn/list-sublevels-for-projects ()
+       "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+       This is normally used by skipping functions where this variable is already local to the agenda."
+       (if (marker-buffer org-agenda-restrict-begin)
+           (setq org-tags-match-list-sublevels t)
+         (setq org-tags-match-list-sublevels nil))
+       nil)
 
-(defvar gn/hide-scheduled-and-waiting-next-tasks t)
+     (defvar gn/hide-scheduled-and-waiting-next-tasks t)
 
-(defun gn/toggle-next-task-display ()
-  (interactive)
-  (setq gn/hide-scheduled-and-waiting-next-tasks (not gn/hide-scheduled-and-waiting-next-tasks))
-  (when  (equal major-mode 'org-agenda-mode)
-    (org-agenda-redo))
-  (message "%s WAITING and SCHEDULED NEXT Tasks" (if gn/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+     (defun gn/toggle-next-task-display ()
+       (interactive)
+       (setq gn/hide-scheduled-and-waiting-next-tasks (not gn/hide-scheduled-and-waiting-next-tasks))
+       (when  (equal major-mode 'org-agenda-mode)
+         (org-agenda-redo))
+       (message "%s WAITING and SCHEDULED NEXT Tasks" (if gn/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
 
-(defun gn/skip-stuck-projects ()
-  "Skip trees that are not stuck projects"
-  (save-restriction
-    (widen)
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      (if (gn/is-project-p)
-          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-                 (has-next ))
-            (save-excursion
-              (forward-line 1)
-              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
-                (unless (member "WAITING" (org-get-tags-at))
-                  (setq has-next t))))
-            (if has-next
-                nil
-              next-headline)) ; a stuck project, has subtasks but no next task
-        nil))))
+     (defun gn/skip-stuck-projects ()
+       "Skip trees that are not stuck projects"
+       (save-restriction
+         (widen)
+         (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+           (if (gn/is-project-p)
+               (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                      (has-next ))
+                 (save-excursion
+                   (forward-line 1)
+                   (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                     (unless (member "WAITING" (org-get-tags-at))
+                       (setq has-next t))))
+                 (if has-next
+                     nil
+                   next-headline)) ; a stuck project, has subtasks but no next task
+             nil))))
 
-(defun gn/skip-non-stuck-projects ()
-  "Skip trees that are not stuck projects"
-  ;; (gn/list-sublevels-for-projects-indented)
-  (save-restriction
-    (widen)
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      (if (gn/is-project-p)
-          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-                 (has-next ))
-            (save-excursion
-              (forward-line 1)
-              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
-                (unless (member "WAITING" (org-get-tags-at))
-                  (setq has-next t))))
-            (if has-next
-                next-headline
-              nil)) ; a stuck project, has subtasks but no next task
-        next-headline))))
+     (defun gn/skip-non-stuck-projects ()
+       "Skip trees that are not stuck projects"
+       ;; (gn/list-sublevels-for-projects-indented)
+       (save-restriction
+         (widen)
+         (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+           (if (gn/is-project-p)
+               (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                      (has-next ))
+                 (save-excursion
+                   (forward-line 1)
+                   (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                     (unless (member "WAITING" (org-get-tags-at))
+                       (setq has-next t))))
+                 (if has-next
+                     next-headline
+                   nil)) ; a stuck project, has subtasks but no next task
+             next-headline))))
 
-(defun gn/skip-non-projects ()
-  "Skip trees that are not projects"
-  ;; (gn/list-sublevels-for-projects-indented)
-  (if (save-excursion (gn/skip-non-stuck-projects))
-      (save-restriction
-        (widen)
-        (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-          (cond
-           ((gn/is-project-p)
-            nil)
-           ((and (gn/is-project-subtree-p) (not (gn/is-task-p)))
-            nil)
-           (t
-            subtree-end))))
-    (save-excursion (org-end-of-subtree t))))
+     (defun gn/skip-non-projects ()
+       "Skip trees that are not projects"
+       ;; (gn/list-sublevels-for-projects-indented)
+       (if (save-excursion (gn/skip-non-stuck-projects))
+           (save-restriction
+             (widen)
+             (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+               (cond
+                ((gn/is-project-p)
+                 nil)
+                ((and (gn/is-project-subtree-p) (not (gn/is-task-p)))
+                 nil)
+                (t
+                 subtree-end))))
+         (save-excursion (org-end-of-subtree t))))
 
-(defun gn/skip-non-tasks ()
-  "Show non-project tasks.
-Skip project and sub-project tasks, habits, and project related tasks."
-  (save-restriction
-    (widen)
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      (cond
-       ((gn/is-task-p)
-        nil)
-       (t
-        next-headline)))))
+     (defun gn/skip-non-tasks ()
+       "Show non-project tasks.
+     Skip project and sub-project tasks, habits, and project related tasks."
+       (save-restriction
+         (widen)
+         (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+           (cond
+            ((gn/is-task-p)
+             nil)
+            (t
+             next-headline)))))
 
-(defun gn/skip-project-trees-and-habits ()
-  "Skip trees that are projects"
-  (save-restriction
-    (widen)
-    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-      (cond
-       ((gn/is-project-p)
-        subtree-end)
-       (t
-        nil)))))
+     (defun gn/skip-project-trees-and-habits ()
+       "Skip trees that are projects"
+       (save-restriction
+         (widen)
+         (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+           (cond
+            ((gn/is-project-p)
+             subtree-end)
+            (t
+             nil)))))
 
-(defun gn/skip-projects-and-habits-and-single-tasks ()
-  "Skip trees that are projects, tasks that are habits, single non-project tasks"
-  (save-restriction
-    (widen)
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      (cond
-       ((and gn/hide-scheduled-and-waiting-next-tasks
-             (member "WAITING" (org-get-tags-at)))
-        next-headline)
-       ((gn/is-project-p)
-        next-headline)
-       ((and (gn/is-task-p) (not (gn/is-project-subtree-p)))
-        next-headline)
-       (t
-        nil)))))
+     (defun gn/skip-projects-and-habits-and-single-tasks ()
+       "Skip trees that are projects, tasks that are habits, single non-project tasks"
+       (save-restriction
+         (widen)
+         (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+           (cond
+            ((and gn/hide-scheduled-and-waiting-next-tasks
+                  (member "WAITING" (org-get-tags-at)))
+             next-headline)
+            ((gn/is-project-p)
+             next-headline)
+            ((and (gn/is-task-p) (not (gn/is-project-subtree-p)))
+             next-headline)
+            (t
+             nil)))))
 
-(defun gn/skip-project-tasks-maybe ()
-  "Show tasks related to the current restriction.
-When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
-When not restricted, skip project and sub-project tasks, habits, and project related tasks."
-  (save-restriction
-    (widen)
-    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-           (next-headline (save-excursion (or (outline-next-heading) (point-max))))
-           (limit-to-project (marker-buffer org-agenda-restrict-begin)))
-      (cond
-       ((gn/is-project-p)
-        next-headline)
-       ((and (not limit-to-project)
-             (gn/is-project-subtree-p))
-        subtree-end)
-       ((and limit-to-project
-             (gn/is-project-subtree-p)
-             (member (org-get-todo-state) (list "NEXT")))
-        subtree-end)
-       (t
-        nil)))))
+     (defun gn/skip-project-tasks-maybe ()
+       "Show tasks related to the current restriction.
+     When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
+     When not restricted, skip project and sub-project tasks, habits, and project related tasks."
+       (save-restriction
+         (widen)
+         (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                (next-headline (save-excursion (or (outline-next-heading) (point-max))))
+                (limit-to-project (marker-buffer org-agenda-restrict-begin)))
+           (cond
+            ((gn/is-project-p)
+             next-headline)
+            ((and (not limit-to-project)
+                  (gn/is-project-subtree-p))
+             subtree-end)
+            ((and limit-to-project
+                  (gn/is-project-subtree-p)
+                  (member (org-get-todo-state) (list "NEXT")))
+             subtree-end)
+            (t
+             nil)))))
 
-(defun gn/skip-project-tasks ()
-  "Show non-project tasks.
-Skip project and sub-project tasks, habits, and project related tasks."
-  (save-restriction
-    (widen)
-    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
-      (cond
-       ((gn/is-project-p)
-        subtree-end)
-      ((gn/is-project-subtree-p)
-        subtree-end)
-       (t
-        nil)))))
+     (defun gn/skip-project-tasks ()
+       "Show non-project tasks.
+     Skip project and sub-project tasks, habits, and project related tasks."
+       (save-restriction
+         (widen)
+         (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+           (cond
+            ((gn/is-project-p)
+             subtree-end)
+           ((gn/is-project-subtree-p)
+             subtree-end)
+            (t
+             nil)))))
 
-(defun gn/skip-non-project-tasks ()
-  "Show project tasks.
-Skip project and sub-project tasks, habits, and loose non-project tasks."
-  (save-restriction
-    (widen)
-    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      (cond
-       ((gn/is-project-p)
-        next-headline)
-       ((and (gn/is-project-subtree-p)
-             (member (org-get-todo-state) (list "NEXT")))
-        subtree-end)
-       ((not (gn/is-project-subtree-p))
-        subtree-end)
-       (t
-        nil)))))
+     (defun gn/skip-non-project-tasks ()
+       "Show project tasks.
+     Skip project and sub-project tasks, habits, and loose non-project tasks."
+       (save-restriction
+         (widen)
+         (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+           (cond
+            ((gn/is-project-p)
+             next-headline)
+            ((and (gn/is-project-subtree-p)
+                  (member (org-get-todo-state) (list "NEXT")))
+             subtree-end)
+            ((not (gn/is-project-subtree-p))
+             subtree-end)
+            (t
+             nil)))))
 
-(defun gn/skip-projects-and-habits ()
-  "Skip trees that are projects and tasks that are habits"
-  (save-restriction
-    (widen)
-    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-      (cond
-       ((gn/is-project-p)
-        subtree-end)
-       (t
-        nil)))))
+     (defun gn/skip-projects-and-habits ()
+       "Skip trees that are projects and tasks that are habits"
+       (save-restriction
+         (widen)
+         (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+           (cond
+            ((gn/is-project-p)
+             subtree-end)
+            (t
+             nil)))))
 
-(defun gn/skip-non-subprojects ()
-  "Skip trees that are not projects"
-  (let ((next-headline (save-excursion (outline-next-heading))))
-    (if (gn/is-subproject-p)
-        nil
-      next-headline)))
+     (defun gn/skip-non-subprojects ()
+       "Skip trees that are not projects"
+       (let ((next-headline (save-excursion (outline-next-heading))))
+         (if (gn/is-subproject-p)
+             nil
+           next-headline)))
    #+end_src
 
 ** Estimates and clocking
-   I need to track time for clients and projects.  This nudges me when I clock in
-   to make sure I have an estimate set.
-
+   I need to track time for clients and projects.  This nudges me when I clock in to make sure I have an estimate set.
 
    #+BEGIN_SRC emacs-lisp
-   (defun gn/org-mode-ask-effort ()
-     "Ask for an effort estimate when clocking in."
-     (unless (org-entry-get (point) "Effort")
-       (let ((effort
-              (completing-read
-               "Effort: "
-               (org-entry-get-multivalued-property (point) "Effort"))))
-       (unless (equal effort "")
-         (org-set-property "Effort" effort)))))
+     (defun gn/org-mode-ask-effort ()
+       "Ask for an effort estimate when clocking in."
+       (unless (org-entry-get (point) "Effort")
+         (let ((effort
+                (completing-read
+                 "Effort: "
+                 (org-entry-get-multivalued-property (point) "Effort"))))
+         (unless (equal effort "")
+           (org-set-property "Effort" effort)))))
 
-   (add-hook 'org-clock-in-prepare-hook
-     'gn/org-mode-ask-effort)
+     (add-hook 'org-clock-in-prepare-hook
+               'gn/org-mode-ask-effort)
 
-   ;; Remove empty LOGBOOK drawers on clock out
-   (defun gn/remove-empty-drawer-on-clock-out ()
-     (interactive)
-     (save-excursion
-     (beginning-of-line 0)
-     (org-remove-empty-drawer-at "LOGBOOK" (point))))
+     ;; Remove empty LOGBOOK drawers on clock out
+     (defun gn/remove-empty-drawer-on-clock-out ()
+       (interactive)
+       (save-excursion
+       (beginning-of-line 0)
+       (org-remove-empty-drawer-at "LOGBOOK" (point))))
 
-   (add-hook 'org-clock-out-hook 'gn/remove-empty-drawer-on-clock-out 'append)
+     (add-hook 'org-clock-out-hook 'gn/remove-empty-drawer-on-clock-out 'append)
 
-   ;; efforts
-   (add-to-list 'org-global-properties
-        '("Effort_ALL". "0:30 1:00 2:00 3:00 4:00 6:00 7:00 8:00 12:00 16:00 40:00"))
+     ;; efforts
+     (add-to-list 'org-global-properties
+                  '("Effort_ALL". "0:30 1:00 2:00 3:00 4:00 6:00 7:00 8:00 12:00 16:00 40:00"))
    #+end_src
 
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '(
+      'org-babel-load-languages
+      '(
         (python . t)
         (emacs-lisp . t)
         (org . t)
         (sql . t)
         (ditaa . t)
-     ))
+        ))
      ;; Syntax highlight in #+BEGIN_SRC blocks
      (setq org-src-fontify-natively t)
      ;; Don't prompt before running code in org
@@ -763,23 +754,19 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 ** Sticky agendas
-   Allow you to have more than one agenda view created simultaneously.
-   You can quickly switch to the view without incurring an agenda
-   rebuild by invoking the agenda custom command key that normally
-   generates the agenda. If it already exists it will display the
-   existing view. g forces regeneration of the agenda view.
+   Allows you to have more than one agenda view created simultaneously.  You can quickly switch to the view without incurring an agenda rebuild by invoking the agenda custom command key that normally generates the agenda. If it already exists it will display the existing view. g forces regeneration of the agenda view.
 
    #+BEGIN_SRC emacs-lisp
-   ;; Use sticky agenda's so they persist
-   (setq org-agenda-sticky t)
+     ;; Use sticky agenda's so they persist
+     (setq org-agenda-sticky t)
    #+end_src
 ** Org-capture
    Capture helps me stay on track during my day.  As distraction and thoughts try to steal my time, I can quickly add a note or task to
    be refiled and dealt with later.  The same goes for phone calls and meetings.
 *** Directories and files
    #+BEGIN_SRC emacs-lisp
-   (setq org-directory "~/Dropbox/Org")
-   (setq org-default-notes-file "~/Dropbox/Org/inbox.org")
+     (setq org-directory "~/Dropbox/Org")
+     (setq org-default-notes-file "~/Dropbox/Org/inbox.org")
    #+end_src
 *** Capture mode keybinding
    I use C-c c to start capture mode
@@ -1151,33 +1138,34 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 ** Org Pomodoro
+   I don't really use this but I'm going to keep it for a while.
    #+BEGIN_SRC emacs-lisp
      (use-package org-pomodoro
        :after org-agenda
        :custom
-         (org-pomodoro-ask-upon-killing t)
-         (org-pomodoro-format "%s")  ;;     
-         (org-pomodoro-short-break-format "%s")
-         (org-pomodoro-long-break-format  "%s")
+       (org-pomodoro-ask-upon-killing t)
+       (org-pomodoro-format "%s")  ;;     
+       (org-pomodoro-short-break-format "%s")
+       (org-pomodoro-long-break-format  "%s")
        :custom-face
-         (org-pomodoro-mode-line ((t (:foreground "#ff5555"))))
-         (org-pomodoro-mode-line-break   ((t (:foreground "#50fa7b"))))
+       (org-pomodoro-mode-line ((t (:foreground "#ff5555"))))
+       (org-pomodoro-mode-line-break   ((t (:foreground "#50fa7b"))))
        :hook
-         (org-pomodoro-started . (lambda () (notifications-notify
-           :title "org-pomodoro"
-           :body "Let's focus for 25 minutes!")))
-         (org-pomodoro-finished . (lambda () (notifications-notify
-           :title "org-pomodoro"
-           :body "Well done! Take a break.")))
+       (org-pomodoro-started . (lambda () (notifications-notify
+                                           :title "org-pomodoro"
+                                           :body "Let's focus for 25 minutes!")))
+       (org-pomodoro-finished . (lambda () (notifications-notify
+                                            :title "org-pomodoro"
+                                            :body "Well done! Take a break.")))
 
        :bind (:map org-agenda-mode-map
-       ("p" . org-pomodoro)))
+                   ("p" . org-pomodoro)))
    #+end_src
 
 ** Org-protocol
    #+BEGIN_SRC emacs-lisp
-   (server-start)
-   (require 'org-protocol)
+     (server-start)
+     (require 'org-protocol)
    #+end_src
 
 ** Ox-Hugo
@@ -1203,74 +1191,71 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   #+RESULTS:
   | variable-pitch-mode |
 * Org-Roam
-  #+BEGIN_SRC emacs-lisp
-            (use-package org-roam
-              :init
-              (setq org-roam-v2-ack t)
-              :custom
-              (org-roam-directory "~/Dropbox/Org/Notes")
-              (org-roam-completion-everywhere t)
-              :bind (("C-c n l" . org-roam-buffer-toggle)
-                     ("C-c n f" . org-roam-node-find)
-                     ("C-c n i" . org-roam-node-insert)
-                     :map org-mode-map
-                     ("C-M-i" . completion-at-point))
-              :config
-              (org-roam-setup))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-roam
+       :init
+       (setq org-roam-v2-ack t)
+       :custom
+       (org-roam-directory "~/Dropbox/Org/Notes")
+       (org-roam-completion-everywhere t)
+       :bind (("C-c n l" . org-roam-buffer-toggle)
+              ("C-c n f" . org-roam-node-find)
+              ("C-c n i" . org-roam-node-insert)
+              :map org-mode-map
+              ("C-M-i" . completion-at-point))
+       :config
+       (org-roam-setup))
+   #+end_src
 
 * iBuffer
   I use ibuffer a lot for switching between buffers from a list of available open buffers.
   These settings help to organize that list.
 
-  #+Begin_SRC emacs-lisp
-    (global-set-key (kbd "C-x C-b") 'ibuffer)
-    (autoload 'ibuffer "ibuffer" "List buffers." t)
+   #+Begin_SRC emacs-lisp
+     (global-set-key (kbd "C-x C-b") 'ibuffer)
+     (autoload 'ibuffer "ibuffer" "List buffers." t)
 
-    (setq ibuffer-saved-filter-groups
-          (quote (("default"
-                   ("Python"
-                    (mode . python-mode))
-                   ;; ("HTML"
-                   ;; (mode . web-mode))
-                   ;; ("JS"
-                   ;; (or (mode . js2-mode)
-                   ;;     (filename . ".js")))
-                   ("Vue"
-                    (or (mode . vue-mode)
-                        (filename . ".vue")))
-                   ("TXT"
-                    (mode . text-mode))
-                   ("YAML"
-                    (filename . "yaml"))
-                   ("Org" ;; all org-related buffers
-                    (mode . org-mode))
-                   ("Lisp"
-                    (mode . emacs-lisp-mode))))))
+     (setq ibuffer-saved-filter-groups
+           (quote (("default"
+                    ("Python"
+                     (mode . python-mode))
+                    ;; ("HTML"
+                    ;; (mode . web-mode))
+                    ;; ("JS"
+                    ;; (or (mode . js2-mode)
+                    ;;     (filename . ".js")))
+                    ("TXT"
+                     (mode . text-mode))
+                    ("YAML"
+                     (filename . "yaml"))
+                    ("Org" ;; all org-related buffers
+                     (mode . org-mode))
+                    ("Lisp"
+                     (mode . emacs-lisp-mode))))))
 
-    ;; don't show empty groups
-    (setq ibuffer-show-empty-filter-groups nil)
+     ;; don't show empty groups
+     (setq ibuffer-show-empty-filter-groups nil)
 
-    (add-hook 'ibuffer-mode-hook
-              (lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))
+     (add-hook 'ibuffer-mode-hook
+               (lambda ()
+                 (ibuffer-switch-to-saved-filter-groups "default")))
 
-    ;; Add full path to buffer title
-    (setq frame-title-format
-          (list (format "%s %%S: %%j " (system-name))
-                '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-  #+end_src
+     ;; Add full path to buffer title
+     (setq frame-title-format
+           (list (format "%s %%S: %%j " (system-name))
+                 '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+   #+end_src
 
 * Passwords
   The "pass" program, aka "password-store", is a password manager that uses GPG and standand UNIX tools to handle passwords. Encrypted files are stored in a plain directory structure. Very simple, very nice: now all data is available with a variety of interfaces, such as standard CLI, a dmenu interface, a graphical front-end like qtpass, etc. Install it on Void Linux with xbps-install -S pass. The package below provides an Emacs interface to some of the most common actions, in the form of a list of candidates that can be narrowed down (such as with Ido). I use it to quickly store a password to the kill ring.
 
    #+BEGIN_SRC emacs-lisp
-   (use-package password-store
-     :commands (password-store-copy
-             password-store-edit
-             password-store-insert)
-     :custom
-       (password-store-time-before-clipboard-restore 30))
+     (use-package password-store
+       :commands (password-store-copy
+               password-store-edit
+               password-store-insert)
+       :custom
+         (password-store-time-before-clipboard-restore 30))
    #+end_src
 
    And this one adds a major mode for browsing the pass keychain. Call it with M-x pass. There is a helpful section at the top with key bindings and their functions.
@@ -1280,12 +1265,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 * Hydra
    #+BEGIN_SRC  emacs-lisp
-   (use-package hydra)
+     (use-package hydra)
 
-   (defhydra hydra-zoom (global-map "<f2>")
-     "zoom"
-     ("g" text-scale-increase "in")
-     ("l" text-scale-decrease "out"))
+     (defhydra hydra-zoom (global-map "<f2>")
+       "zoom"
+       ("g" text-scale-increase "in")
+       ("l" text-scale-decrease "out"))
    #+end_src
 
 * Path from shell
@@ -1293,17 +1278,17 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
-   (use-package exec-path-from-shell
-     :config
-     (when (memq window-system '(mac ns x))
-     (exec-path-from-shell-initialize)))
+     (use-package exec-path-from-shell
+       :config
+       (when (memq window-system '(mac ns x))
+       (exec-path-from-shell-initialize)))
    #+end_src
 
 * Projectile
    #+BEGIN_SRC emacs-lisp
-      (use-package projectile
-        :bind-keymap
-        ("C-c p" . projectile-command-map))
+     (use-package projectile
+       :bind-keymap
+       ("C-c p" . projectile-command-map))
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
@@ -1437,14 +1422,14 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+end_src
 * Black
-     #+BEGIN_SRC emacs-lisp
-       (use-package python-black
-         :quelpa
-         (python-black
-           :fetcher git
-           :url "https://github.com/wbolster/emacs-python-black")
-         :after python)
-     #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package python-black
+       :quelpa
+       (python-black
+         :fetcher git
+         :url "https://github.com/wbolster/emacs-python-black")
+       :after python)
+   #+end_src
 * Company
 
    #+BEGIN_SRC emacs-lisp
@@ -1470,8 +1455,8 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * JSON
 
    #+BEGIN_SRC emacs-lisp
-   (use-package json-mode
-     :defer t)
+     (use-package json-mode
+       :defer t)
    #+end_src
 * Javascript
   Getting a working Javascript environment proves to be difficult in Emacs.  I keep reading js-mode in Emacs 27 is really good but I can't find good documentation on what needs to be done.  js2-mode and web-mode are close but I still run into issue with React and Vue buffers.
@@ -1495,13 +1480,13 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Markdown
 
    #+BEGIN_SRC emacs-lisp
-   (use-package markdown-mode
-     :commands (markdown-mode gfm-mode)
-     :mode ("\\.md\\'"
-            "\\.mkd\\'"
-            "\\.markdown\\'")
-     :init
-     (setq mardown-command "multimarkdown"))
+     (use-package markdown-mode
+       :commands (markdown-mode gfm-mode)
+       :mode ("\\.md\\'"
+              "\\.mkd\\'"
+              "\\.markdown\\'")
+       :init
+       (setq mardown-command "multimarkdown"))
    #+end_src
 
 * Racket
@@ -1516,33 +1501,33 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   Smartparens is a minor-mode for pairing parens, brackets, quotes, etc.  Very handy for Lisp development but also useful for Python.
   [[https://github.com/Fuco1/smartparens#getting-started][Documentation for Smartparens]].
 
-  #+BEGIN_SRC emacs-lisp
- (use-package smartparens
-  :diminish smartparens-mode
-  :config
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode 1)
-    (show-paren-mode t)))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package smartparens
+      :diminish smartparens-mode
+      :config
+      (progn
+        (require 'smartparens-config)
+        (smartparens-global-mode 1)
+        (show-paren-mode t)))
+   #+end_src
 
 * Deft
-  #+BEGIN_SRC emacs-lisp
-    (use-package deft
-      :bind ("<f8>" . deft)
-      :commands (deft)
-      :config
-        (setq deft-directory "~/Dropbox/Org"
-          deft-extensions '("org" "txt" "md"))
-        (setq deft-default-extension "org")
-        (setq deft-use-filename-as-title t)
-        (setq deft-use-filter-string-for-filename t)
-        (setq deft-file-naming-rules
-        '((noslash . "_")
-          (nospace . "_")
-          (case-fn . downcase)))
-     )
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package deft
+       :bind ("<f8>" . deft)
+       :commands (deft)
+       :config
+         (setq deft-directory "~/Dropbox/Org"
+           deft-extensions '("org" "txt" "md"))
+         (setq deft-default-extension "org")
+         (setq deft-use-filename-as-title t)
+         (setq deft-use-filter-string-for-filename t)
+         (setq deft-file-naming-rules
+         '((noslash . "_")
+           (nospace . "_")
+           (case-fn . downcase)))
+      )
+   #+end_src
 
   #+RESULTS:
   : deft
@@ -1597,37 +1582,37 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+end_src
 
 * iMenu
-  #+BEGIN_SRC emacs-lisp
-  (use-package imenu-anywhere
-  :bind (("C-c i" . imenu-anywhere)
-         ("s-i" . imenu-anywhere)))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package imenu-anywhere
+       :bind (("C-c i" . imenu-anywhere)
+              ("s-i" . imenu-anywhere)))
+   #+end_src
 
 * Magit
   TODO: Fix this!  On large repos, magit-todos causes magit to hang on commit.
   <2020-11-24 Tue> This still needs attention. I Haven't looked at the bug since I first left the comment and unset the configuration.
 
-     #+BEGIN_SRC emacs-lisp
-       (use-package magit
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
        :bind ("C-x g" . magit-status))
 
-       ;; TODO: This was never working before, investigate why and fix it.
-       ;;   (use-package magit-todos
-       ;;   :after magit
-       ;;   :after hl-todo
-       ;;   :config
-       ;;   (setq magit-todos-depth 2)
-       ;;   (setq magit-todos-exclude-globs '("*.js.map"))
-       ;;   (magit-todos-mode))
+     ;; TODO: This was never working before, investigate why and fix it.
+     ;;   (use-package magit-todos
+     ;;   :after magit
+     ;;   :after hl-todo
+     ;;   :config
+     ;;   (setq magit-todos-depth 2)
+     ;;   (setq magit-todos-exclude-globs '("*.js.map"))
+     ;;   (magit-todos-mode))
 
-       (use-package hl-todo
-         :config
-         ;; Adding a new keyword: TEST.
-         (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
-         (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
-         :init
-         (add-hook 'python-mode-hook (lambda () (hl-todo-mode t)))
-         )
+     (use-package hl-todo
+       :config
+       ;; Adding a new keyword: TEST.
+       (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
+       (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
+       :init
+       (add-hook 'python-mode-hook (lambda () (hl-todo-mode t)))
+       )
 
    #+end_src
 
@@ -1635,95 +1620,95 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   For saving window configs because I bounce around from project to project and org files a lot it's handy to save configs of windows instead of changing them constantly.
   <2020-11-24 Tue> For now this is working fine but Alphapapa has encouraged me to try out [[https://github.com/alphapapa/burly.el][Burly]], therefore I'm leaving this dev note here.
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package eyebrowse
-    :diminish eyebrowse-mode
-    :init
-    (setq eyebrowse-keymap-prefix (kbd "C-c M-e"))
-    (global-unset-key (kbd "C-c C-w"))
-    :config (progn
-      (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
-      (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
-      (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
-      (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
-      (eyebrowse-mode t)
-      (setq eyebrowse-new-workspace t)))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package eyebrowse
+     :diminish eyebrowse-mode
+     :init
+     (setq eyebrowse-keymap-prefix (kbd "C-c M-e"))
+     (global-unset-key (kbd "C-c C-w"))
+     :config (progn
+       (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+       (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+       (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+       (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+       (eyebrowse-mode t)
+       (setq eyebrowse-new-workspace t)))
+   #+end_src
 
 * Highlight Indentation
-  #+BEGIN_SRC emacs-lisp
-  (use-package highlight-indent-guides
-    :diminish
-    :functions (ivy-cleanup-string
-                my-ivy-cleanup-indentation)
-    :commands highlight-indent-guides--highlighter-default
-    :functions my-indent-guides-for-all-but-first-column
-    :hook ((prog-mode vue-mode vue-html-mode vue-javascript-mode) . highlight-indent-guides-mode)
-    :init (setq highlight-indent-guides-method 'character
-                highlight-indent-guides-responsive 'top)
-    :config
-    ;; Don't display indentations while editing with `company'
-    (with-eval-after-load 'company
-      (add-hook 'company-completion-started-hook
-                (lambda (&rest _)
-                  "Turn off indentation highlighting."
-                  (when highlight-indent-guides-mode
-                    (highlight-indent-guides-mode -1))))
-      (add-hook 'company-after-completion-hook
-                (lambda (&rest _)
-                  "Turn on indentation highlighting."
-                  (when (and (derived-mode-p 'prog-mode)
-                             (not highlight-indent-guides-mode))
-                    (highlight-indent-guides-mode 1)))))
+   #+BEGIN_SRC emacs-lisp
+     (use-package highlight-indent-guides
+       :diminish
+       :functions (ivy-cleanup-string
+                   my-ivy-cleanup-indentation)
+       :commands highlight-indent-guides--highlighter-default
+       :functions my-indent-guides-for-all-but-first-column
+       :hook ((prog-mode vue-mode vue-html-mode vue-javascript-mode) . highlight-indent-guides-mode)
+       :init (setq highlight-indent-guides-method 'character
+                   highlight-indent-guides-responsive 'top)
+       :config
+       ;; Don't display indentations while editing with `company'
+       (with-eval-after-load 'company
+         (add-hook 'company-completion-started-hook
+                   (lambda (&rest _)
+                     "Turn off indentation highlighting."
+                     (when highlight-indent-guides-mode
+                       (highlight-indent-guides-mode -1))))
+         (add-hook 'company-after-completion-hook
+                   (lambda (&rest _)
+                     "Turn on indentation highlighting."
+                     (when (and (derived-mode-p 'prog-mode)
+                                (not highlight-indent-guides-mode))
+                       (highlight-indent-guides-mode 1)))))
 
-    ;; Don't display first level of indentation
-    (defun my-indent-guides-for-all-but-first-column (level responsive display)
-      (unless (< level 1)
-        (highlight-indent-guides--highlighter-default level responsive display)))
-    (setq highlight-indent-guides-highlighter-function
-          #'my-indent-guides-for-all-but-first-column)
+       ;; Don't display first level of indentation
+       (defun my-indent-guides-for-all-but-first-column (level responsive display)
+         (unless (< level 1)
+           (highlight-indent-guides--highlighter-default level responsive display)))
+       (setq highlight-indent-guides-highlighter-function
+             #'my-indent-guides-for-all-but-first-column)
 
-    ;; Don't display indentations in `swiper'
-    ;; https://github.com/DarthFennec/highlight-indent-guides/issues/40
-    (with-eval-after-load 'ivy
-      (defun my-ivy-cleanup-indentation (str)
-        "Clean up indentation highlighting in ivy minibuffer."
-        (let ((pos 0)
-              (next 0)
-              (limit (length str))
-              (prop 'highlight-indent-guides-prop))
-          (while (and pos next)
-            (setq next (text-property-not-all pos limit prop nil str))
-            (when next
-              (setq pos (text-property-any next limit prop nil str))
-              (ignore-errors
-                (remove-text-properties next pos '(display nil face nil) str))))))
-      (advice-add #'ivy-cleanup-string :after #'my-ivy-cleanup-indentation)))
+       ;; Don't display indentations in `swiper'
+       ;; https://github.com/DarthFennec/highlight-indent-guides/issues/40
+       (with-eval-after-load 'ivy
+         (defun my-ivy-cleanup-indentation (str)
+           "Clean up indentation highlighting in ivy minibuffer."
+           (let ((pos 0)
+                 (next 0)
+                 (limit (length str))
+                 (prop 'highlight-indent-guides-prop))
+             (while (and pos next)
+               (setq next (text-property-not-all pos limit prop nil str))
+               (when next
+                 (setq pos (text-property-any next limit prop nil str))
+                 (ignore-errors
+                   (remove-text-properties next pos '(display nil face nil) str))))))
+         (advice-add #'ivy-cleanup-string :after #'my-ivy-cleanup-indentation)))
    #+end_src
 
 * Ace Window
-  #+BEGIN_SRC emacs-lisp
-  (use-package ace-window
-    :config
-    (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
-  (global-set-key (kbd "M-o") 'ace-window)
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package ace-window
+       :config
+       (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+     (global-set-key (kbd "M-o") 'ace-window)
+   #+end_src
 * Mode Line
   Customizing the mode line...
   I was using powerline mode but I kind of like the doom modeline better.
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package doom-modeline
-      ;; if the icon fonts are broken, run `M-x all-the-icons-install-fonts`
-      :init (doom-modeline-mode 1))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package doom-modeline
+       ;; if the icon fonts are broken, run `M-x all-the-icons-install-fonts`
+       :init (doom-modeline-mode 1))
+   #+end_src
 * Alerts
   Using Jweigly's [[https://github.com/jwiegley/alert][Alert]] to pipe alerts to mac os x notifications
 
-  #+BEGIN_SRC emacs-lisp
-    (use-package alert
-      :defer t
-      :commands (alert)
-      :custom
-      (alert-default-style 'osx-notifier))
-  #+end_src
+   #+BEGIN_SRC emacs-lisp
+     (use-package alert
+       :defer t
+       :commands (alert)
+       :custom
+       (alert-default-style 'osx-notifier))
+   #+end_src
