@@ -21,7 +21,7 @@
   functions work, use M-x edebug-defun to set up debugging for that function, and then call it.
 
 * Packages
-   I use `use-package` so that all packages are automatically installed if cloning this repo for another machine. [[https://github.com/quelpa/quelpa][Quelpa]] grabs and builds packages from source (e.g. Github). Along with the quelpa package, quelpa-use-package adds a handler to use-package.
+   I use `use-package` and Straight so that all packages are automatically installed if cloning this repo for another machine.
 
    #+BEGIN_SRC emacs-lisp
       (defvar bootstrap-version)
