@@ -117,7 +117,6 @@
   #+end_src
 
 * One liners preferences
-
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
   These are important in how I like my emacs to perform.
 
@@ -130,13 +129,13 @@
     (setq ring-bell-function (lambda ()))
     (setq confirm-kill-emacs 'yes-or-no-p)
     (setq require-final-newline t)
-    (setq-default line-spacing 0.35)
+    (setq-default line-spacing 0.40)
     (setq explicit-shell-file-name "/bin/zsh")
     (setq backup-directory-alist `(("." . "~/.saves")))
     (setq backup-by-copying t)
     (setq delete-old-versions t)
-    (setq kept-new-versions 6)
-    (setq kept-old-versions 2)
+    (setq kept-new-versions 10)
+    (setq kept-old-versions 10)
     (setq version-control t)
     (global-display-line-numbers-mode)
     (setq-default display-line-numbers-width 3)
