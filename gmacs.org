@@ -49,7 +49,6 @@
       ;; TODO: determine if I need or still use quelpa with straight.
       (use-package quelpa)
       (use-package quelpa-use-package :ensure t)
-      (use-package use-package-ensure-system-package :ensure t)
 
       ;; Handle the `use-package-always-ensure' setting
       (quelpa-use-package-activate-advice)
@@ -172,7 +171,6 @@
 
      ;; ;; Git Gutter
      (use-package git-gutter
-       :ensure t
        :diminish git-gutter-mode
        :config (global-git-gutter-mode)
        :init
@@ -248,7 +246,6 @@
 
   #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :ensure t
     :init
     (which-key-mode)
     :config
@@ -1144,7 +1141,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    #+BEGIN_SRC emacs-lisp
      ;; TODO: Change this over to straight to install instead of quelpa
      (use-package org-super-agenda
-       :ensure t
        :quelpa (org-super-agenda :fetcher github :repo "alphapapa/org-super-agenda")
        :config
        (org-super-agenda-mode t)
@@ -1157,7 +1153,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 ** Org Pomodoro
    #+BEGIN_SRC emacs-lisp
      (use-package org-pomodoro
-       :ensure t
        :after org-agenda
        :custom
          (org-pomodoro-ask-upon-killing t)
@@ -1190,7 +1185,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
       (use-package ox-hugo
-        :ensure t
         :after ox)
    #+end_src
 
@@ -1211,7 +1205,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Org-Roam
   #+BEGIN_SRC emacs-lisp
             (use-package org-roam
-              :ensure t
               :init
               (setq org-roam-v2-ack t)
               :custom
@@ -1273,7 +1266,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
    (use-package password-store
-     :ensure t
      :commands (password-store-copy
              password-store-edit
              password-store-insert)
@@ -1284,8 +1276,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    And this one adds a major mode for browsing the pass keychain. Call it with M-x pass. There is a helpful section at the top with key bindings and their functions.
 
    #+BEGIN_SRC emacs-lisp
-   (use-package pass
-     :ensure t)
+   (use-package pass)
    #+end_src
 * Hydra
    #+BEGIN_SRC  emacs-lisp
@@ -1303,7 +1294,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
    (use-package exec-path-from-shell
-     :ensure t
      :config
      (when (memq window-system '(mac ns x))
      (exec-path-from-shell-initialize)))
@@ -1312,14 +1302,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Projectile
    #+BEGIN_SRC emacs-lisp
       (use-package projectile
-        :ensure t
         :bind-keymap
         ("C-c p" . projectile-command-map))
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
-     (use-package pyenv-mode-auto
-       :ensure t)
+     (use-package pyenv-mode-auto)
 
      (defun pyenv-activate-current-project ()
        "Automatically activates pyenv version if .python-version file exists."
@@ -1342,8 +1330,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
      (add-hook 'after-init-hook 'pyenv-init)
 
-     (use-package pyenv-mode
-       :ensure t)
+     (use-package pyenv-mode)
 
      ;; Fixes an issue where pyenv conflicts with org-mode
      (eval-after-load 'pyenv-mode
@@ -1355,7 +1342,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Flycheck
    #+BEGIN_SRC emacs-lisp
      (use-package flycheck
-       :ensure t
        :config
        (setq flycheck-flake8rc "~/.config/flake8")
        (setq flycheck-python-flake8-executable "~/.pyenv/versions/emacs/bin/flake8"))
@@ -1376,8 +1362,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
 
-     (use-package yaml-mode
-       :ensure t)
+     (use-package yaml-mode)
 
      (use-package lsp-mode
        :init (setq lsp-keymap-prefix "C-;")
@@ -1418,7 +1403,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
           (tsc . "npm install -g typescript")))
 
      (use-package lsp-ui
-       :ensure t
        :commands lsp-ui-mode
        :custom
          (lsp-ui-doc-enable nil)
@@ -1455,7 +1439,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Black
      #+BEGIN_SRC emacs-lisp
        (use-package python-black
-         :ensure t
          :quelpa
          (python-black
            :fetcher git
@@ -1466,7 +1449,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
      (use-package company
-       :ensure t
        :config
        (setq company-minimum-prefix-length 1
              company-idle-delay 0
@@ -1476,14 +1458,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        (global-company-mode +1))
 
      ;(use-package company-lsp
-     ;  :ensure t
      ;  :after company
      ;  :config
      ;  (setq company-lsp-enable-snippet nil)
      ;  :init (add-to-list 'company-backends 'company-capf))
 
      (use-package company-box
-       :ensure t
        :hook (company-mode . company-box-mode))
    #+end_src
 
@@ -1502,7 +1482,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (use-package rjsx-mode)
 
     (use-package prettier-js
-          :ensure t
           :after rjsx-mode
           :defer t
           ;; :diminish prettier-js-mode
@@ -1530,8 +1509,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   To install on Mac, `brew install cask racket` for the full install.  `brew install racket` is a minimal install.
 
   #+BEGIN_SRC emacs-lisp
- (use-package racket-mode
-   :ensure t)
+ (use-package racket-mode)
   #+end_src
 
 * Smartparens
@@ -1540,7 +1518,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
   #+BEGIN_SRC emacs-lisp
  (use-package smartparens
-  :ensure t
   :diminish smartparens-mode
   :config
   (progn
@@ -1552,7 +1529,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * Deft
   #+BEGIN_SRC emacs-lisp
     (use-package deft
-      :ensure t
       :bind ("<f8>" . deft)
       :commands (deft)
       :config
@@ -1576,7 +1552,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
    #+BEGIN_SRC emacs-lisp
      (use-package ivy
-       :ensure t
        :diminish ivy-mode
        :bind
        ("C-x B" . ivy-switch-buffer-other-window)
@@ -1588,7 +1563,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        (ivy-mode 1))
 
      (use-package ivy-rich
-       :ensure t
        :after ivy
        :delight
        :custom
@@ -1598,11 +1572,9 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
        (ivy-rich-mode 1))
 
      (use-package all-the-icons-ivy
-       :ensure t
        :after ivy-mode)
 
      (use-package all-the-icons-ivy-rich
-       :ensure t
        :after ivy-rich
        :init (all-the-icons-ivy-rich-mode 1))
 
@@ -1627,7 +1599,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 * iMenu
   #+BEGIN_SRC emacs-lisp
   (use-package imenu-anywhere
-  :ensure t
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
   #+end_src
@@ -1638,7 +1609,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
      #+BEGIN_SRC emacs-lisp
        (use-package magit
-       :ensure t
        :bind ("C-x g" . magit-status))
 
        ;; TODO: This was never working before, investigate why and fix it.
@@ -1744,7 +1714,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
   #+BEGIN_SRC emacs-lisp
     (use-package doom-modeline
-      :ensure t
       ;; if the icon fonts are broken, run `M-x all-the-icons-install-fonts`
       :init (doom-modeline-mode 1))
   #+end_src
@@ -1754,7 +1723,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   #+BEGIN_SRC emacs-lisp
     (use-package alert
       :defer t
-      :ensure t
       :commands (alert)
       :custom
       (alert-default-style 'osx-notifier))
