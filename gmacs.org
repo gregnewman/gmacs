@@ -46,8 +46,6 @@
      ;; Install use-package
      (straight-use-package 'use-package)
 
-     (package-initialize)
-
       ;; TODO: determine if I need or still use quelpa with straight.
       (use-package quelpa)
       (use-package quelpa-use-package :ensure t)
