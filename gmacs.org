@@ -1364,6 +1364,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
      (use-package yaml-mode)
 
+     ;; These language servers might need to be installed globally
+     ;; typescript-language-server . "npm install -g typescript-language-server"
+     ;; javascript-typescript-langserver . "npm install -g javascript-typescript-langserver"
+     ;; yaml-language-server . "npm install -g yaml-language-server"
+     ;; tsc . "npm install -g typescript"
      (use-package lsp-mode
        :init (setq lsp-keymap-prefix "C-;")
        (defhydra hydra-lsp (:exit t :hint nil)
@@ -1395,12 +1400,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
               ;; (js2-mode . lsp)
               (yaml-mode . lsp)
               (lsp-mode . lsp-enable-which-key-integration))
-       :commands lsp lsp-deferred
-       :ensure-system-package
-         ((typescript-language-server . "npm install -g typescript-language-server")
-          (javascript-typescript-langserver . "npm install -g javascript-typescript-langserver")
-          (yaml-language-server . "npm install -g yaml-language-server")
-          (tsc . "npm install -g typescript")))
+       :commands lsp lsp-deferred)
 
      (use-package lsp-ui
        :commands lsp-ui-mode
