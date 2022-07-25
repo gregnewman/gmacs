@@ -17,14 +17,15 @@
   This is my personal config for Emacs.  It is constructed in literate programming using Org-mode for a documented configuration.
 
   If you’re viewing the Org file, you can open source code blocks (those are the ones in begin_src) in a separate buffer by moving your point inside them and
-  typing C-c ’ (org-edit-special). This opens another buffer in emacs-lisp-mode, so you can use M-x eval-buffer to load the changes. If you want to explore how
+  typing ` C-c ’ ` (org-edit-special). This opens another buffer in emacs-lisp-mode, so you can use M-x eval-buffer to load the changes. If you want to explore how
   functions work, use M-x edebug-defun to set up debugging for that function, and then call it.
 
 * Packages
    I use `use-package` and Straight so that all packages are automatically installed if cloning this repo for another machine.
 
    #+BEGIN_SRC emacs-lisp
-      (defvar bootstrap-version)
+     ;; Boostrap Straight for package management
+     (defvar bootstrap-version)
       (let ((bootstrap-file
              (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
             (bootstrap-version 5))
@@ -54,8 +55,10 @@
       (quelpa-use-package-activate-advice)
    #+END_SRC
 
+   #+RESULTS:
+
 * Theme
-   My current configuration uses doom-theme, specifically doom-gruvbox and some default settings.
+   My current configuration uses doom-theme, specifically doom-dracula (everywhere!) and some default settings.
 
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
@@ -90,9 +93,11 @@
   #+end_src
 
 * Font handling
-  For a more asthetically pleasing experience I'm changing how I use fonts in emacs.  For buffers related to code I want Fira Code and for writing in org-mode buffers I want Avenir.  The following functions allow me to change based on the detected modes.
+  For a more asthetically pleasing experience I'm changing how I use fonts in emacs.  For buffers related to code I want Fira Code and for writing qin org-mode buffers I want Avenir.  The following functions allow me to change based on the detected modes.
 
   #+BEGIN_SRC emacs-lisp
+    ;; TODO: Add code to change font size based on which monitor I'm using.
+
     ;; Use variable width font faces in buffer
     (defun my-buffer-face-mode-variable ()
       "Set font to a variable width (proportional) fonts in current buffer"
@@ -109,7 +114,6 @@
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
     (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
     (add-hook 'rjsx-mode 'my-buffer-face-mode-fixed)
-    ;; (add-hook 'web-mode 'my-buffer-face-mode-fixed)
   #+end_src
 
 * One liners preferences
