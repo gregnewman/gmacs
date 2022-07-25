@@ -4,17 +4,15 @@
 
 As a freelance software craftsman, I use Emacs daily for the following.  My config is stable for what I do and constantly evolving.
 - Org mode!!
-- Python (as a freelance developer) using LSP-mode and the python-language-server
+- Python using LSP-mode and the python-language-server
 - Racket, Lisp, Emacs Lisp, Scheme
-- Javascript/React
-- HTML/CSS/SASS
+- Javascript, Typescript and React
+- HTML/CSS
 - Magit!!
-
-I was using emacs on Pop-OS Linux after leaving Apple in early 2019 but have since gone back to Mac as my primary machine of choice.
 
 | Operating System             | Emacs version                                                                       |
 |------------------------------+-------------------------------------------------------------------------------------|
-| Mac / Catalina               | Emacs-plus@27                                                                       |
+| Mac / Monterey               | Emacs-plus@28                                                                       |
 
 ** General Structure
 
