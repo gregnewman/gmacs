@@ -182,11 +182,8 @@
                git-gutter:lighter " GG"))
        :config
        (progn
-         (set-face-background 'git-gutter:deleted "#990A1B")
          (set-face-foreground 'git-gutter:deleted "#990A1B")
-         (set-face-background 'git-gutter:modified "#00736F")
          (set-face-foreground 'git-gutter:modified "#00736F")
-         (set-face-background 'git-gutter:added "#546E00")
          (set-face-foreground 'git-gutter:added "#546E00"))
        :bind (("C-x p" . git-gutter:previous-hunk)
               ("C-x n" . git-gutter:next-hunk)
@@ -209,40 +206,40 @@
    Remember my place in files across sessions
 
    #+BEGIN_SRC emacs-lisp
-   (save-place-mode +1)
-   (setq-default save-place t)
+     (save-place-mode +1)
+     (setq-default save-place t)
    #+end_src
 
 * Custom function to move to beginning of line
      Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
 
-     #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp
      (defun my/smarter-move-beginning-of-line (arg)
-     "Move point back to indentation of beginning of line.
+       "Move point back to indentation of beginning of line.
 
-     Move point to the first non-whitespace character on this line.
-     If point is already there, move to the beginning of the line.
-     Effectively toggle between the first non-whitespace character and
-     the beginning of the line.
+        Move point to the first non-whitespace character on this line.
+        If point is already there, move to the beginning of the line.
+        Effectively toggle between the first non-whitespace character and
+        the beginning of the line.
 
-     If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-     point reaches the beginning or end of the buffer, stop there."
-      (interactive "^p")
-      (setq arg (or arg 1))
+        If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+        point reaches the beginning or end of the buffer, stop there."
+       (interactive "^p")
+       (setq arg (or arg 1))
 
-      ;; Move lines first
-      (when (/= arg 1)
-        (let ((line-move-visual nil))
-          (forward-line (1- arg))))
+       ;; Move lines first
+       (when (/= arg 1)
+         (let ((line-move-visual nil))
+           (forward-line (1- arg))))
 
-      (let ((orig-point (point)))
-        (back-to-indentation)
-        (when (= orig-point (point))
-          (move-beginning-of-line 1))))
+       (let ((orig-point (point)))
+         (back-to-indentation)
+         (when (= orig-point (point))
+           (move-beginning-of-line 1))))
 
-      ;; remap C-a to `smarter-move-beginning-of-line'
-      (global-set-key [remap move-beginning-of-line]
-                      'my/smarter-move-beginning-of-line)
+       ;; remap C-a to `smarter-move-beginning-of-line'
+       (global-set-key [remap move-beginning-of-line]
+                       'my/smarter-move-beginning-of-line)
    #+end_src
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
