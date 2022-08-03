@@ -107,6 +107,9 @@
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
     (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
     (add-hook 'rjsx-mode 'my-buffer-face-mode-fixed)
+
+    (use-package emojify
+      :hook (after-init . global-emojify-mode))
   #+end_src
 
 * One liners preferences
@@ -1373,7 +1376,8 @@
        :config
         (define-key lsp-mode-map (kbd "C-c h") 'hydra-lsp/body)
        :hook ((python-mode . lsp)
-              ;; (js2-mode . lsp)
+              (rjsx-mode . lsp)
+              (js2-mode . lsp)
               (yaml-mode . lsp)
               (lsp-mode . lsp-enable-which-key-integration))
        :commands lsp lsp-deferred)
@@ -1411,7 +1415,9 @@
          (setq lsp-idle-delay 0.500)
          (add-hook 'lsp-ui-mode-hook #'(lambda() (setq-local flycheck-checker 'python-flake8))))
 
+
    #+end_src
+
 * Black
    #+BEGIN_SRC emacs-lisp
      (use-package python-black
