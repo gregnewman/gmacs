@@ -809,9 +809,10 @@
        :commands org-bullets-mode
        :init
        (add-hook 'org-mode-hook 'org-bullets-mode))
-
+       (progn
+        (require 'org-indent)
+        (org-indent-mode t))
      (setq org-hide-leading-stars t)
-     (setq org-indent-mode t)
      (setq org-fontify-whole-heading-line t)
      (setq org-fontify-quote-and-verse-blocks t)
      (setq org-fontify-done-headline t)
