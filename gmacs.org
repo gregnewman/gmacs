@@ -798,6 +798,8 @@
                   "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
                  ("d" "Daybook" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
                   "* %?" :clock-keep t)
+                 ("w" "Worklog" entry (file+olp+datetree "~/Dropbox/Org/worklog.org")
+                  "* %?" :clock-keep t)
                  ("m" "Meeting" entry (file "~/Dropbox/Org/inbox.org")
                   "* Meeting with %? :MEETING:\n%U" :clock-keep t)
                  ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
