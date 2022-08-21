@@ -820,7 +820,11 @@
      (setq org-fontify-whole-heading-line t)
      (setq org-fontify-quote-and-verse-blocks t)
      (setq org-fontify-done-headline t)
+
+     (use-package org-download)
+     (setq-default org-download-image-dir "~/Dropbox/Org/img")
    #+end_src
+
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
