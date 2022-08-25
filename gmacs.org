@@ -823,6 +823,14 @@
 
      (use-package org-download)
      (setq-default org-download-image-dir "~/Dropbox/Org/img")
+
+     (use-package org-fancy-priorities
+       :ensure t
+       :hook
+       (org-mode . org-fancy-priorities-mode)
+       :config
+       (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+
    #+end_src
 
 ** Agenda commands
