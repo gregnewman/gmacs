@@ -1392,6 +1392,17 @@
         ("S" lsp-shutdown-workspace))
        :config
         (define-key lsp-mode-map (kbd "C-c h") 'hydra-lsp/body)
+        (lsp-register-custom-settings
+         '(("pyls.plugins.pyls_mypy.enabled" t t)
+           ("pyls.plugins.pyls_mypy.live_mode" nil t)
+           ("pyls.plugins.pyls_black.enabled" t t)
+           ("pyls.plugins.pyls_isort.enabled" t t)
+           ("plys.plugins.flake8.enabled" t t)
+
+           ;; Disable these as they are duplicated in flake8
+           ("pyls.plugins.pycodestyle.enabled" nil t)
+           ("pyls.plugins.mccabe.enabled" nil t)
+           ("pyls.plugins.pyflakes.enabled" nil t)))
        :hook ((python-mode . lsp)
               (rjsx-mode . lsp)
               (js2-mode . lsp)
@@ -1402,12 +1413,15 @@
      (use-package lsp-ui
        :commands lsp-ui-mode
        :custom
-         (lsp-ui-doc-enable nil)
+         (lsp-ui-doc-enable t)
          (lsp-ui-doc-position 'top)
          (lsp-ui-doc-use-childframe t)
          (lsp-ui-doc-use-webkit t)
          (lsp-ui-doc-include-signature t)
-         (lsp-ui-sideline-enable nil)
+         (lsp-ui-sideline-enable t)
+         (lsp-ui-sideline-show-hover t)
+         (lsp-ui-sideline-delay 0.5)
+         (lsp-ui-sideline-ignore-duplicates t)
          ;; flycheck
          (lsp-ui-flycheck-enable t)
          (lsp-ui-flycheck-list-position 'right)
