@@ -95,13 +95,13 @@
     (defun my-buffer-face-mode-variable ()
       "Set font to a variable width (proportional) fonts in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Avenir" :height 140 :width semi-condensed))
+      (setq buffer-face-mode-face '(:family "Avenir" :height 130 :width semi-condensed))
       (buffer-face-mode))
     ;; Use monospaced font faces in buffer
     (defun my-buffer-face-mode-fixed ()
       "Sets a fixed width (monospace) font in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Fira Code" :height 140))
+      (setq buffer-face-mode-face '(:family "Fira Code" :height 130))
       (buffer-face-mode))
     ;; Set default font faces for Info and ERC modes
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
@@ -1561,52 +1561,87 @@
   #+RESULTS:
   : deft
 
+* Vertico, Marginalia, Savehist, Orderless
+#+BEGIN_SRC emacs-lisp
+  ;; Enable vertico
+  (use-package vertico
+    :init
+    (vertico-mode))
+
+  (use-package savehist
+    :init
+    (savehist-mode))
+
+  ;; Optionally use the `orderless' completion style.
+  (use-package orderless
+    :init
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+    (setq completion-styles '(orderless basic)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
+
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+    :bind (("M-A" . marginalia-cycle)
+           :map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+
+    ;; The :init configuration is always executed (Not lazy!)
+    :init
+
+    ;; Must be in the :init section of use-package such that the mode gets
+    ;; enabled right away. Note that this forces loading the package.
+    (marginalia-mode))
+#+end_src
 * Ivy, Swiper and Counsel
    I went from IDO to Helm and now going for a more minimalist lightweight solution in Ivy.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package ivy
-       :diminish ivy-mode
-       :bind
-       ("C-x B" . ivy-switch-buffer-other-window)
-       :config
-       (setq ivy-count-format ""  ; Slim down ivy display
-             ivy-display-style nil
-             ivy-minibuffer-faces nil)
-       (setq projectile-completion-system 'ivy) ; Let projectile use ivy
-       (ivy-mode 1))
+     ;; (use-package ivy
+     ;;   :diminish ivy-mode
+     ;;   :bind
+     ;;   ("C-x B" . ivy-switch-buffer-other-window)
+     ;;   :config
+     ;;   (setq ivy-count-format ""  ; Slim down ivy display
+     ;;         ivy-display-style nil
+     ;;         ivy-minibuffer-faces nil)
+     ;;   (setq projectile-completion-system 'ivy) ; Let projectile use ivy
+     ;;   (ivy-mode 1))
 
-     (use-package ivy-rich
-       :after ivy
-       :delight
-       :custom
-       (ivy-virtual-abbreviate 'full)
-       (ivy-rich-switch-buffer-align-virtual-buffer t)
-       :config
-       (ivy-rich-mode 1))
+     ;; (use-package ivy-rich
+     ;;   :after ivy
+     ;;   :delight
+     ;;   :custom
+     ;;   (ivy-virtual-abbreviate 'full)
+     ;;   (ivy-rich-switch-buffer-align-virtual-buffer t)
+     ;;   :config
+     ;;   (ivy-rich-mode 1))
 
-     (use-package all-the-icons-ivy
-       :after ivy-mode)
+     ;; (use-package all-the-icons-ivy
+     ;;   :after ivy-mode)
 
-     (use-package all-the-icons-ivy-rich
-       :after ivy-rich
-       :init (all-the-icons-ivy-rich-mode 1))
+     ;; (use-package all-the-icons-ivy-rich
+     ;;   :after ivy-rich
+     ;;   :init (all-the-icons-ivy-rich-mode 1))
 
-     ;; Ivy-based interface to standard commands
-     (global-set-key (kbd "C-s") 'swiper)
-     (global-set-key (kbd "M-x") 'counsel-M-x)
-     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-     (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-     (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-     (global-set-key (kbd "<f1> l") 'counsel-find-library)
-     (global-set-key (kbd "<f1> i") 'counsel-info-lookup-symbol)
-     (global-set-key (kbd "<f1> u") 'counsel-unicode-char)
-     ;; Ivy-based interface to shell and system tools
-     (global-set-key (kbd "C-c g") 'counsel-git)
-     (global-set-key (kbd "C-c j") 'counsel-git-grep)
-     (global-set-key (kbd "C-c k") 'counsel-ag)
-     (global-set-key (kbd "C-x l") 'counsel-locate)
-     (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+     ;; ;; Ivy-based interface to standard commands
+     ;; (global-set-key (kbd "C-s") 'swiper)
+     ;; (global-set-key (kbd "M-x") 'counsel-M-x)
+     ;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+     ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+     ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+     ;; (global-set-key (kbd "<f1> l") 'counsel-find-library)
+     ;; (global-set-key (kbd "<f1> i") 'counsel-info-lookup-symbol)
+     ;; (global-set-key (kbd "<f1> u") 'counsel-unicode-char)
+     ;; ;; Ivy-based interface to shell and system tools
+     ;; (global-set-key (kbd "C-c g") 'counsel-git)
+     ;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
+     ;; (global-set-key (kbd "C-c k") 'counsel-ag)
+     ;; (global-set-key (kbd "C-x l") 'counsel-locate)
+     ;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 
    #+end_src
 
