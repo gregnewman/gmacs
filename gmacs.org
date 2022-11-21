@@ -1766,6 +1766,7 @@
        ;; if the icon fonts are broken, run `M-x all-the-icons-install-fonts`
        :init (doom-modeline-mode 1))
    #+end_src
+
 * Alerts
   Using Jweigly's [[https://github.com/jwiegley/alert][Alert]] to pipe alerts to mac os x notifications
 
