@@ -494,14 +494,10 @@
    #+end_src
 
 * Magit
-  TODO: Fix this!  On large repos, magit-todos causes magit to hang on commit.
-  <2020-11-24 Tue> This still needs attention. I Haven't looked at the bug since I first left the comment and unset the configuration.
-
-   #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp
      (use-package magit
        :bind ("C-x g" . magit-status))
 
-     ;; TODO: This was never working before, investigate why and fix it.
      (use-package magit-todos
        :after magit
        :after hl-todo
