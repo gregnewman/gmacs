@@ -20,10 +20,31 @@
 
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 
-;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
-(add-to-list 'load-path "~/code/org-mode/lisp")
-(add-to-list 'load-path "~/code/org-mode/contrib/lisp" t)
-(require 'org)
+;; Boostrap Straight for package management
+(setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'org)
+
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+
+;; Disable package.el in favor of straight.el
+(setq package-enable-at-startup nil)
+
+;; Install use-package
+(straight-use-package 'use-package)
 
 (setq my-user-emacs-directory "~/.emacs.d/")
 
