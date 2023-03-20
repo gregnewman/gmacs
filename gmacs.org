@@ -158,21 +158,10 @@
     (setq tags-table-list (list "~/.emacs.d/TAGS"))
    #+end_src
 
-   #+RESULTS:
-   | ~/.emacs.d/TAGS |
-
-* Icons, Whitespace, Git Gutter, Dash and Recent files
+* Icons, Git Gutter and Recent files
    #+BEGIN_SRC emacs-lisp
      ;; icons
      (use-package all-the-icons)
-
-     (use-package whitespace
-       :init
-       (dolist (hook '(prog-mode-hook text-mode-hook))
-         (add-hook hook #'whitespace-mode))
-         (add-hook 'before-save-hook #'whitespace-cleanup)
-       :config
-       (setq whitespace-style '(face tabs empty trailing)))
 
      ;; ;; Git Gutter
      (use-package git-gutter
@@ -191,11 +180,6 @@
               ("C-x n" . git-gutter:next-hunk)
               ("C-x v =" . git-gutter:popup-hunk)
               ("C-x v r" . git-gutter:revert-hunk)))
-
-     ;; Browse Dash documentation
-     (use-package counsel-dash
-       :config
-       (setq counsel-dash-common-docsets '("Javascript" "Python_3")))
 
      ;; Recent files
      (setq recentf-save-file (concat user-emacs-directory "recentf")
@@ -260,7 +244,7 @@
   (provide 'init-which-key)
   #+end_src
 
-* iBuffer
+* TODO iBuffer (clean this up)
   I use ibuffer a lot for switching between buffers from a list of available open buffers.
   These settings help to organize that list.
 
