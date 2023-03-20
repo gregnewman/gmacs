@@ -434,3 +434,62 @@
      ;; Set default font faces for Info and ERC modes
      (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
    #+end_src
+
+* Vertico, Marginalia, Savehist, Orderless
+#+BEGIN_SRC emacs-lisp
+  ;; Enable vertico
+  (use-package vertico
+    :init
+    (vertico-mode))
+
+  (use-package savehist
+    :init
+    (savehist-mode))
+
+  ;; Optionally use the `orderless' completion style.
+  (use-package orderless
+    :init
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+    (setq completion-styles '(orderless basic)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
+
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+    :bind (("M-A" . marginalia-cycle)
+           :map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+
+    ;; The :init configuration is always executed (Not lazy!)
+    :init
+
+    ;; Must be in the :init section of use-package such that the mode gets
+    ;; enabled right away. Note that this forces loading the package.
+    (marginalia-mode))
+#+end_src
+
+* Company
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :config
+       (setq company-minimum-prefix-length 1
+             company-idle-delay 0
+             company-tooltip-limit 10
+             company-transformers nil
+             company-show-numbers t)
+       (global-company-mode +1))
+
+     ; (use-package company-lsp
+     ;  :after company
+     ;  :config
+     ;  (setq company-lsp-enable-snippet nil)
+     ;  :init (add-to-list 'company-backends 'company-capf))
+
+     (use-package company-box
+       :hook (company-mode . company-box-mode))
+   #+end_src
+
