@@ -344,3 +344,93 @@
 
      (add-hook 'python-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
+
+* Org-mode
+  [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
+  
+  * Capture - Everything in your mind needs to be captured because your mind is "a horrible office".  This is typically the inbox.org file in my setup but is also done in analog notebooks, email and voice memos.
+  * Clarify - Every task that doesn't take two minutes to do should be broken down into actionable tasks that simplify the larger scope of the project.
+  * Organize - All projects and next actions are organized into areas, assigned due dates if needed, prioritized and effort estimates added to them.  If the tasks/projects are not something to do right now they are still organized for later consumption.  Anything that needs to be on the calendar should be added but keep the calendar sacred.  Calendars should only be for appointments or hard-carved blocks of time.
+  * Reviews - Reviews should be handled on a regular basis.  I do a daily review of what should be the priorities for the day but I also do weekly and monthly reviews to keep my systems from getting stale and/or stuck.
+  * Engage - Choose the next action and get to work.
+
+  As a software craftsman I spend my days in Emacs. [[https://orgmode.org/][Orgmode]] is a perfect solution for keeping me honest with my system(s) and having it ready at a keystroke.  My files are plain text files with the .org extenstion and synced between my laptops and mobile devices using Dropbox.
+
+  My org file structure is as follows:
+  * gtd.org - Where my personal areas live. Personal, Finance, House, Cars, Wife, Dog, etc.
+  * books.org - A record of the books I read and related notes.
+  * classical_guitar.org - This file tracks my course work for the classical guitar school and my studies.
+  * computer.org - Notes related to my Linux setup and the programming languages I use.
+  * daybook.org - A living notebook that I append to during the day with notes about projects or KI's
+  * learning.org - any courses I take, typically CS related live here.
+  * reviews.org - I use templates to guide the daily, weekly and monthly reviews.  The results of those are in this file.
+  * studio.org - All tasks and notes regarding my art studio, projects and client commissions.
+  * Each software related client gets a file of their own where I track time, tasks and notes.  Each file is named after the client.
+
+** Configuration
+   This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
+   I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-modules '(org-info
+                         org-panel
+                         org-protocol
+                         org-toc))
+     (eval-after-load 'org
+       '(org-load-modules-maybe t))
+
+     ;; respects splits
+     (setq org-agenda-window-setup 'current-window)
+
+     ;; agenda files
+     (setq org-agenda-files (list "~/Dropbox/Org/"))
+
+     ;; Start the weekly agenda on Monday
+     (setq org-agenda-start-on-weekday 1)
+
+     ;; Display tags farther right
+     (setq org-agenda-tags-column -102)
+     (setq org-agenda-span 7)
+     (setq org-tags-column 150)
+     (setq org-agenda-sticky nil)
+     (setq org-agenda-inhibit-startup t)
+     (setq org-agenda-use-tag-inheritance t)
+     (setq org-agenda-show-log t)
+     (setq org-agenda-skip-scheduled-if-done t)
+     (setq org-agenda-skip-deadline-if-done t)
+     (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
+     (setq org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS")
+
+     ;; The following lines are always needed.  Choose your own keys.
+     (global-set-key "\C-cl" 'org-store-link)
+     (global-set-key "\C-ca" 'org-agenda)
+
+     ;; enable line breaks
+     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+
+     ;; Don't allow parent to be marked done unless children are done
+     (setq org-enforce-todo-dependencies t)
+     (setq org-enforce-todo-checkbox-dependencies t)
+
+     (setq org-fontify-done-headline t)
+     (setq org-startup-folded t)
+     (setq org-src-fontify-natively nil)
+
+     ;; Refiling
+     (setq org-refile-targets '((org-agenda-files :maxlevel . 5)))
+     (setq org-refile-allow-creating-parent-nodes 'confirm)
+
+     ;; Visual Line Mode
+     (add-hook 'org-mode-hook 'visual-line-mode)
+
+     ;; Line numbers
+     ;; TODO fix this in 29 it doesn't work
+     (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
+
+     (defun gn/orgmode-ignore-whitespace-mode ()
+       (interactive)
+       "turns off whitespace mode in org buffers"
+       (whitespace-mode -1))
+     ;; Set default font faces for Info and ERC modes
+     (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
+   #+end_src
