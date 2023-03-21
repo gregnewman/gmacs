@@ -366,7 +366,7 @@
   * reviews.org - I use templates to guide the daily, weekly and monthly reviews.  The results of those are in this file.
   * studio.org - All tasks and notes regarding my art studio, projects and client commissions.
   * Each software related client gets a file of their own where I track time, tasks and notes.  Each file is named after the client.
-
+** TODO fix indents in orgmode under headings
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
    I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
