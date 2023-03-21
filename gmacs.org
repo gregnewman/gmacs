@@ -455,12 +455,12 @@
                ("HOLD" :foreground "magenta" :weight bold)
                ("CANCELLED" :foreground "dim gray" :weight bold))))
    #+end_src
-*** Capture mode keybinding
+** Capture mode keybinding
    I use C-c c to start capture mode
    #+BEGIN_SRC emacs-lisp
    (global-set-key (kbd "C-c c") 'org-capture)
    #+end_src
-*** Capture templates
+** Capture templates
     Capture template are critical for keeping focused on the current work and not getting sent down the proverbial rabbit hole.  It's also handy for knowledge investements while working.  For instance, a method in a python library I need to understand more deeply, I can trigger the capture template for Knowledge Investments with `C=c c k`, add some context and with `C=c C=c` close and save the capture without leaving my position in the file.  The link to where I found the method is captured in the template and I can visit that later in the day when I have time to dive deep.
 
     For my reference the syntax is as follows
