@@ -494,6 +494,32 @@
                  ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
+** Org bullets and misc settings
+   Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :commands org-bullets-mode
+       :init
+       (add-hook 'org-mode-hook 'org-bullets-mode))
+       (progn
+        (require 'org-indent)
+        (org-indent-mode t))
+     (setq org-hide-leading-stars t)
+     (setq org-fontify-whole-heading-line t)
+     (setq org-fontify-quote-and-verse-blocks t)
+     (setq org-fontify-done-headline t)
+
+     (use-package org-download)
+     (setq-default org-download-image-dir "~/Dropbox/Org/img")
+
+     (use-package org-fancy-priorities
+       :ensure t
+       :hook
+       (org-mode . org-fancy-priorities-mode)
+       :config
+       (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+
+   #+end_src
 * Vertico, Marginalia, Savehist, Orderless
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
