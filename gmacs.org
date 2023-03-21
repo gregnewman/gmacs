@@ -98,14 +98,15 @@
     (defun my-buffer-face-mode-variable ()
       "Set font to a variable width (proportional) fonts in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Avenir" :height 130 :width semi-condensed))
+      (setq buffer-face-mode-face '(:family "Avenir" :height 140 :width semi-condensed))
       (buffer-face-mode))
     ;; Use monospaced font faces in buffer
     (defun my-buffer-face-mode-fixed ()
       "Sets a fixed width (monospace) font in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Fira Code" :height 120))
+      (setq buffer-face-mode-face '(:family "Fira Code" :height 140))
       (buffer-face-mode))
+    
     ;; Set default font faces for Info and ERC modes
     (add-hook 'org-mode-hook 'my-buffer-face-mode-variable)
     (add-hook 'python-mode-hook  'my-buffer-face-mode-fixed)
@@ -429,7 +430,10 @@
        "turns off whitespace mode in org buffers"
        (whitespace-mode -1))
      ;; Set default font faces for Info and ERC modes
-     (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
+     ;; (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
+
+     ;; Turn off whitespace-mode since my linters will handle them anyway and it's annoying
+     (whitespace-mode -1)
    #+end_src
 
 ** Todo Keywords
@@ -450,6 +454,45 @@
                ("WAITING" :foreground "tomato" :weight bold)
                ("HOLD" :foreground "magenta" :weight bold)
                ("CANCELLED" :foreground "dim gray" :weight bold))))
+   #+end_src
+*** Capture mode keybinding
+   I use C-c c to start capture mode
+   #+BEGIN_SRC emacs-lisp
+   (global-set-key (kbd "C-c c") 'org-capture)
+   #+end_src
+*** Capture templates
+    Capture template are critical for keeping focused on the current work and not getting sent down the proverbial rabbit hole.  It's also handy for knowledge investements while working.  For instance, a method in a python library I need to understand more deeply, I can trigger the capture template for Knowledge Investments with `C=c c k`, add some context and with `C=c C=c` close and save the capture without leaving my position in the file.  The link to where I found the method is captured in the template and I can visit that later in the day when I have time to dive deep.
+
+    For my reference the syntax is as follows
+    #+BEGIN_EXAMPLE
+    ("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
+                 "* TODO %?\n%U\n%a\n" :clock-keep t)
+    #+end_example
+
+    `t` is the trigger key for Todo.
+    Todo entry is layman's term for the capture followed by what file to store it in.
+    The instruction regex starts with the tag or keyword then [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][template expansions]].
+       - %? Position the cursor where I was
+       - %u, %U Inactive timestamp
+       - %a annotation, normally the link created with org-store-link
+       - :clock-keep keeps the clock running if I'm clocking a task
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Capture templates
+     (setq org-indent-indentation-per-level 2)
+     (setq org-capture-templates
+         (quote (("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
+                 "* TODO %?\n%U\n%a\n" :clock-keep t)
+                 ("k" "Knowledge Investment" entry (file "~/Dropbox/Org/inbox.org")
+                  "* %? :KI:\n%U\n%a\n" :clock-keep t)
+                 ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")
+                  "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
+                 ("d" "Daybook" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
+                  "* %?" :clock-keep t)
+                 ("m" "Meeting" entry (file "~/Dropbox/Org/inbox.org")
+                  "* Meeting with %? :MEETING:\n%U" :clock-keep t)
+                 ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
+                  "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
 * Vertico, Marginalia, Savehist, Orderless
 #+BEGIN_SRC emacs-lisp
