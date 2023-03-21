@@ -2,21 +2,18 @@
 
 ** What To Expect
 
-As a freelance software craftsman, I use Emacs daily for the following.  My config is stable for what I do and constantly evolving.
+As a software craftsman, I use Emacs daily for the following.  My config is stable for what I do and constantly evolving.
+
 - Org mode!!
-- Python using LSP-mode and the python-language-server
+- Python using Eglot and LSP
 - Racket, Lisp, Emacs Lisp, Scheme
 - Javascript, Typescript and React
-- HTML/CSS
+- HTML/CSS/Tailwind
 - Magit!!
 
-| Operating System             | Emacs version                                                                       |
-|------------------------------+-------------------------------------------------------------------------------------|
-| Mac / Monterey               | Emacs-plus@28                                                                       |
-
-** General Structure
-
-Now, my Emacs configuration is in a file named =gmacs.org=. My =init.el= got some nifty Elisp code that converts/tangles (only) the Elisp blocks into the =gmacs.el=. This generated file is interpreted by my GNU/Emacs on startup.  Thanks to Karl Voit for ideas to get this working properly; mainly with using org from git instead of packaged.
+| Operating System | Emacs version |
+|------------------+---------------|
+| Mac / Ventura    | Emacs-plus@29 |
 
 ** License
 
