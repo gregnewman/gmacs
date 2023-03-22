@@ -634,6 +634,8 @@
    #+end_src
 
 * Docker
+Repo and documentation https://github.com/Silex/docker.el
+
 #+BEGIN_SRC emacs-lisp
   (use-package docker
     :ensure t
