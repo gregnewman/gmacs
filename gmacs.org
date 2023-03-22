@@ -632,3 +632,10 @@
        (setq highlight-indent-guides-highlighter-function
              #'my-indent-guides-for-all-but-first-column)
    #+end_src
+
+* Docker
+#+BEGIN_SRC emacs-lisp
+  (use-package docker
+    :ensure t
+    :bind ("C-c d" . docker))
+#+end_src
