@@ -607,7 +607,7 @@
        :diminish
        :commands highlight-indent-guides--highlighter-default
        :functions my-indent-guides-for-all-but-first-column
-       :hook ((prog-mode vue-mode vue-html-mode vue-javascript-mode) . highlight-indent-guides-mode)
+       :hook ((prog-mode) . highlight-indent-guides-mode)
        :init (setq highlight-indent-guides-method 'character
                    highlight-indent-guides-responsive 'top)
        :config
