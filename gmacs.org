@@ -421,9 +421,17 @@
      ;; Visual Line Mode
      (add-hook 'org-mode-hook 'visual-line-mode)
 
+     ;; Org indent mode
+     (add-hook 'org-mode-hook 'org-indent-mode)
+
      ;; Line numbers
      ;; TODO fix this in 29 it doesn't work
-     (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
+     (defun gn/orgmode-ignore-line-numbers-mode ()
+       (interactive)
+       "turns off line numbers mode in org buffers"
+       (display-line-numbers-mode -1))
+
+     (add-hook 'org-mode-hook #'gn/orgmode-ignore-line-numbers-mode)
 
      (defun gn/orgmode-ignore-whitespace-mode ()
        (interactive)
@@ -436,6 +444,34 @@
      (whitespace-mode -1)
    #+end_src
 
+** Org-modern
+    #+BEGIN_SRC emacs-lisp
+      (use-package org-modern
+        :config
+        (setq
+         ;; Edit settings
+         org-auto-align-tags nil
+         org-tags-column 0
+         org-catch-invisible-edits 'show-and-error
+         org-special-ctrl-a/e t
+         org-insert-heading-respect-content t
+
+         ;; Org styling, hide markup etc.
+         org-hide-emphasis-markers t
+         org-pretty-entities t
+         org-ellipsis "…"
+
+         ;; Agenda styling
+         org-agenda-tags-column 0
+         org-agenda-block-separator ?─
+         org-agenda-time-grid
+         '((daily today require-timed)
+           (800 1000 1200 1400 1600 1800 2000)
+           " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+         org-agenda-current-time-string
+         "⭠ now ─────────────────────────────────────────────────"))
+      (global-org-modern-mode)
+    #+end_src
 ** Todo Keywords
     Setting up my todo keywords which are global and their relative colors.
    #+BEGIN_SRC emacs-lisp
@@ -496,7 +532,7 @@
    #+end_src
 ** Org bullets and misc settings
    Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
-   #+BEGIN_SRC emacs-lisp
+
      (use-package org-bullets
        :commands org-bullets-mode
        :init
@@ -509,6 +545,7 @@
      (setq org-fontify-quote-and-verse-blocks t)
      (setq org-fontify-done-headline t)
 
+ #+BEGIN_SRC emacs-lisp
      (use-package org-download)
      (setq-default org-download-image-dir "~/Dropbox/Org/img")
 
