@@ -425,7 +425,6 @@
      (add-hook 'org-mode-hook 'org-indent-mode)
 
      ;; Line numbers
-     ;; TODO fix this in 29 it doesn't work
      (defun gn/orgmode-ignore-line-numbers-mode ()
        (interactive)
        "turns off line numbers mode in org buffers"
