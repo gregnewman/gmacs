@@ -98,13 +98,13 @@
     (defun my-buffer-face-mode-variable ()
       "Set font to a variable width (proportional) fonts in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Avenir" :height 140 :width semi-condensed))
+      (setq buffer-face-mode-face '(:family "Avenir" :height 130 :width semi-condensed))
       (buffer-face-mode))
     ;; Use monospaced font faces in buffer
     (defun my-buffer-face-mode-fixed ()
       "Sets a fixed width (monospace) font in current buffer"
       (interactive)
-      (setq buffer-face-mode-face '(:family "Fira Code" :height 140))
+      (setq buffer-face-mode-face '(:family "Fira Code" :height 130))
       (buffer-face-mode))
     
     ;; Set default font faces for Info and ERC modes
@@ -122,14 +122,14 @@
 
   #+BEGIN_SRC emacs-lisp
     (fset 'yes-or-no-p 'y-or-n-p)
-    (set-frame-font "Fira Code Medium 14")
+    (set-frame-font "Fira Code Medium 12")
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
     (setq ring-bell-function (lambda ()))
     (setq confirm-kill-emacs 'yes-or-no-p)
     (setq require-final-newline t)
-    (setq-default line-spacing 0.25)
+    (setq-default line-spacing 0.15)
     (setq explicit-shell-file-name "/bin/zsh")
     (setq backup-directory-alist `(("." . "~/.saves")))
     (setq backup-by-copying t)
@@ -443,34 +443,6 @@
      (whitespace-mode -1)
    #+end_src
 
-** Org-modern
-    #+BEGIN_SRC emacs-lisp
-      (use-package org-modern
-        :config
-        (setq
-         ;; Edit settings
-         org-auto-align-tags nil
-         org-tags-column 0
-         org-catch-invisible-edits 'show-and-error
-         org-special-ctrl-a/e t
-         org-insert-heading-respect-content t
-
-         ;; Org styling, hide markup etc.
-         org-hide-emphasis-markers t
-         org-pretty-entities t
-         org-ellipsis "…"
-
-         ;; Agenda styling
-         org-agenda-tags-column 0
-         org-agenda-block-separator ?─
-         org-agenda-time-grid
-         '((daily today require-timed)
-           (800 1000 1200 1400 1600 1800 2000)
-           " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-         org-agenda-current-time-string
-         "⭠ now ─────────────────────────────────────────────────"))
-      (global-org-modern-mode)
-    #+end_src
 ** Todo Keywords
     Setting up my todo keywords which are global and their relative colors.
    #+BEGIN_SRC emacs-lisp
