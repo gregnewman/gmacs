@@ -68,7 +68,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-dracula t))
+       (load-theme 'doom-solarized-dark t))
    #+end_src
 
 * Windows Configuration
@@ -138,7 +138,6 @@
     (setq kept-old-versions 10)
     (setq version-control t)
     (global-display-line-numbers-mode)
-    (setq-default display-line-numbers-width 3)
     (setq-default display-fill-column-indicator-column 80)
     ;; always show paren highlights
     (show-paren-mode 1)
@@ -503,7 +502,7 @@
    #+end_src
 ** Org bullets and misc settings
    Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
-
+ #+BEGIN_SRC emacs-lisp
      (use-package org-bullets
        :commands org-bullets-mode
        :init
@@ -516,7 +515,6 @@
      (setq org-fontify-quote-and-verse-blocks t)
      (setq org-fontify-done-headline t)
 
- #+BEGIN_SRC emacs-lisp
      (use-package org-download)
      (setq-default org-download-image-dir "~/Dropbox/Org/img")
 
