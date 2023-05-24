@@ -5,7 +5,7 @@
 As a software craftsman, I use Emacs daily for the following.  My config is stable for what I do and constantly evolving.
 
 - Org mode!!
-- Python using Eglot and LSP
+- Python and Django using Eglot and LSP
 - Racket, Lisp, Emacs Lisp, Scheme
 - Javascript, Typescript and React
 - HTML/CSS/Tailwind
@@ -13,7 +13,7 @@ As a software craftsman, I use Emacs daily for the following.  My config is stab
 
 | Operating System | Emacs version |
 |------------------+---------------|
-| Mac / Ventura    | Emacs-plus@29 |
+| Mac / Ventura    | Emacs 29.0.60 |
 
 ** License
 
