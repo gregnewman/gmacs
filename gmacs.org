@@ -68,7 +68,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-solarized-dark t))
+       (load-theme 'doom-xcode t))
    #+end_src
 
 * Windows Configuration
@@ -689,4 +689,9 @@ Repo and documentation https://github.com/Silex/docker.el
   (use-package docker
     :ensure t
     :bind ("C-c d" . docker))
+#+end_src
+* Eglot
+#+BEGIN_SRC  emacs-lisp
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'javascript-mode-hook 'eglot-ensure)
 #+end_src
