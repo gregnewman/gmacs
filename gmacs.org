@@ -156,6 +156,15 @@
     (global-auto-revert-mode t)
     ;; Configure where TAGS are stored
     (setq tags-table-list (list "~/.emacs.d/TAGS"))
+    ;; isearch improvements
+    (setq isearch-lazy-count t)
+    (setq lazy-count-prefix-format nil)
+    (setq lazy-count-suffix-format "   (%s/%s)")
+
+    ;; some useful settings found in http://yummymelon.com/devnull/surprise-and-emacs-defaults.html
+    (setq sentence-end-double-space nil)
+    (setq delete-selection-mode t)
+    (setq dired-auto-revert-buffer t)
    #+end_src
 
 * Icons, Git Gutter and Recent files
