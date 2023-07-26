@@ -16,9 +16,19 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-;;(package-initialize)
-
+(package-initialize)
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
+(setq my-user-emacs-directory "~/.emacs.d/")
+
+;; HACK Work around native compilation on macOS failing with 'ld: library not
+;; found for -lemutls_w'.
+;; https://github.com/d12frosted/homebrew-emacs-plus/issues/554
+(setenv "LIBRARY_PATH"
+	(string-join
+	 '("/opt/homebrew/opt/gcc/lib/gcc/13"
+	   "/opt/homebrew/opt/libgccjit/lib/gcc/13"
+	   "/opt/homebrew/opt/gcc/lib/gcc/13/gcc/aarch64-apple-darwin22/13")
+	 ":"))
 
 ;; Boostrap Straight for package management
 (setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
@@ -45,8 +55,6 @@
 
 ;; Install use-package
 (straight-use-package 'use-package)
-
-(setq my-user-emacs-directory "~/.emacs.d/")
 
 ;; =======================================================================================
 ;; The init.el file looks for "gmacs.org" and tangles its elisp blocks (matching
@@ -127,11 +135,11 @@ Note the weekly scope of the command's precision.")
   (load-file elfile))
 
 ;; when gmacs.org is saved, re-generate gmacs.el:
-(defun my-tangle-gmacs.org-hook-func ()
+(defun my-tangle-gmacs-org-hook-func ()
   (when (string= "gmacs.org" (buffer-name))
 	(let ((orgfile (concat my-user-emacs-directory "gmacs.org"))
 		  (elfile (concat my-user-emacs-directory "gmacs.el")))
 	  (my-tangle-gmacs.org))))
-(add-hook 'after-save-hook 'my-tangle-gmacs.org-hook-func)
+(add-hook 'after-save-hook 'my-tangle-gmacs-org-hook-func)
 
 (message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) my-init-el-start-time)))
