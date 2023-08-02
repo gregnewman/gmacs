@@ -4,8 +4,12 @@
 #+TODO: ACTIVE | DISABLED
 #+STARTUP: indent
 
-* Tasks I plan to complete regarding this config
-- [ ] Fix tangling config.  When I save it tangles the config then kills the buffer.
+* Tasks I plan to complete regarding this config [20%]
+- [X] Fix tangling config.  When I save it tangles the config then kills the buffer.
+- [ ] Change fonts
+- [ ] Change line height/spacing
+- [ ] I would love to have highlighting for css colors. I think i had this once before.
+- [ ] Tailwind autocomplete
 * About
   This is my personal config for Emacs.  It is constructed in literate programming using Org-mode for a documented configuration.
 
@@ -698,4 +702,12 @@ Repo and documentation https://github.com/Silex/docker.el
 #+BEGIN_SRC  emacs-lisp
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'javascript-mode-hook 'eglot-ensure)
+#+end_src
+* Avy
+#+BEGIN_SRC emacs-lisp
+      (use-package avy
+        :ensure t
+        :config
+        (avy-setup-default)
+        :bind ("M-s" . avy-goto-char-timer))
 #+end_src
