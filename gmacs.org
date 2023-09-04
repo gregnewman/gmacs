@@ -4,11 +4,11 @@
 #+TODO: ACTIVE | DISABLED
 #+STARTUP: indent
 
-* Tasks I plan to complete regarding this config [20%]
+* Tasks I plan to complete regarding this config [80%]
 - [X] Fix tangling config.  When I save it tangles the config then kills the buffer.
-- [ ] Change fonts
-- [ ] Change line height/spacing
-- [ ] I would love to have highlighting for css colors. I think i had this once before.
+- [X] Change fonts
+- [X] Change line height/spacing
+- [X] I would love to have highlighting for css colors. I think i had this once before.
 - [ ] Tailwind autocomplete
 * About
   This is my personal config for Emacs.  It is constructed in literate programming using Org-mode for a documented configuration.
@@ -87,9 +87,9 @@
 
 * Font handling
   #+BEGIN_SRC emacs-lisp
-    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 180)
-    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 190)
-    (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'light :height 1.3)
+    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 170)
+    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 150)
+    (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'light :height 1.1)
   #+END_SRC
 
 * One liners preferences
@@ -341,6 +341,39 @@
   * Reviews - Reviews should be handled on a regular basis.  I do a daily review of what should be the priorities for the day but I also do weekly and monthly reviews to keep my systems from getting stale and/or stuck.
   * Engage - Choose the next action and get to work.
 
+** Fontification and Beautification
+#+BEGIN_SRC emacs-lisp
+;; Load org-faces to make sure we can set appropriate faces
+(require 'org-faces)
+
+;; Hide emphasis markers on formatted text
+(setq org-hide-emphasis-markers t)
+
+;; Resize Org headings
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+  (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
+
+;; Make the document title a bit bigger
+(set-face-attribute 'org-document-title nil :font "Iosevka Aile" :weight 'bold :height 1.3)
+
+;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+#+END_SRC
+
 ** TODO fix indents in orgmode under headings
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
@@ -410,8 +443,6 @@
        (interactive)
        "turns off whitespace mode in org buffers"
        (whitespace-mode -1))
-     ;; Set default font faces for Info and ERC modes
-     ;; (add-hook 'org-mode-hook #'gn/orgmode-ignore-whitespace-mode)
 
      ;; Turn off whitespace-mode since my linters will handle them anyway and it's annoying
      (whitespace-mode -1)
