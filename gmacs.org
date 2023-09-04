@@ -229,7 +229,7 @@
   (provide 'init-which-key)
   #+end_src
 
-* TODO iBuffer (clean this up)
+* iBuffer
   I use ibuffer a lot for switching between buffers from a list of available open buffers.
   These settings help to organize that list.
 
@@ -241,11 +241,11 @@
            (quote (("default"
                     ("Python"
                      (mode . python-mode))
-                    ;; ("HTML"
-                    ;; (mode . web-mode))
-                    ;; ("JS"
-                    ;; (or (mode . js2-mode)
-                    ;;     (filename . ".js")))
+                    ("HTML"
+                     (mode . mhtml-mode))
+                    ("JS"
+                     (or (mode . javascript-mode)
+                         (filename . ".js")))
                     ("TXT"
                      (mode . text-mode))
                     ("YAML"
