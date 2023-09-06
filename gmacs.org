@@ -65,7 +65,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-xcode t))
+       (load-theme 'doom-dracula t))
    #+end_src
 
 * Windows Configuration
@@ -87,9 +87,9 @@
 
 * Font handling
   #+BEGIN_SRC emacs-lisp
-    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 170)
-    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 150)
-    (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'light :height 1.1)
+    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 140)
+    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 130)
+    (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'light :height 1.0)
   #+END_SRC
 
 * One liners preferences
@@ -350,14 +350,14 @@
 (setq org-hide-emphasis-markers t)
 
 ;; Resize Org headings
-(dolist (face '((org-level-1 . 1.2)
-                (org-level-2 . 1.1)
-                (org-level-3 . 1.05)
-                (org-level-4 . 1.0)
-                (org-level-5 . 1.1)
-                (org-level-6 . 1.1)
-                (org-level-7 . 1.1)
-                (org-level-8 . 1.1)))
+(dolist (face '((org-level-1 . 1.0)
+                (org-level-2 . 0.95)
+                (org-level-3 . 0.90)
+                (org-level-4 . 0.90)
+                (org-level-5 . 0.90)
+                (org-level-6 . 0.90)
+                (org-level-7 . 0.90)
+                (org-level-8 . 0.90)))
   (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
 
 ;; Make the document title a bit bigger
@@ -629,19 +629,6 @@
                  nil))
 
      (add-to-list 'org-agenda-custom-commands
-          '("1" "Clients"
-               ((agenda "")
-
-                (tags "PRIORITY=\"A\""
-                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                  (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
-
-               (tags-todo "client"
-                 ((org-agenda-skip-function
-                  '(or (gn/org-skip-subtree-if-priority ?A)
-                   (org-agenda-skip-if nil '(scheduled deadline)))))))))
-
-     (add-to-list 'org-agenda-custom-commands
           '("c" "Simple agenda view"
                ((tags "PRIORITY=\"A\""
                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
@@ -651,13 +638,6 @@
                  ((org-agenda-skip-function
                   '(or (gn/org-skip-subtree-if-priority ?A)
                    (org-agenda-skip-if nil '(scheduled deadline)))))))))
-
-     (add-to-list 'org-agenda-custom-commands
-               '("2" . "COLLECT...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("2b" "CollectBox"
-                 ((alltodo ""))))
 
      (add-to-list 'org-agenda-custom-commands
                '("f" . "FOCUS...") t)
@@ -860,7 +840,7 @@
        :hook
        (org-mode . org-fancy-priorities-mode)
        :config
-       (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+       (setq org-fancy-priorities-list '("🅰️" "🅱️" "1️⃣" "☕")))
 
    #+end_src
 * Org-Roam
@@ -1040,4 +1020,10 @@ Repo and documentation https://github.com/Silex/docker.el
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
     :hook (emacs-lisp-mode web-mode python-mode))
+#+END_SRC
+* Yasnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet)
+  (use-package yasnippet-snippets)
+  (yas-global-mode 1)
 #+END_SRC
