@@ -374,7 +374,6 @@
 (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 #+END_SRC
 
-** TODO fix indents in orgmode under headings
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
    I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
