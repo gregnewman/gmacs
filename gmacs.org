@@ -949,38 +949,6 @@
        )
    #+end_src
 
-* Highlight Indentation
-   BEGIN_SRC emacs-lisp
-     (use-package highlight-indent-guides
-       :diminish
-       :commands highlight-indent-guides--highlighter-default
-       :functions my-indent-guides-for-all-but-first-column
-       :hook ((prog-mode) . highlight-indent-guides-mode)
-       :init (setq highlight-indent-guides-method 'character
-                   highlight-indent-guides-responsive 'top)
-       :config
-       ;; Don't display indentations while editing with `company'
-       (with-eval-after-load 'company
-         (add-hook 'company-completion-started-hook
-                   (lambda (&rest _)
-                     "Turn off indentation highlighting."
-                     (when highlight-indent-guides-mode
-                       (highlight-indent-guides-mode -1))))
-         (add-hook 'company-after-completion-hook
-                   (lambda (&rest _)
-                     "Turn on indentation highlighting."
-                     (when (and (derived-mode-p 'prog-mode)
-                                (not highlight-indent-guides-mode))
-                       (highlight-indent-guides-mode 1))))))
-
-       ;; Don't display first level of indentation
-       (defun my-indent-guides-for-all-but-first-column (level responsive display)
-         (unless (< level 1)
-           (highlight-indent-guides--highlighter-default level responsive display)))
-       (setq highlight-indent-guides-highlighter-function
-             #'my-indent-guides-for-all-but-first-column)
-   end_src
-
 * Docker
 Repo and documentation https://github.com/Silex/docker.el
 
@@ -1014,30 +982,31 @@ Repo and documentation https://github.com/Silex/docker.el
   (yas-global-mode 1)
 #+END_SRC
 * Indent bars
+Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-bars/tree/main][from jdtsmith/indent-bars]]
 #+BEGIN_SRC emacs-lisp
-  (use-package indent-bars
-    :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
-    :custom
-    (indent-bars-treesit-support t)
-    (indent-bars-no-descend-string t)
-     (indent-bars-treesit-ignore-blank-lines-types '("module"))
-     (indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
-         			              list list_comprehension
-         			              dictionary dictionary_comprehension
-         			              parenthesized_expression subscript)))
-    :hook
-    ((python-base-mode yaml-mode) . indent-bars-mode))
+    (use-package indent-bars
+      :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+      :custom
+      (indent-bars-treesit-support t)
+      (indent-bars-no-descend-string t)
+       (indent-bars-treesit-ignore-blank-lines-types '("module"))
+       (indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
+           			              list list_comprehension
+           			              dictionary dictionary_comprehension
+           			              parenthesized_expression subscript)))
+      :hook
+      ((python-base-mode yaml-mode js-base-mode html-mode) . indent-bars-mode))
 
-  (setq
-   indent-bars-color '(highlight :face-bg t :blend 0.2)
-   indent-bars-prefer-character 1
-   indent-bars-pattern ".*.*.*.*"
-   indent-bars-width-frac 0.5
-   indent-bars-pad-frac 0.2
-   indent-bars-zigzag 0.1
-   indent-bars-color-by-depth '(:palette ("red" "green" "orange" "cyan") :blend 1)
-   indent-bars-highlight-current-depth '(:blend 0.5))
-;;   indent-bars-highlight-current-depth '(:background "gray10"))
+    (setq
+     indent-bars-color '(highlight :face-bg t :blend 0.2)
+     indent-bars-prefer-character 1
+     indent-bars-pattern ".*.*.*.*"
+     indent-bars-width-frac 0.5
+     indent-bars-pad-frac 0.2
+     indent-bars-zigzag 0.1
+     indent-bars-color-by-depth '(:palette ("red" "green" "orange" "cyan") :blend 1)
+     indent-bars-highlight-current-depth '(:blend 0.5))
+  ;;   indent-bars-highlight-current-depth '(:background "gray10"))
 #+END_SRC
 
 * Golden Ratio
