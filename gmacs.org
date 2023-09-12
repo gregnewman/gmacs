@@ -994,19 +994,18 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
            			              list list_comprehension
            			              dictionary dictionary_comprehension
            			              parenthesized_expression subscript)))
+      :config
+      (setq
+       indent-bars-color '(highlight :face-bg t :blend 0.2)
+       indent-bars-prefer-character 1
+       indent-bars-pattern ".*.*.*.*"
+       indent-bars-width-frac 0.5
+       indent-bars-pad-frac 0.2
+       indent-bars-zigzag 0.1
+       indent-bars-color-by-depth '(:palette ("red" "green" "orange" "cyan") :blend 1)
+       indent-bars-highlight-current-depth '(:blend 0.5))
       :hook
       ((python-base-mode yaml-mode js-base-mode html-mode) . indent-bars-mode))
-
-    (setq
-     indent-bars-color '(highlight :face-bg t :blend 0.2)
-     indent-bars-prefer-character 1
-     indent-bars-pattern ".*.*.*.*"
-     indent-bars-width-frac 0.5
-     indent-bars-pad-frac 0.2
-     indent-bars-zigzag 0.1
-     indent-bars-color-by-depth '(:palette ("red" "green" "orange" "cyan") :blend 1)
-     indent-bars-highlight-current-depth '(:blend 0.5))
-  ;;   indent-bars-highlight-current-depth '(:background "gray10"))
 #+END_SRC
 
 * Golden Ratio
