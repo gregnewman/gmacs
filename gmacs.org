@@ -562,7 +562,7 @@
 
      ;; Taken from doc.norang.ca/org-mode.html
      (add-to-list 'org-agenda-custom-commands
-          '(" " "Agenda"
+          '("1" "Agenda"
                  ((agenda "" nil)
                   (tags-todo "-CANCELLED/!NEXT"
                              ((org-agenda-overriding-header (concat "Project Next Tasks"
@@ -629,10 +629,10 @@
 
      (add-to-list 'org-agenda-custom-commands
           '("c" "Simple agenda view"
-               ((tags "PRIORITY=\"A\""
+               ((agenda "")
+               (tags "PRIORITY=\"A\""
                  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                   (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
-               (agenda "")
                (alltodo ""
                  ((org-agenda-skip-function
                   '(or (gn/org-skip-subtree-if-priority ?A)
@@ -642,7 +642,7 @@
                '("f" . "FOCUS...") t)
 
      (add-to-list 'org-agenda-custom-commands
-               '("rad" "All Tasks (grouped by Due Date)"
+               '("d" "All Tasks (grouped by Due Date)"
                  ((tags-todo "DEADLINE<\"<+0d>\""
                              ((org-agenda-overriding-header "OVERDUE")
                               (org-agenda-skip-function
@@ -755,19 +755,6 @@
                   (org-agenda-span 'week)
                   (org-agenda-start-on-weekday 1)
                   (org-agenda-start-with-clockreport-mode t)
-                  (org-agenda-time-grid nil))) t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("rc" . "Calendar...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("rc7" "Events and appointments for 7 days"
-                 ((agenda ""))
-                 ((org-agenda-entry-types '(:timestamp :sexp))
-                  ;; (org-agenda-overriding-header "Calendar for 7 days")
-                  (org-agenda-span 'week)
-                  (org-agenda-format-date "\n%a %d")
-                  ;; (org-agenda-date-weekend ... new face ...)
                   (org-agenda-time-grid nil))) t)
 
      (add-to-list 'org-agenda-custom-commands
@@ -963,7 +950,7 @@
    #+end_src
 
 * Highlight Indentation
-   #+BEGIN_SRC emacs-lisp
+   BEGIN_SRC emacs-lisp
      (use-package highlight-indent-guides
        :diminish
        :commands highlight-indent-guides--highlighter-default
@@ -992,7 +979,7 @@
            (highlight-indent-guides--highlighter-default level responsive display)))
        (setq highlight-indent-guides-highlighter-function
              #'my-indent-guides-for-all-but-first-column)
-   #+end_src
+   end_src
 
 * Docker
 Repo and documentation https://github.com/Silex/docker.el
@@ -1025,4 +1012,39 @@ Repo and documentation https://github.com/Silex/docker.el
   (use-package yasnippet)
   (use-package yasnippet-snippets)
   (yas-global-mode 1)
+#+END_SRC
+* Indent bars
+#+BEGIN_SRC emacs-lisp
+  (use-package indent-bars
+    :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+    :custom
+    (indent-bars-treesit-support t)
+    (indent-bars-no-descend-string t)
+     (indent-bars-treesit-ignore-blank-lines-types '("module"))
+     (indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
+         			              list list_comprehension
+         			              dictionary dictionary_comprehension
+         			              parenthesized_expression subscript)))
+    :hook
+    ((python-base-mode yaml-mode) . indent-bars-mode))
+
+  (setq
+   indent-bars-color '(highlight :face-bg t :blend 0.2)
+   indent-bars-prefer-character 1
+   indent-bars-pattern ".*.*.*.*"
+   indent-bars-width-frac 0.5
+   indent-bars-pad-frac 0.2
+   indent-bars-zigzag 0.1
+   indent-bars-color-by-depth '(:palette ("red" "green" "orange" "cyan") :blend 1)
+   indent-bars-highlight-current-depth '(:blend 0.5))
+;;   indent-bars-highlight-current-depth '(:background "gray10"))
+#+END_SRC
+
+* Golden Ratio
+#+BEGIN_SRC emacs-lisp
+  (use-package golden-ratio
+    :ensure t
+    :diminish golden-ratio-mode
+    :init
+    (golden-ratio-mode 1))
 #+END_SRC
