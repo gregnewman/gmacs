@@ -157,7 +157,7 @@
          (setq git-gutter:separator-sign " "
                git-gutter:lighter " GG"))
        :config
-       ((progn )
+       (progn 
          (set-face-foreground 'git-gutter:deleted "#990A1B")
          (set-face-foreground 'git-gutter:modified "#00736F")
          (set-face-foreground 'git-gutter:added "#546E00"))
