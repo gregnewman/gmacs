@@ -1,7 +1,6 @@
 # -*- mode: org; coding: utf-8; -*-
 # Source:     https://github.com/gregnewman/gmacs
 # License:    This file is licensed under the GPL v3.
-#+TODO: ACTIVE | DISABLED
 #+STARTUP: indent
 
 * Tasks I plan to complete regarding this config [80%]
