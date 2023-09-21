@@ -446,6 +446,23 @@
      (whitespace-mode -1)
    #+end_src
 
+** Alerts
+#+BEGIN_SRC emacs-lisp
+        (use-package org-alert
+          :straight t 
+          :ensure t 
+          :config 
+              (setq org-alert-interval 60 
+                    org-alert-notify-cutoff 5
+                    org-alert-notify-after-event-cutoff 2) 
+              (org-alert-enable))
+
+        (use-package alert 
+          :straight t 
+          :config
+          (setq alert-default-style 'osx-notifier
+                alert-fade-time 120))
+#+END_SRC
 ** Todo Keywords
     Setting up my todo keywords which are global and their relative colors.
    #+BEGIN_SRC emacs-lisp
@@ -498,6 +515,8 @@
                  ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")
                   "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
                  ("d" "Daybook" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
+                  "* %?" :clock-keep t)
+                 ("b" "Bullet Journal" entry (file+olp+datetree "~/Dropbox/Org/bullet.org")
                   "* %?" :clock-keep t)
                  ("m" "Meeting" entry (file "~/Dropbox/Org/inbox.org")
                   "* Meeting with %? :MEETING:\n%U" :clock-keep t)
@@ -1013,5 +1032,5 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
     :ensure t
     :diminish golden-ratio-mode
     :init
-    (golden-ratio-mode 1))
+    (golden-ratio-mode 0))
 #+END_SRC
