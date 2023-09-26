@@ -211,6 +211,21 @@
        (global-set-key [remap move-beginning-of-line]
                        'my/smarter-move-beginning-of-line)
    #+end_src
+* Eglot and Tree-sitter
+#+BEGIN_SRC  emacs-lisp
+  ;; (add-to-list 'major-mode-remap-alist '(python-ts-mode . python-ts-mode))
+  (setq major-mode-remap-alist
+        '((yaml-mode . yaml-ts-mode)
+          (bash-mode . bash-ts-mode)
+          (js-mode . js-ts-mode)
+          (typescript-mode . typescript-ts-mode)
+          (json-mode . json-ts-mode)
+          (css-mode . css-ts-mode)
+          (python-ts-mode . python-ts-mode)))
+  (add-hook 'python-ts-mode-hook 'eglot-ensure)
+  (add-hook 'javascript-mode-hook 'eglot-ensure)
+#+end_src
+
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
@@ -239,7 +254,7 @@
      (setq ibuffer-saved-filter-groups
            (quote (("default"
                     ("Python"
-                     (mode . python-mode))
+                     (mode . python-ts-mode))
                     ("HTML"
                      (mode . mhtml-mode))
                     ("JS"
@@ -328,7 +343,7 @@
        '(progn
         (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
 
-     (add-hook 'python-mode-hook #'display-fill-column-indicator-mode)
+     (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 
 * Org-mode
@@ -963,7 +978,7 @@
        (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
        (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
        :init
-       (add-hook 'python-mode-hook (lambda () (hl-todo-mode t)))
+       (add-hook 'python-ts-mode-hook (lambda () (hl-todo-mode t)))
        )
    #+end_src
 
@@ -974,11 +989,6 @@ Repo and documentation https://github.com/Silex/docker.el
   (use-package docker
     :ensure t
     :bind ("C-c d" . docker))
-#+end_src
-* Eglot
-#+BEGIN_SRC  emacs-lisp
-  (add-hook 'python-mode-hook 'eglot-ensure)
-  (add-hook 'javascript-mode-hook 'eglot-ensure)
 #+end_src
 * Avy
 #+BEGIN_SRC emacs-lisp
@@ -991,7 +1001,7 @@ Repo and documentation https://github.com/Silex/docker.el
 * Rainbow Mode
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :hook (emacs-lisp-mode web-mode python-mode))
+    :hook (emacs-lisp-mode web-mode python-ts-mode))
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC emacs-lisp
