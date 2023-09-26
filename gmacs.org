@@ -223,7 +223,7 @@
           (css-mode . css-ts-mode)
           (python-ts-mode . python-ts-mode)))
   (add-hook 'python-ts-mode-hook 'eglot-ensure)
-  (add-hook 'javascript-mode-hook 'eglot-ensure)
+  (add-hook 'js-ts-mode-hook 'eglot-ensure)
 #+end_src
 
 * Which-key
@@ -258,7 +258,7 @@
                     ("HTML"
                      (mode . mhtml-mode))
                     ("JS"
-                     (or (mode . javascript-mode)
+                     (or (mode . js-ts-mode)
                          (filename . ".js")))
                     ("TXT"
                      (mode . text-mode))
