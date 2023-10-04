@@ -346,6 +346,16 @@
      (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 
+* Copilot
+#+BEGIN_SRC emacs-lisp
+  (use-package copilot
+    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+    :ensure t
+    :diminish)
+  (add-hook 'prog-mode-hook 'copilot-mode)
+  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+  (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+#+END_SRC
 * Org-mode
   [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
   
