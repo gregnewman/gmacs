@@ -140,6 +140,11 @@
     (setq sentence-end-double-space nil)
     (setq delete-selection-mode t)
     (setq dired-auto-revert-buffer t)
+
+    ;; associate some of these files with modes
+    (add-to-list 'auto-mode-alist '("\\.astro\\'" . javascript-mode))
+    (add-to-list 'auto-mode-alist '("\\.ts\\'" . javascript-mode))
+    (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-mode))
    #+end_src
 
 * Icons, Git Gutter and Recent files
