@@ -1014,6 +1014,7 @@ Repo and documentation https://github.com/Silex/docker.el
     :bind ("C-c d" . docker))
 #+end_src
 * Avy
+Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a string and choose the selection in buffer.
 #+BEGIN_SRC emacs-lisp
       (use-package avy
         :ensure t
