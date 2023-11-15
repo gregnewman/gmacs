@@ -307,14 +307,22 @@
        (when (memq window-system '(mac ns x))
        (exec-path-from-shell-initialize)))
    #+end_src
+* System packages
+The :ensure-system-package keyword allows you to ensure system binaries exist alongside your package declarations.
 
-* Projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package use-package-ensure-system-package
+    :ensure t)
+#+end_src
+* TODO Projectile and RG (Ripgrep)
+It looks like rg.el has more options for regex when searching
    #+BEGIN_SRC emacs-lisp
      (use-package projectile
        :bind-keymap
        ("C-c p" . projectile-command-map))
 
-     (use-package ripgrep)
+     (use-package rg
+       :ensure-system-package rg)
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
