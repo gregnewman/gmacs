@@ -97,7 +97,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (fset 'yes-or-no-p 'y-or-n-p)
-    (set-frame-font "Monaspace Neon 14")
+    (set-frame-font "Monaspace Neon 13")
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
