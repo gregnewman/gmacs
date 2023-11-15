@@ -314,7 +314,7 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
   (use-package use-package-ensure-system-package
     :ensure t)
 #+end_src
-* TODO Projectile and RG (Ripgrep)
+* Projectile and RG (Ripgrep)
 It looks like rg.el has more options for regex when searching
    #+BEGIN_SRC emacs-lisp
      (use-package projectile
