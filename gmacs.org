@@ -217,8 +217,7 @@
                        'my/smarter-move-beginning-of-line)
    #+end_src
 * Eglot and Tree-sitter
-#+BEGIN_SRC  emacs-lisp
-  ;; (add-to-list 'major-mode-remap-alist '(python-ts-mode . python-ts-mode))
+#+BEGIN_SRC  emacs-list
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
@@ -227,8 +226,7 @@
           (json-mode . json-ts-mode)
           (css-mode . css-ts-mode)
           (python-mode . python-ts-mode)))
-  (add-hook 'python-ts-mode-hook 'eglot-ensure)
-  (add-hook 'js-ts-mode-hook 'eglot-ensure)
+  (add-to-list 'eglot-server-programs '((python-ts-mode python-mode) "python"))
 #+end_src
 
 * Which-key
