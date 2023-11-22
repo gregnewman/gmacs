@@ -219,14 +219,19 @@
 * Eglot and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 #+BEGIN_SRC  emacs-lisp
-  (setq major-mode-remap-alist
-        '((yaml-mode . yaml-ts-mode)
-          (bash-mode . bash-ts-mode)
-          (js-mode . js-ts-mode)
-          (typescript-mode . typescript-ts-mode)
-          (json-mode . json-ts-mode)
-          (css-mode . css-ts-mode)
-          (python-mode . python-ts-mode)))
+  (use-package eglot)
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'python-ts-mode-hook 'eglot-ensure)
+  (add-hook 'js-mode-hook 'eglot-ensure)
+  (add-hook 'js-ts-mode-hook 'eglot-ensure)
+  ;; (setq major-mode-remap-alist
+  ;;       '((yaml-mode . yaml-ts-mode)
+  ;;         (bash-mode . bash-ts-mode)
+  ;;         (js-mode . js-ts-mode)
+  ;;         (typescript-mode . typescript-ts-mode)
+  ;;         (json-mode . json-ts-mode)
+  ;;         (css-mode . css-ts-mode)
+  ;;         (python-mode . python-ts-mode)))
 
   (use-package treesit-auto
   :custom
