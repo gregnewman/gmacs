@@ -217,7 +217,8 @@
                        'my/smarter-move-beginning-of-line)
    #+end_src
 * Eglot and Tree-sitter
-#+BEGIN_SRC  emacs-list
+Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
+#+BEGIN_SRC  emacs-lisp
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
@@ -226,7 +227,13 @@
           (json-mode . json-ts-mode)
           (css-mode . css-ts-mode)
           (python-mode . python-ts-mode)))
-  (add-to-list 'eglot-server-programs '((python-ts-mode python-mode) "python"))
+
+  (use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 #+end_src
 
 * Which-key
