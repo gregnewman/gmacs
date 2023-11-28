@@ -230,6 +230,8 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   (add-hook 'css-ts-mode-hook 'eglot-ensure)
   (add-hook 'json-ts-mode-hook 'eglot-ensure)
   (add-hook 'yaml-ts-mode-hook 'eglot-ensure)
+  (add-hook 'html-ts-mode-hook 'eglot-ensure)
+  (add-hook 'html-mode-hook 'eglot-ensure)
 
   (use-package treesit-auto
   :custom
@@ -1075,20 +1077,4 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
     :diminish golden-ratio-mode
     :init
     (golden-ratio-mode 0))
-#+END_SRC
-* Spacious Padding
-Trying this little [[https://git.sr.ht/~protesilaos/spacious-padding][padding package by Prot]].
-#+BEGIN_SRC emacs-lisp
-  (use-package spacious-padding
-    :ensure t
-    :config
-    (setq spacious-padding-widths
-          '(
-            :internal-border-width 10
-            :header-line-width 4
-            :mode-line-width 6
-            :tab-width 4
-            :right-divider-width 30))
-    )
-  (spacious-padding-mode 1)
 #+END_SRC
