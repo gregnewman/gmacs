@@ -231,7 +231,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   (add-hook 'json-ts-mode-hook 'eglot-ensure)
   (add-hook 'yaml-ts-mode-hook 'eglot-ensure)
   (add-hook 'html-ts-mode-hook 'eglot-ensure)
-  (add-hook 'html-mode-hook 'eglot-ensure)
+  (add-hook 'mhtml-mode-hook 'eglot-ensure)
 
   (use-package treesit-auto
   :custom
