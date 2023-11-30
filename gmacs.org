@@ -1079,3 +1079,14 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
     :init
     (golden-ratio-mode 0))
 #+END_SRC
+* Logos (writing) and Olivetti 
+#+BEGIN_SRC emacs-lisp
+  (use-package logos
+    :ensure t
+    :config
+    (setq logos-outlines-are-pages t)
+    )
+
+  (use-package olivetti
+    :ensure t)
+#+END_SRC
