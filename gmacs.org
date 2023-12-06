@@ -91,8 +91,6 @@
     (set-face-attribute 'variable-pitch nil :font "Monaspace Neon" :weight 'light :height 1.0)
   #+END_SRC
 
-  #+RESULTS:
-
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
   These are important in how I like my emacs to perform.
