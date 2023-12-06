@@ -86,10 +86,12 @@
 
 * Font handling
   #+BEGIN_SRC emacs-lisp
-    (set-face-attribute 'default nil :font "Monaspace Neon" :weight 'light :height 140)
-    (set-face-attribute 'fixed-pitch nil :font "Monaspace Neon" :weight 'light :height 130)
-    (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'light :height 1.0)
+    (set-face-attribute 'default nil :font "Monaspace Neon" :weight 'light :height 125)
+    (set-face-attribute 'fixed-pitch nil :font "Monaspace Neon" :weight 'light :height 125)
+    (set-face-attribute 'variable-pitch nil :font "Monaspace Neon" :weight 'light :height 1.0)
   #+END_SRC
+
+  #+RESULTS:
 
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
