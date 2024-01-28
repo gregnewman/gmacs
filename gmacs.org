@@ -220,8 +220,9 @@
    #+end_src
 * Eglot and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
+
 #+BEGIN_SRC  emacs-lisp
-  (use-package eglot)
+  (use-package eglot :ensure t)
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'python-ts-mode-hook 'eglot-ensure)
   (add-hook 'js-mode-hook 'eglot-ensure)
@@ -235,11 +236,11 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   (add-hook 'mhtml-mode-hook 'eglot-ensure)
 
   (use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
 #+end_src
 
 * Which-key
@@ -309,8 +310,8 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
    #+end_src
 
 * Path from shell
-   When starting emacs gui on Mac OS, the paths are not read from .zshrc
-   Using `exec-path-from-shell` fixes this.
+When starting emacs gui on Mac OS, the paths are not read from .zshrc
+Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
      (use-package exec-path-from-shell
