@@ -96,58 +96,58 @@
   These are important in how I like my emacs to perform.
 
   #+BEGIN_SRC emacs-lisp
-            (fset 'yes-or-no-p 'y-or-n-p)
-            (set-frame-font "Monaspace Neon 13")
-            (setq user-full-name "Greg Newman"
-                  user-mail-address "greg@gregnewman.org")
-            (setq-default indent-tabs-mode nil)
-            (setq ring-bell-function (lambda ()))
-            (setq confirm-kill-emacs 'yes-or-no-p)
-            (setq require-final-newline t)
-            (setq-default line-spacing 0.15)
-            (setq explicit-shell-file-name "/bin/zsh")
-            (setq backup-directory-alist `(("." . "~/.saves")))
-            (setq backup-by-copying t)
-            (setq delete-old-versions t)
-            (setq kept-new-versions 10)
-            (setq kept-old-versions 10)
-            (setq version-control t)
-            (global-display-line-numbers-mode)
-            (setq-default display-fill-column-indicator-column 80)
-            ;; always show paren highlights
-            (show-paren-mode 1)
-            ; highlight current line
-            (global-hl-line-mode 1)
-            ;; javascript indents.  This can probably be removed once I settle on a "good" js config
-            (setq js-indent-level 2)
-            ; Desktop setup.
-            (desktop-save-mode 1)
-            (setq desktop-dirname "~/.emacs.d/desktops/")
-            (setq desktop-base-file-name (concat ".desktop." (system-name)))
-            (setq desktop-path (list desktop-dirname))
-            (setq desktop-base-lock-name "lock")
-            (setq desktop-load-locked-desktop t)
-            ; Very useful if dealing with git repos and also files that can change from Dropbox
-            (global-auto-revert-mode t)
-            ;; Configure where TAGS are stored
-            (setq tags-table-list (list "~/.emacs.d/TAGS"))
-            ;; isearch improvements
-            (setq isearch-lazy-count t)
-            (setq lazy-count-prefix-format nil)
-            (setq lazy-count-suffix-format "   (%s/%s)")
+    (fset 'yes-or-no-p 'y-or-n-p)
+    (set-frame-font "Monaspace Neon 13")
+    (setq user-full-name "Greg Newman"
+          user-mail-address "greg@gregnewman.org")
+    (setq-default indent-tabs-mode nil)
+    (setq ring-bell-function (lambda ()))
+    (setq confirm-kill-emacs 'yes-or-no-p)
+    (setq require-final-newline t)
+    (setq-default line-spacing 0.15)
+    (setq explicit-shell-file-name "/bin/zsh")
+    (setq backup-directory-alist `(("." . "~/.saves")))
+    (setq backup-by-copying t)
+    (setq delete-old-versions t)
+    (setq kept-new-versions 10)
+    (setq kept-old-versions 10)
+    (setq version-control t)
+    (global-display-line-numbers-mode)
+    (setq-default display-fill-column-indicator-column 80)
+    ;; always show paren highlights
+    (show-paren-mode 1)
+    ; highlight current line
+    (global-hl-line-mode 1)
+    ;; javascript indents.  This can probably be removed once I settle on a "good" js config
+    (setq js-indent-level 2)
+    ; Desktop setup.
+    (desktop-save-mode 1)
+    (setq desktop-dirname "~/.emacs.d/desktops/")
+    (setq desktop-base-file-name (concat ".desktop." (system-name)))
+    (setq desktop-path (list desktop-dirname))
+    (setq desktop-base-lock-name "lock")
+    (setq desktop-load-locked-desktop t)
+    ; Very useful if dealing with git repos and also files that can change from Dropbox
+    (global-auto-revert-mode t)
+    ;; Configure where TAGS are stored
+    (setq tags-table-list (list "~/.emacs.d/TAGS"))
+    ;; isearch improvements
+    (setq isearch-lazy-count t)
+    (setq lazy-count-prefix-format nil)
+    (setq lazy-count-suffix-format "   (%s/%s)")
 
-            ;; some useful settings found in http://yummymelon.com/devnull/surprise-and-emacs-defaults.html
-            (setq sentence-end-double-space nil)
-            (setq delete-selection-mode t)
-            (setq dired-auto-revert-buffer t)
+    ;; some useful settings found in http://yummymelon.com/devnull/surprise-and-emacs-defaults.html
+    (setq sentence-end-double-space nil)
+    (setq delete-selection-mode t)
+    (setq dired-auto-revert-buffer t)
 
-            ;; associate some of these files with modes
-            (setq auto-mode-alist
-                  (append auto-mode-alist
-                          '(("\\.astro\\'" . javascript-mode)
-                            ("\\.ts\\'" . javascript-mode)
-                            ("\\.mdx\\'" . markdown-mode)
-                            ("\\.html\\'" . mhtml-mode))))
+    ;; associate some of these files with modes
+    (setq auto-mode-alist
+          (append auto-mode-alist
+                  '(("\\.astro\\$" . javascript-mode)
+                    ("\\.ts\\$" . javascript-mode)
+                    ("\\.mdx\\$" . markdown-mode)
+                    ("\\.html\\$" . mhtml-mode))))
    #+end_src
 * Icons, Git Gutter and Recent files
    #+BEGIN_SRC emacs-lisp
