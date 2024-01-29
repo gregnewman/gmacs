@@ -142,12 +142,10 @@
     (setq dired-auto-revert-buffer t)
 
     ;; associate some of these files with modes
-    (setq auto-mode-alist
-          (append auto-mode-alist
-                  '(("\\.astro\\$" . js-ts-mode)
-                    ("\\.mdx\\$" . markdown-ts-mode)
-                    ("\\.html\\$" . html-ts-mode))))
+    (add-to-list 'auto-mode-alist '("\\.astro\\'" . js-ts-mode))
+    (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-ts-mode))
    #+end_src
+   
 * Icons, Git Gutter and Recent files
    #+BEGIN_SRC emacs-lisp
      ;; icons
