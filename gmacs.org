@@ -144,10 +144,9 @@
     ;; associate some of these files with modes
     (setq auto-mode-alist
           (append auto-mode-alist
-                  '(("\\.astro\\$" . javascript-mode)
-                    ("\\.ts\\$" . javascript-mode)
-                    ("\\.mdx\\$" . markdown-mode)
-                    ("\\.html\\$" . mhtml-mode))))
+                  '(("\\.astro\\$" . js-ts-mode)
+                    ("\\.mdx\\$" . markdown-ts-mode)
+                    ("\\.html\\$" . html-ts-mode))))
    #+end_src
 * Icons, Git Gutter and Recent files
    #+BEGIN_SRC emacs-lisp
@@ -223,17 +222,14 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
 #+BEGIN_SRC  emacs-lisp
   (use-package eglot :ensure t)
-  (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'python-ts-mode-hook 'eglot-ensure)
-  (add-hook 'js-mode-hook 'eglot-ensure)
   (add-hook 'js-ts-mode-hook 'eglot-ensure)
-  (add-hook 'typescript-mode-hook 'eglot-ensure)
   (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
-  (add-hook 'bash-mode-hook 'eglot-ensure)
+  (add-hook 'bash-ts-mode-hook 'eglot-ensure)
   (add-hook 'css-ts-mode-hook 'eglot-ensure)
   (add-hook 'json-ts-mode-hook 'eglot-ensure)
   (add-hook 'yaml-ts-mode-hook 'eglot-ensure)
-  (add-hook 'mhtml-mode-hook 'eglot-ensure)
+  (add-hook 'html-ts-mode-hook 'eglot-ensure)
 
   (use-package treesit-auto
     :custom
