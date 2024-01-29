@@ -3,12 +3,6 @@
 # License:    This file is licensed under the GPL v3.
 #+STARTUP: indent
 
-* Tasks I plan to complete regarding this config [80%]
-- [X] Fix tangling config.  When I save it tangles the config then kills the buffer.
-- [X] Change fonts
-- [X] Change line height/spacing
-- [X] I would love to have highlighting for css colors. I think i had this once before.
-- [ ] Tailwind autocomplete
 * About
   This is my personal config for Emacs.  It is constructed in literate programming using Org-mode for a documented configuration.
 
