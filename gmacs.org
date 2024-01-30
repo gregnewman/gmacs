@@ -80,8 +80,8 @@
 
 * Font handling
   #+BEGIN_SRC emacs-lisp
-    (set-face-attribute 'default nil :font "Monaspace Neon" :weight 'light :height 125)
-    (set-face-attribute 'fixed-pitch nil :font "Monaspace Neon" :weight 'light :height 125)
+    (set-face-attribute 'default nil :font "Monaspace Neon" :weight 'light :height 120)
+    (set-face-attribute 'fixed-pitch nil :font "Monaspace Neon" :weight 'light :height 120)
     (set-face-attribute 'variable-pitch nil :font "Monaspace Neon" :weight 'light :height 1.0)
   #+END_SRC
 
@@ -91,7 +91,7 @@
 
   #+BEGIN_SRC emacs-lisp
     (fset 'yes-or-no-p 'y-or-n-p)
-    (set-frame-font "Monaspace Neon 13")
+    (set-frame-font "Monaspace Neon 12")
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
