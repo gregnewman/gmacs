@@ -138,6 +138,9 @@
     ;; associate some of these files with modes
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . js-ts-mode))
     (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-ts-mode))
+
+    ;; enable winner mode by default
+    (winner-mode 1)
    #+end_src
    
 * Icons, Git Gutter and Recent files
