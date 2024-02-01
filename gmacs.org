@@ -952,8 +952,6 @@ It looks like rg.el has more options for regex when searching
     (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
  #+END_SRC
 
- #+RESULTS:
-
 * Vertico, Marginalia, Savehist, Orderless
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
