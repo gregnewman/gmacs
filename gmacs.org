@@ -140,16 +140,6 @@
     (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-ts-mode))
    #+end_src
 
-* Winner Mode
-#+BEGIN_SRC emacs-lisp
-  (use-package winner
-    :ensure nil
-    :hook after-init
-    :commands (winner-undo winner-redo)
-    :custom
-    (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*")))
-#+END_SRC
-
 * Icons, Git Gutter and Recent files
    #+BEGIN_SRC emacs-lisp
      ;; icons
@@ -934,6 +924,36 @@ It looks like rg.el has more options for regex when searching
 
   (org-roam-db-autosync-mode)
 #+end_src
+* Denote
+#+BEGIN_SRC emacs-lisp
+  (use-package denote
+      :custom
+      ((denote-directory "~/Dropbox/Org/denote/")
+       (denote-prompts '(title keywords))
+       ;; Use orgmode format by default
+       (denote-file-type 'org)
+       (denote-date-prompt-use-org-read-date t))
+      :hook
+      (dired-mode . denote-dired-mode))
+
+  (use-package consult-notes
+    :commands (consult-notes
+               consult-notes-search-in-all-notes
+               ;; if using org-roam 
+               consult-notes-org-roam-find-node
+               consult-notes-org-roam-find-node-relation)
+    :config
+    (setq consult-notes-file-dir-sources '(("Org"  ?o  "~/Dropbox/Org/")
+                                           ("Denote" ?d "~/Dropbox/Org/denote/")))
+
+    (consult-notes-org-headings-mode)
+    (consult-notes-denote-mode)
+    ;; search only for text files in denote dir
+    (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
+ #+END_SRC
+
+ #+RESULTS:
+
 * Vertico, Marginalia, Savehist, Orderless
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
@@ -1023,6 +1043,16 @@ Repo and documentation https://github.com/Silex/docker.el
     :ensure t
     :bind ("C-c d" . docker))
 #+end_src
+* Winner Mode
+#+BEGIN_SRC emacs-lisp
+  (use-package winner
+    :ensure nil
+    :hook after-init
+    :commands (winner-undo winner-redo)
+    :custom
+    (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*")))
+#+END_SRC
+
 * Avy
 Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a string and choose the selection in buffer.
 #+BEGIN_SRC emacs-lisp
