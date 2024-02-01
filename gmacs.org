@@ -1050,7 +1050,7 @@ Repo and documentation https://github.com/Silex/docker.el
     :commands (winner-undo winner-redo)
     :custom
     (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*")))
-
+#+END_SRC
 
 * Avy
 Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a string and choose the selection in buffer.
