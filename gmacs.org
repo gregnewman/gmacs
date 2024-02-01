@@ -927,14 +927,14 @@ It looks like rg.el has more options for regex when searching
 * Denote
 #+BEGIN_SRC emacs-lisp
   (use-package denote
-      :custom
-      ((denote-directory "~/Dropbox/Org/denote/")
-       (denote-prompts '(title keywords))
-       ;; Use orgmode format by default
-       (denote-file-type 'org)
-       (denote-date-prompt-use-org-read-date t))
-      :hook
-      (dired-mode . denote-dired-mode))
+    :custom
+    ((denote-directory "~/Dropbox/Org/denote/")
+     (denote-prompts '(title keywords))
+     ;; Use orgmode format by default
+     (denote-file-type 'org)
+     (denote-date-prompt-use-org-read-date t))
+    :hook
+    (dired-mode . denote-dired-mode))
 
   (use-package consult-notes
     :commands (consult-notes
