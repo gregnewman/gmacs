@@ -925,6 +925,8 @@ It looks like rg.el has more options for regex when searching
   (org-roam-db-autosync-mode)
 #+end_src
 * Denote
+[[https://protesilaos.com/emacs/denote][Denote]] for taking notes and [[https://github.com/mclear-tools/consult-notes][consult-notes]] for quickly searching
+
 #+BEGIN_SRC emacs-lisp
   (use-package denote
     :custom
