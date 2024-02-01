@@ -887,6 +887,7 @@ It looks like rg.el has more options for regex when searching
    #+end_src
 * Org-Roam
 #+BEGIN_SRC emacs-lisp
+#+end_src
   (use-package org-roam
     ;; :straight t (org-roam :type git :host github :repo "org-roam/org-roam")
       :straight t
@@ -923,7 +924,7 @@ It looks like rg.el has more options for regex when searching
   (setq md-roam-file-extension "md")
 
   (org-roam-db-autosync-mode)
-#+end_src
+
 * Denote
 [[https://protesilaos.com/emacs/denote][Denote]] for taking notes and [[https://github.com/mclear-tools/consult-notes][consult-notes]] for quickly searching
 
@@ -953,7 +954,6 @@ It looks like rg.el has more options for regex when searching
     ;; search only for text files in denote dir
     (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
  #+END_SRC
-
 * Vertico, Marginalia, Savehist, Orderless
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
@@ -1046,12 +1046,11 @@ Repo and documentation https://github.com/Silex/docker.el
 * Winner Mode
 #+BEGIN_SRC emacs-lisp
   (use-package winner
-    :ensure nil
-    :hook after-init
+    :ensure t
     :commands (winner-undo winner-redo)
     :custom
     (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*")))
-#+END_SRC
+
 
 * Avy
 Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a string and choose the selection in buffer.
