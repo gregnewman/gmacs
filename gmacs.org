@@ -507,7 +507,7 @@ It looks like rg.el has more options for regex when searching
      ;; Keywords
      (setq org-todo-keywords
        (quote ((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)")
-               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+               (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
      ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
      (setq org-log-done 'time)
@@ -517,9 +517,10 @@ It looks like rg.el has more options for regex when searching
                ("NEXT" :foreground "cyan" :weight bold)
                ("DONE" :foreground "dim gray" :weight bold)
                ("WAITING" :foreground "tomato" :weight bold)
-               ("HOLD" :foreground "magenta" :weight bold)
+               ("SOMEDAY" :foreground "magenta" :weight bold)
                ("CANCELLED" :foreground "dim gray" :weight bold))))
    #+end_src
+
 ** Capture mode keybinding
    I use C-c c to start capture mode
    #+BEGIN_SRC emacs-lisp
