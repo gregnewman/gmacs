@@ -58,7 +58,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-dracula t))
+       (load-theme 'doom-solarized-dark-high-contrast t))
    #+end_src
 
 * Windows Configuration
@@ -324,6 +324,12 @@ It looks like rg.el has more options for regex when searching
      (use-package rg
        :ensure-system-package rg)
    #+end_src
+* Justfiles
+#+BEGIN_SRC emacs-lisp
+(use-package just-mode
+  :ensure t)
+#+END_SRC
+
 * Pyenv
    #+BEGIN_SRC emacs-lisp
      (use-package pyenv-mode-auto)
@@ -555,13 +561,14 @@ It looks like rg.el has more options for regex when searching
                   "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
                  ("d" "Daybook" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
                   "* %?" :clock-keep t)
-                 ("b" "Bullet Journal" entry (file+olp+datetree "~/Dropbox/Org/bullet.org")
-                  "* %?" :clock-keep t)
+                 ("o" "OBTF" entry (file+olp+datetree "~/Dropbox/Org/OBTF.org")
+                  "* %<%H:%M> %?" :jump-to-captured t)
                  ("m" "Meeting" entry (file "~/Dropbox/Org/inbox.org")
                   "* Meeting with %? :MEETING:\n%U" :clock-keep t)
                  ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
                   "* PHONE %? :PHONE:\n%U" :clock-keep t))))
    #+end_src
+
 ** Org Babel
    #+BEGIN_SRC emacs-lisp
      (org-babel-do-load-languages
