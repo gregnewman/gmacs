@@ -230,7 +230,19 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
-
+* Consult
+#+BEGIN_SRC emacs-lisp
+  (use-package consult :ensure t)
+  (require 'consult-imenu)
+  (dolist (python '(python-mode python-ts-mode))
+    (add-to-list 'consult-imenu-config
+      `(,python
+         :toplevel "Method"
+         :types ((?p "Property" font-lock-variable-name-face)
+                  (?c "Class" font-lock-type-face)
+                  (?M "Module" font-lock-type-face)
+                  (?m "Method" font-lock-function-name-face)))))
+#+END_SRC
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
@@ -930,6 +942,12 @@ It looks like rg.el has more options for regex when searching
     ;; Must be in the :init section of use-package such that the mode gets
     ;; enabled right away. Note that this forces loading the package.
     (marginalia-mode))
+
+  (use-package all-the-icons-completion
+    :after (marginalia all-the-icons)
+    :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+    :init
+    (all-the-icons-completion-mode))
 #+end_src
 
 * Company
