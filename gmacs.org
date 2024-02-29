@@ -232,19 +232,16 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+end_src
 * TODO Consult
 This is not working to group classes etc in Python files so I have it disabled until I can find the problem
-#+BEGIN_SRC
-    (use-package consult :ensure t)
-    (require 'consult-imenu)
-    (dolist (python '(python-mode python-ts-mode))
-      (add-to-list 'consult-imenu-config
-        `(,python
-           :toplevel "Classes"
-           :types ((?f "Functions" font-lock-function-name-face)
-                    (?c "Classes" font-lock-type-face)
-                    (?m "Methods" font-lock-function-name-face)))))
+#+BEGIN_SRC emacs-lisp
+  (use-package consult :ensure t)
+  (require 'consult-imenu)
+  (add-to-list 'consult-imenu-config
+               `(python-ts-mode
+                 :toplevel "Class"
+                 :types ((?c "Class" font-lock-type-face)
+                         (?f "Function" font-lock-function-name-face)
+                         (?m "Methods" font-lock-function-name-face))))
 #+END_SRC
-
-#+RESULTS:
 
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
@@ -915,6 +912,10 @@ It looks like rg.el has more options for regex when searching
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
   (use-package vertico
+    :custom
+    (vertico-count 13)                    ; Number of candidates to display
+    (vertico-resize t)
+    (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
     :init
     (vertico-mode))
 
@@ -939,6 +940,9 @@ It looks like rg.el has more options for regex when searching
            :map minibuffer-local-map
            ("M-A" . marginalia-cycle))
 
+    :custom
+    (marginalia-max-relative-age 0)
+    (marginalia-align 'right)
     ;; The :init configuration is always executed (Not lazy!)
     :init
 
