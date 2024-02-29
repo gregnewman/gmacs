@@ -237,8 +237,8 @@ This is not working to group classes etc in Python files so I have it disabled u
   (require 'consult-imenu)
   (add-to-list 'consult-imenu-config
                `(python-ts-mode
-                 :toplevel "Class"
-                 :types ((?c "Class" font-lock-type-face)
+                 :toplevel "Classes"
+                 :types ((?c "Classes" font-lock-type-face)
                          (?f "Function" font-lock-function-name-face)
                          (?m "Methods" font-lock-function-name-face))))
 #+END_SRC
