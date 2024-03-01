@@ -230,19 +230,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
-* TODO Consult
-This is not working to group classes etc in Python files so I have it disabled until I can find the problem
-#+BEGIN_SRC emacs-lisp
-  (use-package consult :ensure t)
-  (require 'consult-imenu)
-  (add-to-list 'consult-imenu-config
-               `(python-ts-mode
-                 :toplevel "Classes"
-                 :types ((?c "Classes" font-lock-type-face)
-                         (?f "Function" font-lock-function-name-face)
-                         (?m "Methods" font-lock-function-name-face))))
-#+END_SRC
-
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
