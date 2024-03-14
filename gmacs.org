@@ -895,53 +895,90 @@ It looks like rg.el has more options for regex when searching
     ;; search only for text files in denote dir
     (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
  #+END_SRC
-* Vertico, Marginalia, Savehist, Orderless
+* Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
-  ;; Enable vertico
-  (use-package vertico
-    :custom
-    (vertico-count 13)                    ; Number of candidates to display
-    (vertico-resize t)
-    (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
-    :init
-    (vertico-mode))
+   ;; Enable vertico
+   (use-package vertico
+     :custom
+     (vertico-count 13)                    ; Number of candidates to display
+     (vertico-resize t)
+     (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+     :init
+     (vertico-mode))
 
-  (use-package savehist
-    :init
-    (savehist-mode))
+   (use-package savehist
+     :init
+     (savehist-mode))
 
-  ;; Optionally use the `orderless' completion style.
-  (use-package orderless
-    :init
-    ;; Configure a custom style dispatcher (see the Consult wiki)
-    ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
-    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-    (setq completion-styles '(orderless basic)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles partial-completion)))))
+   ;; Optionally use the `orderless' completion style.
+   (use-package orderless
+     :init
+     ;; Configure a custom style dispatcher (see the Consult wiki)
+     ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+     ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+     (setq completion-styles '(orderless basic)
+           completion-category-defaults nil
+           completion-category-overrides '((file (styles partial-completion)))))
 
-  ;; Enable rich annotations using the Marginalia package
-  (use-package marginalia
-    ;; Either bind `marginalia-cycle' globally or only in the minibuffer
-    :bind (("M-A" . marginalia-cycle)
-           :map minibuffer-local-map
-           ("M-A" . marginalia-cycle))
+   ;; Enable rich annotations using the Marginalia package
+   (use-package marginalia
+     ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+     :bind (("M-A" . marginalia-cycle)
+            :map minibuffer-local-map
+            ("M-A" . marginalia-cycle))
 
-    :custom
-    (marginalia-max-relative-age 0)
-    (marginalia-align 'right)
-    ;; The :init configuration is always executed (Not lazy!)
-    :init
+     :custom
+     (marginalia-max-relative-age 0)
+     (marginalia-align 'right)
+     ;; The :init configuration is always executed (Not lazy!)
+     :init
 
-    ;; Must be in the :init section of use-package such that the mode gets
-    ;; enabled right away. Note that this forces loading the package.
-    (marginalia-mode))
+     ;; Must be in the :init section of use-package such that the mode gets
+     ;; enabled right away. Note that this forces loading the package.
+     (marginalia-mode))
 
-  (use-package all-the-icons-completion
-    :after (marginalia all-the-icons)
-    :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-    :init
-    (all-the-icons-completion-mode))
+   ;; Embark - this config is taken directly from https://github.com/oantolin/embark
+   (use-package embark
+     :ensure t
+
+     :bind
+     (("C-." . embark-act)         ;; pick some comfortable binding
+      ("C-;" . embark-dwim)        ;; good alternative: M-.
+      ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+     :init
+
+     ;; Optionally replace the key help with a completing-read interface
+     (setq prefix-help-command #'embark-prefix-help-command)
+
+     ;; Show the Embark target at point via Eldoc. You may adjust the
+     ;; Eldoc strategy, if you want to see the documentation from
+     ;; multiple providers. Beware that using this can be a little
+     ;; jarring since the message shown in the minibuffer can be more
+     ;; than one line, causing the modeline to move up and down:
+
+     ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+     ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+     :config
+
+     ;; Hide the mode line of the Embark live/completions buffers
+     (add-to-list 'display-buffer-alist
+                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                    nil
+                    (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :ensure t ; only need to install it, embark loads it after consult if found
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+
+   (use-package all-the-icons-completion
+     :after (marginalia all-the-icons)
+     :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+     :init
+     (all-the-icons-completion-mode))
 #+end_src
 
 * Company
