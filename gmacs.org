@@ -1041,6 +1041,7 @@ Repo and documentation https://github.com/Silex/docker.el
     :commands (winner-undo winner-redo)
     :custom
     (winner-boring-buffers '("*Completions*" "*Help*" "*Apropos*" "*Buffer List*" "*info*" "*Compile-Log*")))
+  (winner-mode 1)
 #+END_SRC
 
 * Avy
