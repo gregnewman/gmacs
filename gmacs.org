@@ -213,15 +213,19 @@
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
 #+BEGIN_SRC  emacs-lisp
-  (use-package eglot :ensure t)
-  (add-hook 'python-ts-mode-hook 'eglot-ensure)
-  (add-hook 'js-ts-mode-hook 'eglot-ensure)
-  (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
-  (add-hook 'bash-ts-mode-hook 'eglot-ensure)
-  (add-hook 'css-ts-mode-hook 'eglot-ensure)
-  (add-hook 'json-ts-mode-hook 'eglot-ensure)
-  (add-hook 'yaml-ts-mode-hook 'eglot-ensure)
-  (add-hook 'html-ts-mode-hook 'eglot-ensure)
+  (use-package eglot
+    :straight t
+    ;; :straight (:type built-in)
+    :hook ((css-mode
+            css-ts-mode
+            typescript-ts-mode
+            yaml-mode yaml-ts-mode
+            html-mode html-ts-mode
+            js-mode js-ts-mode
+            json-mode json-ts-mode
+            bash-mode bash-ts-mode
+            python-mode python-ts-mode)
+           . eglot-ensure))
 
   (use-package treesit-auto
     :custom
@@ -936,6 +940,18 @@ It looks like rg.el has more options for regex when searching
      ;; Must be in the :init section of use-package such that the mode gets
      ;; enabled right away. Note that this forces loading the package.
      (marginalia-mode))
+
+   ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
+   (require 'consult-imenu)
+   (dolist (python '(python-mode python-ts-mode))
+     (add-to-list 'consult-imenu-config
+                  `(,python
+                    :toplevel "Method"
+                    :types ((?f "Field" font-lock-variable-name-face)
+                            (?c "Class" font-lock-type-face)
+                            (?m "Method" font-lock-function-name-face)
+                            (?v "Variable" font-lock-variable-name-face)
+                            ))))
 
    ;; Embark - this config is taken directly from https://github.com/oantolin/embark
    (use-package embark
