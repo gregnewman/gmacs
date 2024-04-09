@@ -209,37 +209,6 @@
        (global-set-key [remap move-beginning-of-line]
                        'my/smarter-move-beginning-of-line)
    #+end_src
-* Eglot and Tree-sitter
-Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
-
-#+BEGIN_SRC  emacs-lisp
-  (use-package eglot
-    :straight t
-    ;; :straight (:type built-in)
-    :hook ((css-mode
-            css-ts-mode
-            typescript-ts-mode
-            yaml-mode
-            yaml-ts-mode
-            html-mode
-            html-ts-mode
-            js-mode
-            js-ts-mode
-            json-mode
-            json-ts-mode
-            bash-mode
-            bash-ts-mode
-            python-mode
-            python-ts-mode)
-           . eglot-ensure))
-
-  (use-package treesit-auto
-    :custom
-    (treesit-auto-install 'prompt)
-    :config
-    (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode))
-#+end_src
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
@@ -306,16 +275,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
        ("l" text-scale-decrease "out"))
    #+end_src
 
-* Path from shell
-When starting emacs gui on Mac OS, the paths are not read from .zshrc
-Using `exec-path-from-shell` fixes this.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package exec-path-from-shell
-       :config
-       (when (memq window-system '(mac ns x))
-       (exec-path-from-shell-initialize)))
-   #+end_src
 * System packages
 The :ensure-system-package keyword allows you to ensure system binaries exist alongside your package declarations.
 
@@ -323,56 +282,11 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
   (use-package use-package-ensure-system-package
     :ensure t)
 #+end_src
-* Projectile and RG (Ripgrep)
-It looks like rg.el has more options for regex when searching
-   #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :bind-keymap
-       ("C-c p" . projectile-command-map))
-
-     (use-package rg
-       :ensure-system-package rg)
-   #+end_src
 * Justfiles
 #+BEGIN_SRC emacs-lisp
 (use-package just-mode
   :ensure t)
 #+END_SRC
-
-* Pyenv
-   #+BEGIN_SRC emacs-lisp
-     (use-package pyenv-mode-auto)
-
-     (defun pyenv-activate-current-project ()
-       "Automatically activates pyenv version if .python-version file exists."
-       (interactive)
-       (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
-       (if python-version-directory
-          (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
-                 (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
-            (pyenv-mode-set pyenv-current-version)
-            (message (concat "Setting virtualenv to " pyenv-current-version))))))
-
-     (defvar pyenv-current-version nil nil)
-
-     (defun pyenv-init()
-     "Initialize pyenv's current version to the global one."
-     (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
-      (message (concat "Setting pyenv version to " global-pyenv))
-      (pyenv-mode-set global-pyenv)
-      (setq pyenv-current-version global-pyenv)))
-
-     (add-hook 'after-init-hook 'pyenv-init)
-
-     (use-package pyenv-mode)
-
-     ;; Fixes an issue where pyenv conflicts with org-mode
-     (eval-after-load 'pyenv-mode
-       '(progn
-        (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
-
-     (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
-   #+end_src
 
 * Copilot
 #+BEGIN_SRC emacs-lisp
@@ -905,6 +819,82 @@ It looks like rg.el has more options for regex when searching
     ;; search only for text files in denote dir
     (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
  #+END_SRC
+* Path from shell
+When starting emacs gui on Mac OS, the paths are not read from .zshrc
+Using `exec-path-from-shell` fixes this.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package exec-path-from-shell
+       :config
+       (when (memq window-system '(mac ns x))
+       (exec-path-from-shell-initialize)))
+   #+end_src
+* Pyenv
+   #+BEGIN_SRC emacs-lisp
+     (use-package pyenv-mode-auto)
+
+     (defun pyenv-activate-current-project ()
+       "Automatically activates pyenv version if .python-version file exists."
+       (interactive)
+       (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
+       (if python-version-directory
+          (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
+                 (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
+            (pyenv-mode-set pyenv-current-version)
+            (message (concat "Setting virtualenv to " pyenv-current-version))))))
+
+     (defvar pyenv-current-version nil nil)
+
+     (defun pyenv-init()
+     "Initialize pyenv's current version to the global one."
+     (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
+      (message (concat "Setting pyenv version to " global-pyenv))
+      (pyenv-mode-set global-pyenv)
+      (setq pyenv-current-version global-pyenv)))
+
+     (add-hook 'after-init-hook 'pyenv-init)
+
+     (use-package pyenv-mode)
+
+     ;; Fixes an issue where pyenv conflicts with org-mode
+     (eval-after-load 'pyenv-mode
+       '(progn
+        (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
+
+     (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
+   #+end_src
+
+* Eglot and Tree-sitter
+Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
+
+#+BEGIN_SRC  emacs-lisp
+  (use-package eglot
+    :straight t
+    ;; :straight (:type built-in)
+    :hook ((css-mode
+            css-ts-mode
+            typescript-ts-mode
+            yaml-mode
+            yaml-ts-mode
+            html-mode
+            html-ts-mode
+            js-mode
+            js-ts-mode
+            json-mode
+            json-ts-mode
+            bash-mode
+            bash-ts-mode
+            python-mode
+            python-ts-mode)
+           . eglot-ensure))
+
+  (use-package treesit-auto
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
+#+end_src
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
    ;; Enable vertico
@@ -959,6 +949,25 @@ It looks like rg.el has more options for regex when searching
                             (?v "Variable" font-lock-variable-name-face)
                             ))))
 
+  (use-package consult-projectile
+    :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
+    :commands (consult-projectile)
+    :bind (("C-x 4 p" . consult-projectile-find-file-other-window)
+           ("M-s r" . consult-ripgrep)
+           ("M-s f" . projectile-ripgrep)))
+
+  (use-package consult-dir
+    ;; This package helps ease traveling across directories by providing directory
+    ;; candidates related to current buffers, bookmarks, and projects.  Further,
+    ;; like other ~consult.el~ functions, you can use narrowing keys.  See
+    ;; https://github.com/karthink/consult-dir.
+    :straight t
+    :after (consult)
+    :bind (("C-x C-d" . consult-dir)
+           :map minibuffer-local-completion-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file)))
+
    ;; Embark - this config is taken directly from https://github.com/oantolin/embark
    (use-package embark
      :ensure t
@@ -1003,6 +1012,16 @@ It looks like rg.el has more options for regex when searching
      (all-the-icons-completion-mode))
 #+end_src
 
+* Projectile and RG (Ripgrep)
+It looks like rg.el has more options for regex when searching
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :bind-keymap
+       ("C-c p" . projectile-command-map))
+
+     (use-package rg
+       :ensure-system-package rg)
+   #+end_src
 * Company
 
    #+BEGIN_SRC emacs-lisp
