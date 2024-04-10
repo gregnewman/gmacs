@@ -1133,6 +1133,15 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
       ((python-base-mode yaml-mode js-base-mode html-mode) . indent-bars-mode))
 #+END_SRC
 
+* Mac Link
+#+BEGIN_SRC emacs-lisp
+  ;; Org-mac-link is being pulled from Jeremy's fork. I was getting errors with the main repo.
+  (use-package org-mac-link
+    ;; Similar to `grab-mac-link' but a bit specific to `org-mode'.
+    :straight (org-mac-link :type git :host github :repo "jeremyf/org-mac-link")
+    :bind (:map org-mode-map (("C-c g" . org-mac-grab-link))))
+#+end_src
+
 * Golden Ratio
 #+BEGIN_SRC emacs-lisp
   (use-package golden-ratio
