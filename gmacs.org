@@ -123,6 +123,7 @@
     (setq desktop-load-locked-desktop t)
     ; Very useful if dealing with git repos and also files that can change from Dropbox
     (global-auto-revert-mode t)
+    (setq auto-revert-use-notify nil)
     ;; Configure where TAGS are stored
     (setq tags-table-list (list "~/.emacs.d/TAGS"))
     ;; isearch improvements
