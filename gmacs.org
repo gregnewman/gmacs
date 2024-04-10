@@ -1037,12 +1037,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-keyword)
     ;; TODO: these conflict so set new ones
-    :bind (("C-c p d" . cape-dabbrev)
-           ("C-c p e" . cape-elisp-block)
-           ("C-c p f" . cape-file)
-           ("C-c p h" . cape-history)
-           ("C-c p s" . cape-symbol)
-           ("C-c p w" . cape-dict)))
+    :bind (("C-c h d" . cape-dabbrev)
+           ("C-c h e" . cape-elisp-block)
+           ("C-c h f" . cape-file)
+           ("C-c h h" . cape-history)
+           ("C-c h s" . cape-symbol)
+           ("C-c h w" . cape-dict)))
 #+END_SRC
 * Projectile and RG (Ripgrep)
 It looks like rg.el has more options for regex when searching
