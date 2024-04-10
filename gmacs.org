@@ -1036,7 +1036,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (add-to-list 'completion-at-point-functions #'cape-dabbrev)
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-keyword)
-    ;; TODO: these conflict so set new ones
     :bind (("C-c h d" . cape-dabbrev)
            ("C-c h e" . cape-elisp-block)
            ("C-c h f" . cape-file)
