@@ -1026,6 +1026,24 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (all-the-icons-completion-mode))
 #+end_src
 
+* Cape
+#+BEGIN_SRC emacs-lisp
+  (use-package cape
+    ;; Completion at point functions, with the amazing `cape-capf-super' for
+    ;; granular configuration of specific mode completion behavior.
+    :straight t
+    :init
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-keyword)
+    ;; TODO: these conflict so set new ones
+    :bind (("C-c p d" . cape-dabbrev)
+           ("C-c p e" . cape-elisp-block)
+           ("C-c p f" . cape-file)
+           ("C-c p h" . cape-history)
+           ("C-c p s" . cape-symbol)
+           ("C-c p w" . cape-dict)))
+#+END_SRC
 * Projectile and RG (Ripgrep)
 It looks like rg.el has more options for regex when searching
    #+BEGIN_SRC emacs-lisp
