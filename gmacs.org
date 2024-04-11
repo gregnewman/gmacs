@@ -871,11 +871,11 @@ Using `exec-path-from-shell` fixes this.
   (use-package web-mode
     ;; Help consistently edit web documents of SGML markup dialetcs.
     :ensure t
-    :config (setq web-mode-markup-indent-offset 2
-                  web-mode-css-indent-offset 2
-                  web-mode-code-indent-offset 2)
     :config
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (setq web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-code-indent-offset 2)
     (setq web-mode-engines-alist
           '(("django"    . "\\.html\\'")))
     (setq web-mode-enable-auto-closing t)
