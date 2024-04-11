@@ -122,8 +122,9 @@
     (setq desktop-base-lock-name "lock")
     (setq desktop-load-locked-desktop t)
     ; Very useful if dealing with git repos and also files that can change from Dropbox
-    (global-auto-revert-mode t)
+    (global-auto-revert-mode 1)
     (setq auto-revert-use-notify nil)
+    (setq auto-revert-interval 5)
     ;; Configure where TAGS are stored
     (setq tags-table-list (list "~/.emacs.d/TAGS"))
     ;; isearch improvements
@@ -865,6 +866,22 @@ Using `exec-path-from-shell` fixes this.
      (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 
+* Web Mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    ;; Help consistently edit web documents of SGML markup dialetcs.
+    :ensure t
+    :config (setq web-mode-markup-indent-offset 2
+                  web-mode-css-indent-offset 2
+                  web-mode-code-indent-offset 2)
+    :config
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (setq web-mode-engines-alist
+          '(("django"    . "\\.html\\'")))
+    (setq web-mode-enable-auto-closing t)
+    (setq web-mode-enable-auto-quoting t))
+#+END_SRC
+
 * Eglot and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
@@ -890,8 +907,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
             typescript-ts-mode
             yaml-mode
             yaml-ts-mode
-            html-mode
-            html-ts-mode
+;;            web-mode
             js-mode
             js-ts-mode
             json-mode
@@ -1204,7 +1220,7 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
        indent-bars-color-by-depth '(:palette ("red" "green" "orange" "cyan") :blend 1)
        indent-bars-highlight-current-depth '(:blend 0.5))
       :hook
-      ((python-base-mode yaml-mode js-base-mode html-mode) . indent-bars-mode))
+      ((python-base-mode yaml-mode js-base-mode web-mode) . indent-bars-mode))
 #+END_SRC
 
 * Mac Link
