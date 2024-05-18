@@ -921,9 +921,9 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   ;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 
     ;; Eldoc 
-    (use-package eldoc
-      :init
-      (global-eldoc-mode))
+  (use-package eldoc
+    :init
+    (global-eldoc-mode))
 #+end_src
 
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
