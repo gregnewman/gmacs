@@ -58,7 +58,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-       (load-theme 'doom-solarized-dark-high-contrast t))
+       (load-theme 'doom-dracula t))
    #+end_src
 
 * Windows Configuration
@@ -894,15 +894,15 @@ Using `exec-path-from-shell` fixes this.
 * Eglot and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
-#+BEGIN_SRC  emacs-lisp
+#+BEGIN_SRC emacs-lisp
+  ;; Eglot
   (use-package eglot
-    :straight t
-    ;; :straight (:type built-in)
+    :hook (prog-mode . eglot-ensure)
     :bind (:map eglot-mode-map
                 ("C-c l a" . eglot-code-actions)
                 ("C-c l r" . eglot-rename)
                 ("C-c l f" . eglot-format)
-                ("C-c l d" . eldoc))
+                ("C-c l d" . eldoc)))
     ;; This is commented until I get Ruff and other linters setup and working
     ;; :hook (eglot-managed-mode . (lambda () (flymake-mode -1)))
 
@@ -911,29 +911,17 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     ;; (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
     ;; (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
 
-    :hook ((css-mode
-            css-ts-mode
-            typescript-ts-mode
-            yaml-mode
-            yaml-ts-mode
-            html-mode
-            html-ts-mode
-            js-mode
-            js-ts-mode
-            json-mode
-            json-ts-mode
-            bash-mode
-            bash-ts-mode
-            python-mode
-            python-ts-mode)
-           . eglot-ensure))
-
-  (use-package treesit-auto
-    :custom
-    (treesit-auto-install 'prompt)
-    :config
-    (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode))
+  ;; Treesit 
+   (use-package treesit-auto
+     :custom
+     (treesit-auto-install 'prompt)
+     :config
+     (treesit-auto-add-to-auto-mode-alist 'all)
+     (global-treesit-auto-mode))
+  ;; Eldoc 
+  (use-package eldoc
+    :init
+    (global-eldoc-mode))
 #+end_src
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
