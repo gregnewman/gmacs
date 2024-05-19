@@ -891,17 +891,13 @@ Using `exec-path-from-shell` fixes this.
      (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 
-* Eglot and Tree-sitter
+* Eglot, Eldoc and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
 #+BEGIN_SRC emacs-lisp
     ;; Eglot
-    ;; Open python files in tree-sitter mode.
-    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-
     (use-package eglot
-      :ensure t
-      :defer t
+      :straight t
       :hook ((python-ts-mode . eglot-ensure)
   ;;           (python-ts-mode . flyspell-prog-mode)
              (python-ts-mode . superword-mode)
@@ -921,9 +917,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
               (typescript-mode . typescript-ts-mode)
               (json-mode . json-ts-mode)
               (css-mode . css-ts-mode)
-              (python-mode . python-ts-mode)))
-      (when (memq window-system '(mac ns x))
-        (exec-path-from-shell-initialize)))
+              (python-mode . python-ts-mode))))
 
     ;; Open python files in tree-sitter mode.
 
