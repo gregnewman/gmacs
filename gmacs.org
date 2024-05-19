@@ -894,13 +894,6 @@ Using `exec-path-from-shell` fixes this.
 * Eglot, Eldoc and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
-#+BEGIN_COMMENT
-(use-package eglot
-  :ensure t
-  :defer t
-  :hook (python-mode . eglot-ensure))
-#+END_COMMENT
-
 #+BEGIN_SRC emacs-lisp
     ;; Eglot
     (use-package eglot
