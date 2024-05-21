@@ -895,42 +895,61 @@ Using `exec-path-from-shell` fixes this.
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
 #+BEGIN_SRC emacs-lisp
-    ;; Eglot
-    (use-package eglot
-      :straight t
-      :hook ((python-ts-mode . eglot-ensure)
-             (python-ts-mode . superword-mode)
-             (python-ts-mode . hs-minor-mode)
-             (python-ts-mode . (lambda () (set-fill-column 80))))
-      :bind (:map eglot-mode-map
-                  ("C-c l a" . eglot-code-actions)
-                  ("C-c l qr" . eglot-rename)
-                  ("C-c l f" . eglot-format)
-                  ("C-c l d" . eldoc))
-      :config
-      (setq major-mode-remap-alist
-            '((yaml-mode . yaml-ts-mode)
-              (bash-mode . bash-ts-mode)
-              (js2-mode . js-ts-mode)
-              (typescript-mode . typescript-ts-mode)
-              (json-mode . json-ts-mode)
-              (css-mode . css-ts-mode)
-              (python-mode . python-ts-mode))))
+  ;; Eglot
+  (use-package eglot
+    :hook ((python-mode . eglot-ensure)
+           (python-mode . superword-mode)
+           (python-mode . hs-minor-mode)
+           (python-mode . (lambda () (set-fill-column 80))))
+    :bind (:map eglot-mode-map
+                ("C-c l a" . eglot-code-actions)
+                ("C-c l qr" . eglot-rename)
+                ("C-c l f" . eglot-format)
+                ("C-c l d" . eldoc)))
 
-    ;; Tree-sitter
-    (use-package treesit-auto
-      :straight (:host github :repo "renzmann/treesit-auto")
-      :config
-      (setq treesit-auto-install 'prompt)
-      (treesit-auto-add-to-auto-mode-alist 'all)
-      (global-treesit-auto-mode)
-      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  ;; Eldoc 
+  (use-package eldoc
+    :init
+    (global-eldoc-mode))
+#+END_SRC
 
-    ;; Eldoc 
-    (use-package eldoc
-      :init
-      (global-eldoc-mode))
-#+end_src
+#+BEGIN_COMMENT
+  ;; Eglot
+  (use-package eglot
+    :straight t
+    :hook ((python-ts-mode . eglot-ensure)
+           (python-ts-mode . superword-mode)
+           (python-ts-mode . hs-minor-mode)
+           (python-ts-mode . (lambda () (set-fill-column 80))))
+    :bind (:map eglot-mode-map
+                ("C-c l a" . eglot-code-actions)
+                ("C-c l qr" . eglot-rename)
+                ("C-c l f" . eglot-format)
+                ("C-c l d" . eldoc))
+    :config
+    (setq major-mode-remap-alist
+          '((yaml-mode . yaml-ts-mode)
+            (bash-mode . bash-ts-mode)
+            (js2-mode . js-ts-mode)
+            (typescript-mode . typescript-ts-mode)
+            (json-mode . json-ts-mode)
+            (css-mode . css-ts-mode)
+            (python-mode . python-ts-mode))))
+
+  ;; Tree-sitter
+  (use-package treesit-auto
+    :straight (:host github :repo "renzmann/treesit-auto")
+    :config
+    (setq treesit-auto-install 'prompt)
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+  ;; Eldoc 
+  (use-package eldoc
+    :init
+    (global-eldoc-mode))
+#+end_comment
 
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
@@ -975,17 +994,17 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (marginalia-mode))
 
    ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
-  (require 'consult-imenu)
-  (dolist (python '(python-mode python-ts-mode))
-    (add-to-list 'consult-imenu-config
-                 `(,python
-                   :toplevel "Method"
-                   :types ((?f "Field" font-lock-variable-name-face)
-                           (?c "Class" font-lock-property-use-face)
-                           (?m "Method" font-lock-function-name-face)
-                           (?M "Module" font-lock-builtin-face)
-                           (?v "Variable" font-lock-variable-name-face)
-                           ))))
+;;  (require 'consult-imenu)
+;;  (dolist (python '(python-mode python-ts-mode))
+;;    (add-to-list 'consult-imenu-config
+;;                 `(,python
+;;                   :toplevel "Method"
+;;                   :types ((?f "Field" font-lock-variable-name-face)
+;;                           (?c "Class" font-lock-property-use-face)
+;;                           (?m "Method" font-lock-function-name-face)
+;;                           (?M "Module" font-lock-builtin-face)
+;;                           (?v "Variable" font-lock-variable-name-face)
+;;                           ))))
 
   (use-package consult-projectile
     :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
@@ -994,8 +1013,8 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            ;;("M-s r" . consult-ripgrep)
            ;;("M-s f" . projectile-ripgrep)))
 
-  (use-package html-ts-mode
-    :straight (html-ts-mode :type git :host github :repo "mickeynp/html-ts-mode" :branch "master"))
+  ;; (use-package html-ts-mode
+  ;;  :straight (html-ts-mode :type git :host github :repo "mickeynp/html-ts-mode" :branch "master"))
 
   (use-package consult-dir
     ;; This package helps ease traveling across directories by providing directory
