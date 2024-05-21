@@ -986,11 +986,8 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      :custom
      (marginalia-max-relative-age 0)
      (marginalia-align 'right)
-     ;; The :init configuration is always executed (Not lazy!)
-     :init
 
-     ;; Must be in the :init section of use-package such that the mode gets
-     ;; enabled right away. Note that this forces loading the package.
+     :init
      (marginalia-mode))
 
    ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
@@ -1012,9 +1009,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     :bind (("C-x 4 p" . consult-projectile-find-file-other-window)))
            ;;("M-s r" . consult-ripgrep)
            ;;("M-s f" . projectile-ripgrep)))
-
-  ;; (use-package html-ts-mode
-  ;;  :straight (html-ts-mode :type git :host github :repo "mickeynp/html-ts-mode" :branch "master"))
 
   (use-package consult-dir
     ;; This package helps ease traveling across directories by providing directory
