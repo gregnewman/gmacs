@@ -895,12 +895,24 @@ Using `exec-path-from-shell` fixes this.
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
 #+BEGIN_SRC emacs-lisp
+  (setq major-mode-remap-alist
+        '((yaml-mode . yaml-ts-mode)
+          (bash-mode . bash-ts-mode)
+          (js-mode . js-ts-mode)
+          (js2-mode . js-ts-mode)
+          (js-base-mode . js-ts-mode)
+          (typescript-mode . typescript-ts-mode)
+          (json-mode . json-ts-mode)
+          (css-mode . css-ts-mode)
+          (python-mode . python-ts-mode)))
+
   ;; Eglot
   (use-package eglot
-    :hook ((python-mode . eglot-ensure)
-           (python-mode . superword-mode)
-           (python-mode . hs-minor-mode)
-           (python-mode . (lambda () (set-fill-column 80))))
+    :hook ((python-ts-mode . eglot-ensure)
+           (js-ts-mode . eglot-ensure)
+           (python-ts-mode . superword-mode)
+           (python-ts-mode . hs-minor-mode)
+           (python-ts-mode . (lambda () (set-fill-column 80))))
     :bind (:map eglot-mode-map
                 ("C-c l a" . eglot-code-actions)
                 ("C-c l qr" . eglot-rename)
