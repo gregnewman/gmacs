@@ -910,6 +910,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   (use-package eglot
     :hook ((python-ts-mode . eglot-ensure)
            (js-ts-mode . eglot-ensure)
+           (typescript-ts-mode . eglot-ensure)
            (python-ts-mode . superword-mode)
            (python-ts-mode . hs-minor-mode)
            (python-ts-mode . (lambda () (set-fill-column 80))))
@@ -1003,17 +1004,17 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (marginalia-mode))
 
    ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
-;;  (require 'consult-imenu)
-;;  (dolist (python '(python-mode python-ts-mode))
-;;    (add-to-list 'consult-imenu-config
-;;                 `(,python
-;;                   :toplevel "Method"
-;;                   :types ((?f "Field" font-lock-variable-name-face)
-;;                           (?c "Class" font-lock-property-use-face)
-;;                           (?m "Method" font-lock-function-name-face)
-;;                           (?M "Module" font-lock-builtin-face)
-;;                           (?v "Variable" font-lock-variable-name-face)
-;;                           ))))
+  ;; (require 'consult-imenu)
+  ;; (dolist (python '(python-mode python-ts-mode))
+  ;;   (add-to-list 'consult-imenu-config
+  ;;                `(,python
+  ;;                  :toplevel "Method"
+  ;;                  :types ((?f "Field" font-lock-variable-name-face)
+  ;;                          (?c "Class" font-lock-property-use-face)
+  ;;                          (?m "Method" font-lock-function-name-face)
+  ;;                          (?M "Module" font-lock-builtin-face)
+  ;;                          (?v "Variable" font-lock-variable-name-face)
+  ;;                         ))))
 
   (use-package consult-projectile
     :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
