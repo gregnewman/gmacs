@@ -926,44 +926,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (global-eldoc-mode))
 #+END_SRC
 
-#+BEGIN_COMMENT
-  ;; Eglot
-  (use-package eglot
-    :straight t
-    :hook ((python-ts-mode . eglot-ensure)
-           (python-ts-mode . superword-mode)
-           (python-ts-mode . hs-minor-mode)
-           (python-ts-mode . (lambda () (set-fill-column 80))))
-    :bind (:map eglot-mode-map
-                ("C-c l a" . eglot-code-actions)
-                ("C-c l qr" . eglot-rename)
-                ("C-c l f" . eglot-format)
-                ("C-c l d" . eldoc))
-    :config
-    (setq major-mode-remap-alist
-          '((yaml-mode . yaml-ts-mode)
-            (bash-mode . bash-ts-mode)
-            (js2-mode . js-ts-mode)
-            (typescript-mode . typescript-ts-mode)
-            (json-mode . json-ts-mode)
-            (css-mode . css-ts-mode)
-            (python-mode . python-ts-mode))))
-
-  ;; Tree-sitter
-  (use-package treesit-auto
-    :straight (:host github :repo "renzmann/treesit-auto")
-    :config
-    (setq treesit-auto-install 'prompt)
-    (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode)
-    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-  ;; Eldoc 
-  (use-package eldoc
-    :init
-    (global-eldoc-mode))
-#+end_comment
-
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
