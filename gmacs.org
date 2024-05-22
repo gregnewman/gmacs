@@ -920,6 +920,15 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
                 ("C-c l f" . eglot-format)
                 ("C-c l d" . eldoc)))
 
+  ;; Tree-sitter
+    (use-package treesit-auto
+      :straight (:host github :repo "renzmann/treesit-auto")
+      :config
+      (setq treesit-auto-install 'prompt)
+      (treesit-auto-add-to-auto-mode-alist 'all)
+      (global-treesit-auto-mode)
+      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
   ;; Eldoc 
   (use-package eldoc
     :init
