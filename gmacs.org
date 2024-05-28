@@ -1262,3 +1262,16 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
   (use-package olivetti
     :ensure t)
 #+END_SRC
+* Casual Stuff
+#+BEGIN_SRC emacs-lisp
+  ;; Casual Avy
+  ;; https://github.com/kickingvegas/casual-avy
+  (use-package casual-avy
+    :straight
+    (casual-avy
+     :type git
+     :host github
+     :repo "kickingvegas/casual-avy")
+    :bind ("M-g" . casual-avy-tmenu))
+#+END_SRC
+
