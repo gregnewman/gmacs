@@ -1273,5 +1273,16 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
      :host github
      :repo "kickingvegas/casual-avy")
     :bind ("M-g" . casual-avy-tmenu))
+
+  ;; Casual Dired
+  ;; https://github.com/kickingvegas/casual-dired
+  (use-package casual-dired
+    :straight
+    (casual-dired
+     :type git
+     :host github
+     :repo "kickingvegas/casual-dired")
+    :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
+
 #+END_SRC
 
