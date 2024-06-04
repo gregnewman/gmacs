@@ -81,9 +81,11 @@
 * Font handling
   #+BEGIN_SRC emacs-lisp
     (set-face-attribute 'default nil :font "Monaspace Neon" :weight 'light :height 120)
-    (set-face-attribute 'fixed-pitch nil :font "Monaspace Neon" :weight 'light :height 120)
+    (set-face-attribute 'fixed-pitch nil :font "Fira Code" :weight 'light :height 120)
     (set-face-attribute 'variable-pitch nil :font "Monaspace Neon" :weight 'light :height 1.0)
   #+END_SRC
+
+  #+RESULTS:
 
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
@@ -334,37 +336,61 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
   * Engage - Choose the next action and get to work.
 
 ** Fontification and Beautification
+Use C-u C-x = (which runs the command what-cursor-position with a prefix argument) to show information about the character under the cursor, including the face which is being used for it.
+
 #+BEGIN_SRC emacs-lisp
-;; Load org-faces to make sure we can set appropriate faces
-(require 'org-faces)
+  ;; Load org-faces to make sure we can set appropriate faces
+  (require 'org-faces)
 
-;; Hide emphasis markers on formatted text
-(setq org-hide-emphasis-markers t)
+  ;; Hide emphasis markers on formatted text
+  (setq org-hide-emphasis-markers t)
+  ;; When Visual Line mode is enabled, `word-wrap' is turned on in this buffer, and simple editing commands are redefined to act on visual lines, not logical lines. 
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
 
-;; Resize Org headings
-(dolist (face '((org-level-1 . 1.0)
-                (org-level-2 . 0.95)
-                (org-level-3 . 0.90)
-                (org-level-4 . 0.90)
-                (org-level-5 . 0.90)
-                (org-level-6 . 0.90)
-                (org-level-7 . 0.90)
-                (org-level-8 . 0.90)))
-  (set-face-attribute (car face) nil :font "Monaspace Neon" :weight 'medium :height (cdr face)))
+  ;; Resize Org headings
+  (dolist (face '((org-level-1 . 1.1)
+                  (org-level-2 . 1.0)
+                  (org-level-3 . 1.0)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.0)
+                  (org-level-6 . 1.0)
+                  (org-level-7 . 1.0)
+                  (org-level-8 . 1.0))))
+;;    (set-face-attribute (car face) nil :font "Monaspace Neon" :weight 'medium :height (cdr face)))
 
-;; Make the document title a bit bigger
-(set-face-attribute 'org-document-title nil :font "Monaspace Neon" :weight 'bold :height 1.3)
+  ;; Make the document title a bit bigger
+  ;;(set-face-attribute 'org-document-title nil :font "Monaspace Neon" :weight 'bold :height 1.1)
 
-;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  ;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
+  ;; (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  ;; (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+  ;; (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+  ;; (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  ;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  ;; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  (custom-theme-set-faces
+   'user
+   '(variable-pitch ((t (:family "Monaspace Neon" :height 120 :weight thin))))
+   '(fixed-pitch ((t ( :family "Fira Code" :height 115))))
+   '(org-block ((t (:inherit fixed-pitch))))
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   '(org-document-info ((t (:foreground "dark orange"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   '(org-link ((t (:foreground "cyan" :underline t :weight light))))
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.9))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+END_SRC
+
+#+RESULTS:
 
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
@@ -460,21 +486,22 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
 ** Todo Keywords
     Setting up my todo keywords which are global and their relative colors.
    #+BEGIN_SRC emacs-lisp
-     ;; Keywords
-     (setq org-todo-keywords
-       (quote ((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)")
-               (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+          ;; Keywords
+          (setq org-todo-keywords
+            (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                    (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
-     ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
-     (setq org-log-done 'time)
+          ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
+          (setq org-log-done 'time)
 
-     (setq org-todo-keyword-faces
-       (quote (("TODO" :foreground "lime green" :weight bold)
-               ("NEXT" :foreground "cyan" :weight bold)
-               ("DONE" :foreground "dim gray" :weight bold)
-               ("WAITING" :foreground "tomato" :weight bold)
-               ("SOMEDAY" :foreground "magenta" :weight bold)
-               ("CANCELLED" :foreground "dim gray" :weight bold))))
+          (setq org-todo-keyword-faces
+            (quote (("PROJECT" :foreground "orange" :weight bold)
+                    ("TODO" :foreground "lime green" :weight bold)
+                    ("NEXT" :foreground "cyan" :weight bold)
+                    ("DONE" :foreground "dim gray" :weight bold)
+                    ("WAITING" :foreground "tomato" :weight bold)
+                    ("SOMEDAY" :foreground "magenta" :weight bold)
+                    ("CANCELLED" :foreground "dim gray" :weight bold))))
    #+end_src
 
 ** Capture mode keybinding
