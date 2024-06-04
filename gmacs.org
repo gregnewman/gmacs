@@ -778,8 +778,8 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                                   '((:name "All Tasks" :auto-category t)))))))))
    #+end_src
 
-** Org bullets and misc settings
-   Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
+** Org bullets and misc settings'
+Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
  #+BEGIN_SRC emacs-lisp
      (use-package org-bullets
        :commands org-bullets-mode
@@ -1321,3 +1321,8 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 
 #+END_SRC
 
+* Emojis
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :hook (after-init . global-emojify-mode))
+#+END_SRC
