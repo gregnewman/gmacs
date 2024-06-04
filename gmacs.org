@@ -356,11 +356,11 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                   (org-level-5 . 1.0)
                   (org-level-6 . 1.0)
                   (org-level-7 . 1.0)
-                  (org-level-8 . 1.0))))
-;;    (set-face-attribute (car face) nil :font "Monaspace Neon" :weight 'medium :height (cdr face)))
+                  (org-level-8 . 1.0)))
+    (set-face-attribute (car face) nil :font "Monaspace Neon" :weight 'medium :height (cdr face)))
 
   ;; Make the document title a bit bigger
-  ;;(set-face-attribute 'org-document-title nil :font "Monaspace Neon" :weight 'bold :height 1.1)
+  (set-face-attribute 'org-document-title nil :font "Monaspace Neon" :weight 'bold :height 1.1)
 
   ;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
   ;; (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
