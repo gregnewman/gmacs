@@ -1315,7 +1315,7 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+END_SRC
 
 * Emojis
-#+BEGIN_COMMENT
+#+BEGIN_SRC emacs-lisp
   (use-package emojify
     :hook (after-init . global-emojify-mode))
 #+END_SRC
