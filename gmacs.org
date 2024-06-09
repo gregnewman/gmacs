@@ -1320,3 +1320,27 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
   (use-package emojify
     :hook (after-init . global-emojify-mode))
 #+END_SRC
+* Activities
+Activities, this Emacs library allows the user to manage frames/tabs, windows, and buffers according to their purpose. An “activity” comprises a frame or tab, its window configuration, and the buffers displayed in them–its “state”; this state would be related to a certain task the user performs at various times, such as developing a certain software project, reading and writing email, working with one’s Org mode system, etc.
+
+[[https://github.com/alphapapa/activities.el][alphapapa/activities.el: Activities for Emacs (suspend and resume activities, i.e. frames/tabs and their windows, buffers)]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package activities
+    :init
+    (activities-mode)
+    ;; (activities-tabs-mode) ;; if you want tabs
+    ;; Prevent `edebug' default bindings from interfering.
+    (setq edebug-inhibit-emacs-lisp-mode-bindings t)
+
+    :bind
+    (("C-x C-a C-n" . activities-new)
+     ("C-x C-a C-d" . activities-define)
+     ("C-x C-a C-a" . activities-resume)
+     ("C-x C-a C-s" . activities-suspend)
+     ("C-x C-a C-k" . activities-kill)
+     ("C-x C-a RET" . activities-switch)
+     ("C-x C-a b" . activities-switch-buffer)
+     ("C-x C-a g" . activities-revert)
+     ("C-x C-a l" . activities-list)))
+#+END_SRC
