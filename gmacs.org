@@ -742,7 +742,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                            (org-agenda-start-day "-1w")
                            (org-deadline-warning-days 0)))
                   (agenda ""
-                          ((org-agenda-overriding-header "NEXT MONTH")
+                          ((org-agenda-overriding-header "NEXT 30 DAYS")
                            (org-agenda-span 'month)
                            (org-agenda-start-day "+0d")
                            (org-deadline-warning-days 0)))
