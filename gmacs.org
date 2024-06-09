@@ -479,22 +479,23 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
 ** Todo Keywords
     Setting up my todo keywords which are global and their relative colors.
    #+BEGIN_SRC emacs-lisp
-          ;; Keywords
-          (setq org-todo-keywords
-            (quote ((sequence "PROJECT(p)" "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                    (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+     ;; Keywords
+     (setq org-todo-keywords
+       (quote ((sequence "TODO(t)" "NEXT(n)" "PROJECT(p)" "|" "DONE(d)" "PROJECTDONE(e)")
+               (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
-          ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
-          (setq org-log-done 'time)
+     ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
+     (setq org-log-done 'time)
 
-          (setq org-todo-keyword-faces
-            (quote (("PROJECT" :foreground "orange" :weight bold)
-                    ("TODO" :foreground "lime green" :weight bold)
-                    ("NEXT" :foreground "cyan" :weight bold)
-                    ("DONE" :foreground "dim gray" :weight bold)
-                    ("WAITING" :foreground "tomato" :weight bold)
-                    ("SOMEDAY" :foreground "magenta" :weight bold)
-                    ("CANCELLED" :foreground "dim gray" :weight bold))))
+     (setq org-todo-keyword-faces
+       (quote (("PROJECT" :foreground "orange" :weight bold)
+               ("TODO" :foreground "lime green" :weight bold)
+               ("NEXT" :foreground "cyan" :weight bold)
+               ("DONE" :foreground "dim gray" :weight bold)
+               ("PROJECTDONE" :foreground "dim gray" :weight bold)
+               ("WAITING" :foreground "tomato" :weight bold)
+               ("SOMEDAY" :foreground "magenta" :weight bold)
+               ("CANCELLED" :foreground "dim gray" :weight bold))))
    #+end_src
 
 ** Capture mode keybinding
