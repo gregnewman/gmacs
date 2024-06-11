@@ -335,6 +335,11 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
   * Reviews - Reviews should be handled on a regular basis.  I do a daily review of what should be the priorities for the day but I also do weekly and monthly reviews to keep my systems from getting stale and/or stuck.
   * Engage - Choose the next action and get to work.
 
+    I have gitwatch running on my machine which watches my org directory and commits changes as they come in.
+    #+BEGIN_EXAMPLE bash
+    gitwatch -r origin -b main . &
+    #+END_EXAMPLE
+
 ** Fontification and Beautification
 Use C-u C-x = (which runs the command what-cursor-position with a prefix argument) to show information about the character under the cursor, including the face which is being used for it.
 
@@ -406,7 +411,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
      ;; Display tags farther right
      (setq org-agenda-tags-column -102)
      (setq org-agenda-span 7)
-     (setq org-tags-column 150)
+     (setq org-tags-column 88)
      (setq org-agenda-sticky nil)
      (setq org-agenda-inhibit-startup t)
      (setq org-agenda-use-tag-inheritance t)
