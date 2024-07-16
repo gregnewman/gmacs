@@ -486,15 +486,14 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    #+BEGIN_SRC emacs-lisp
      ;; Keywords
      (setq org-todo-keywords
-       (quote ((sequence "TODO(t)" "NEXT(n)" "PROJECT(p)" "|" "DONE(d)" "PROJECTDONE(e)")
+       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "PROJECTDONE(e)")
                (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
 
      ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
      (setq org-log-done 'time)
 
      (setq org-todo-keyword-faces
-       (quote (("PROJECT" :foreground "orange" :weight bold)
-               ("TODO" :foreground "lime green" :weight bold)
+       (quote (("TODO" :foreground "lime green" :weight bold)
                ("NEXT" :foreground "cyan" :weight bold)
                ("DONE" :foreground "dim gray" :weight bold)
                ("PROJECTDONE" :foreground "dim gray" :weight bold)
@@ -661,8 +660,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                             (concat "CALENDAR Today: "
                                     (format-time-string "%a %d" (current-time))))
                            (org-agenda-span 'day)))
-                  (tags-todo "LEVEL=1+REFILE"
-                             ((org-agenda-overriding-header "COLLECTBOX (Unscheduled)")))
                   (tags-todo "DEADLINE=\"<+0d>\""
                              ((org-agenda-overriding-header "DUE TODAY")
                               (org-agenda-skip-function
@@ -752,7 +749,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                            (org-agenda-span 'month)
                            (org-agenda-start-day "+0d")
                            (org-deadline-warning-days 0)))
-                  (todo "PROJECT"
+                  (tags "PROJECT"
                         ((org-agenda-overriding-header "PROJECT LIST")))
                   (todo "DONE|PROJECTDONE"
                         ((org-agenda-overriding-header
@@ -1349,3 +1346,25 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
      ("C-x C-a g" . activities-revert)
      ("C-x C-a l" . activities-list)))
 #+END_SRC
+* Bookmarks
+http://emacswiki.org/emacs/BookMarks
+
+| Keystroke           | Action                  |
+|---------------------+-------------------------|
+| C-x r m             | Set a bookmark          |
+| C-x r b             | Jump to a bookmark      |
+| C-x r l             | List your bookmarks     |
+| M-x bookmark-delete | Delete bookmark by name |
+
+#+BEGIN_SRC emacs-lisp
+  (setq bookmark-save-flag t
+      bookmark-set-fringe-mark t
+      bookmark-menu-confirm-deletion t)
+#+END_SRC
+* imenu-list
+#+BEGIN_SRC emacs-lisp
+  (use-package imenu-list)
+  (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+#+END_SRC
+
+* Helper Functions
