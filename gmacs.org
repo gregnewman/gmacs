@@ -1362,9 +1362,11 @@ http://emacswiki.org/emacs/BookMarks
       bookmark-menu-confirm-deletion t)
 #+END_SRC
 * imenu-list
+Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: Emacs plugin to show the current buffer's imenu entries in a separate buffer]]
 #+BEGIN_SRC emacs-lisp
   (use-package imenu-list)
   (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+  (setq imenu-list-focus-after-activation t)
 #+END_SRC
 
 * Helper Functions
