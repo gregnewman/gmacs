@@ -326,6 +326,12 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
   (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
 #+END_SRC
+* Racket
+#+BEGIN_SRC emacs-lisp
+  (use-package racket-mode)
+  (use-package ob-racket
+    :straight (:type git :host github :repo "hasu/emacs-ob-racket"))
+#+END_SRC
 * Org-mode
   [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
   
@@ -354,7 +360,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
   (add-hook 'org-mode-hook 'variable-pitch-mode)
 
   ;; Resize Org headings
-  (dolist (face '((org-level-1 . 1.1)
+  (dolist (face '((org-level-1 . 1.0)
                   (org-level-2 . 1.0)
                   (org-level-3 . 1.0)
                   (org-level-4 . 1.0)
@@ -387,8 +393,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.9))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+END_SRC
-
-#+RESULTS:
 
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
@@ -554,6 +558,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
         (org . t)
         (sql . t)
         (ditaa . t)
+        (racket . t)
         ))
      ;; Syntax highlight in #+BEGIN_SRC blocks
      (setq org-src-fontify-natively t)
@@ -1370,3 +1375,9 @@ Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: E
 #+END_SRC
 
 * Helper Functions
+* Lua
+#+BEGIN_SRC emacs-lisp
+  (use-package lua-mode)
+#+END_SRC
+
+#+RESULTS:
