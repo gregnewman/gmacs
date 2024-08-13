@@ -41,8 +41,6 @@
      (straight-use-package 'use-package)
    #+END_SRC
 
-   #+RESULTS:
-
 * Theme
    My current configuration uses doom-theme, specifically doom-dracula (everywhere!) and some default settings.
 
@@ -84,8 +82,6 @@
     (set-face-attribute 'fixed-pitch nil :font "Fira Code" :weight 'light :height 120)
     (set-face-attribute 'variable-pitch nil :font "Monaspace Neon" :weight 'light :height 1.0)
   #+END_SRC
-
-  #+RESULTS:
 
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
@@ -1078,9 +1074,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (all-the-icons-completion-mode))
 #+end_src
 
-#+RESULTS:
-| all-the-icons-completion-marginalia-setup |
-
 * Cape and Corfu
 #+BEGIN_SRC emacs-lisp
     (use-package cape
@@ -1379,5 +1372,3 @@ Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: E
 #+BEGIN_SRC emacs-lisp
   (use-package lua-mode)
 #+END_SRC
-
-#+RESULTS:
