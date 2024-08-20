@@ -57,6 +57,12 @@
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
        (load-theme 'doom-dracula t))
+
+     (use-package doom-modeline
+       :ensure t
+       :init (doom-modeline-mode 1))
+
+     (setq doom-modeline-battery t)
    #+end_src
 
 * Windows Configuration
