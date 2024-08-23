@@ -148,8 +148,8 @@
 * Transparency
 #+BEGIN_SRC emacs-lisp
   ;; set default to 95% opaque
-  (set-frame-parameter (selected-frame) 'alpha '(95 95))
-  (add-to-list 'default-frame-alist '(alpha 95 95))
+  (set-frame-parameter (selected-frame) 'alpha '(100 100))
+  (add-to-list 'default-frame-alist '(alpha 100 100))
 
   ;; convenience function to toggle transparency given a value
   (defun gn/transparency (value)
@@ -159,6 +159,7 @@
 
   (global-set-key (kbd "C-c t") 'gn/transparency)
 #+END_SRC
+
 * Markdown
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
