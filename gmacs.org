@@ -111,7 +111,7 @@
     (setq kept-old-versions 10)
     (setq version-control t)
     (global-display-line-numbers-mode)
-    (setq-default display-fill-column-indicator-column 80)
+    (setq-default display-fill-column-indicator-column 88)
     ;; always show paren highlights
     (show-paren-mode 1)
     ; highlight current line
@@ -145,6 +145,7 @@
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . js-ts-mode))
     ;; (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-ts-mode))
    #+end_src
+
 * Transparency
 #+BEGIN_SRC emacs-lisp
   ;; set default to 95% opaque
@@ -561,6 +562,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
       'org-babel-load-languages
       '(
         (python . t)
+        (js . t)
         (emacs-lisp . t)
         (org . t)
         (sql . t)
@@ -943,17 +945,37 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
   ;; Eglot
   (use-package eglot
+    :ensure t
+    :defer t
+    :bind (:map eglot-mode-map
+                ("C-c l a" . eglot-code-actions)
+                ("C-c l qr" . eglot-rename)
+                ("C-c l f" . eglot-format)
+                ("C-c l d" . eldoc))
     :hook ((python-ts-mode . eglot-ensure)
            (js-ts-mode . eglot-ensure)
            (typescript-ts-mode . eglot-ensure)
            (python-ts-mode . superword-mode)
            (python-ts-mode . hs-minor-mode)
-           (python-ts-mode . (lambda () (set-fill-column 80))))
-    :bind (:map eglot-mode-map
-                ("C-c l a" . eglot-code-actions)
-                ("C-c l qr" . eglot-rename)
-                ("C-c l f" . eglot-format)
-                ("C-c l d" . eldoc)))
+           (python-ts-mode . (lambda () (set-fill-column 88))))
+    :config
+    (setq-default eglot-workspace-configuration
+                  '((:pylsp . (:configurationSources ["flake8"]
+                             :plugins (
+                                       :pycodestyle (:enabled :json-false)
+                                       :mccabe (:enabled :json-false)
+                                       :pyflakes (:enabled :json-false)
+                                       :flake8 (:enabled :json-false
+                                                :maxLineLength 88)
+                                       :ruff (:enabled t
+                                              :lineLength 88)
+                                       :pydocstyle (:enabled t
+                                                    :convention "numpy")
+                                       :yapf (:enabled :json-false)
+                                       :autopep8 (:enabled :json-false)
+                                       :black (:enabled t
+                                               :line_length 88
+                                               :cache_config t)))))))
 
   ;; Tree-sitter
     (use-package treesit-auto
