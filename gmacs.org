@@ -55,14 +55,23 @@
        (doom-themes-visual-bell-config)
 
        ;; Corrects (and improves) org-mode's native fontification.
-       (doom-themes-org-config)
-       (load-theme 'doom-dracula t))
+       (doom-themes-org-config))
+       ;; (load-theme 'doom-dracula t))
 
      (use-package doom-modeline
        :ensure t
        :init (doom-modeline-mode 1))
 
      (setq doom-modeline-battery t)
+
+     (use-package flexoki-themes
+       :ensure t  ;; or :straight t if using straight.el
+       :config
+       (load-theme 'flexoki-themes-dark t)
+       :custom
+       (flexoki-themes-use-bold-keywords t)
+       (flexoki-themes-use-bold-builtins t)
+       (flexoki-themes-use-italic-comments t))
    #+end_src
 
 * Windows Configuration
@@ -116,6 +125,7 @@
     (show-paren-mode 1)
     ; highlight current line
     (global-hl-line-mode 1)
+    (set-face-background 'hl-line "#1C1B1A")
     ;; javascript indents.  This can probably be removed once I settle on a "good" js config
     (setq js-indent-level 2)
     ; Desktop setup.
@@ -574,6 +584,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
      ;; Don't prompt before running code in org
      (setq org-confirm-babel-evaluate nil)
    #+end_src
+
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
     Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
@@ -976,6 +987,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
                                        :black (:enabled t
                                                :line_length 88
                                                :cache_config t)))))))
+
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(js-ts-mode . ("typescript-language-server" "--stdio"))))
+
+;;  (add-to-list 'eglot-server-programs '(js-ts-mode . ("typescript-language-server" "--stdio")))
 
   ;; Tree-sitter
     (use-package treesit-auto
