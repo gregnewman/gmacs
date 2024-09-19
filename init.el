@@ -20,15 +20,6 @@
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
 
-;; HACK Work around native compilation on macOS failing with 'ld: library not
-;; found for -lemutls_w'.
-;; https://github.com/d12frosted/homebrew-emacs-plus/issues/554
-(setenv "LIBRARY_PATH"
-	(string-join
-	 '("/opt/homebrew/opt/gcc/lib/gcc/13"
-	   "/opt/homebrew/opt/libgccjit/lib/gcc/13"
-	   "/opt/homebrew/opt/gcc/lib/gcc/13/gcc/aarch64-apple-darwin22/13")
-	 ":"))
 
 ;; Boostrap Straight for package management
 (setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
