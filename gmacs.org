@@ -60,9 +60,18 @@
 
      (use-package doom-modeline
        :ensure t
-       :init (doom-modeline-mode 1))
+       :init (doom-modeline-mode 1)
+       :config
+       (setq doom-modeline-battery t)
+       ;; Whether display the time. It respects `display-time-mode'.
+       (display-time-mode 1)
+       (setq doom-modeline-time t)
+       ;; Whether to use an analogue clock svg as the live time icon.
+       ;; It respects options `doom-modeline-icon', `doom-modeline-time-icon', and `doom-modeline-time-live-icon'.
+       (setq doom-modeline-time-analogue-clock t)
 
-     (setq doom-modeline-battery t)
+       ;; The scaling factor used when drawing the analogue clock.
+       (setq doom-modeline-time-clock-size 0.7))
    #+end_src
 
 * Windows Configuration
@@ -84,9 +93,9 @@
 
 * Font handling
   #+BEGIN_SRC emacs-lisp
-    (set-face-attribute 'default nil :font "Monaspace Neon" :weight 'light :height 120)
-    (set-face-attribute 'fixed-pitch nil :font "Fira Code" :weight 'light :height 120)
-    (set-face-attribute 'variable-pitch nil :font "Monaspace Neon" :weight 'light :height 1.0)
+    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 120)
+    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 120)
+    (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :weight 'light :height 1.0)
   #+END_SRC
 
 * One liners preferences
@@ -145,6 +154,10 @@
     ;; associate some of these files with modes
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . js-ts-mode))
     ;; (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-ts-mode))
+
+    (setq calendar-latitude 35.064905)
+    (setq calendar-longitude -80.769724)
+    (setq calendar-location-name "Charlotte, NC")
    #+end_src
 
 * Transparency
@@ -328,6 +341,7 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
     :ensure t
     :diminish
     :config
+    (setq copilot-node-executable "/opt/homebrew/bin/node")
     (add-hook 'prog-mode-hook 'copilot-mode)
     (setq copilot-max-char -1)
     )
@@ -929,75 +943,78 @@ Using `exec-path-from-shell` fixes this.
 
      (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
-
+* Project
+  (use-package project
+    :ensure t)
 * Eglot, Eldoc and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
 #+BEGIN_SRC emacs-lisp
-  (setq major-mode-remap-alist
-        '((yaml-mode . yaml-ts-mode)
-          (bash-mode . bash-ts-mode)
-          (js-mode . js-ts-mode)
-          (js2-mode . js-ts-mode)
-          (js-base-mode . js-ts-mode)
-          (typescript-mode . typescript-ts-mode)
-          (json-mode . json-ts-mode)
-          (css-mode . css-ts-mode)
-          (python-mode . python-ts-mode)))
+    (setq major-mode-remap-alist
+          '((yaml-mode . yaml-ts-mode)
+            (bash-mode . bash-ts-mode)
+            (js-mode . js-ts-mode)
+            (js2-mode . js-ts-mode)
+            (js-base-mode . js-ts-mode)
+            (typescript-mode . typescript-ts-mode)
+            (json-mode . json-ts-mode)
+            (css-mode . css-ts-mode)
+            (python-mode . python-ts-mode)))
 
-  ;; Eglot
-  (use-package eglot
-    :ensure t
-    :defer t
-    :bind (:map eglot-mode-map
-                ("C-c l a" . eglot-code-actions)
-                ("C-c l qr" . eglot-rename)
-                ("C-c l f" . eglot-format)
-                ("C-c l d" . eldoc))
-    :hook ((python-ts-mode . eglot-ensure)
-           (js-ts-mode . eglot-ensure)
-           (typescript-ts-mode . eglot-ensure)
-           (python-ts-mode . superword-mode)
-           (python-ts-mode . hs-minor-mode)
-           (python-ts-mode . (lambda () (set-fill-column 88))))
-    :config
-    (setq-default eglot-workspace-configuration
-                  '((:pylsp . (:configurationSources ["flake8"]
-                             :plugins (
-                                       :pycodestyle (:enabled :json-false)
-                                       :mccabe (:enabled :json-false)
-                                       :pyflakes (:enabled :json-false)
-                                       :flake8 (:enabled :json-false
-                                                :maxLineLength 88)
-                                       :ruff (:enabled t
-                                              :lineLength 88)
-                                       :pydocstyle (:enabled t
-                                                    :convention "numpy")
-                                       :yapf (:enabled :json-false)
-                                       :autopep8 (:enabled :json-false)
-                                       :black (:enabled t
-                                               :line_length 88
-                                               :cache_config t)))))))
+    ;; Eglot
+    ;; (use-package eglot
+    ;;   ;; :ensure t
+    ;;   ;; :defer t
+    ;;   :bind (:map eglot-mode-map
+    ;;               ("C-c l a" . eglot-code-actions)
+    ;;               ("C-c l qr" . eglot-rename)
+    ;;               ("C-c l f" . eglot-format)
+    ;;               ("C-c l d" . eldoc))
+    ;;   :hook ((python-ts-mode . eglot-ensure)
+    ;;          (js-ts-mode . eglot-ensure)
+    ;;          (typescript-ts-mode . eglot-ensure)
+    ;;          (python-ts-mode . superword-mode)
+    ;;          (python-ts-mode . hs-minor-mode)
+    ;;          (python-ts-mode . (lambda () (set-fill-column 88)))))
+    ;;   ;; :config
+    ;;   ;; (setq-default eglot-workspace-configuration
+      ;;               '((:pylsp . (:configurationSources ["flake8"]
+      ;;                          :plugins (
+      ;;                                    :pycodestyle (:enabled :json-false)
+      ;;                                    :mccabe (:enabled :json-false)
+      ;;                                    :pyflakes (:enabled :json-false)
+      ;;                                    :flake8 (:enabled :json-false
+      ;;                                             :maxLineLength 88)
+      ;;                                    :ruff (:enabled t
+      ;;                                           :lineLength 88)
+      ;;                                    :pydocstyle (:enabled t
+      ;;                                                 :convention "numpy")
+      ;;                                    :yapf (:enabled :json-false)
+      ;;                                    :autopep8 (:enabled :json-false)
+      ;;                                    :black (:enabled t
+      ;;                                            :line_length 88
+      ;;                                           :cache_config t)))))))
 
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '(js-ts-mode . ("typescript-language-server" "--stdio"))))
+    ;; (with-eval-after-load 'eglot
+  ;;     (add-to-list 'eglot-server-programs
+  ;;                  '(js-ts-mode . ("typescript-language-server" "--stdio"))))
 
-;;  (add-to-list 'eglot-server-programs '(js-ts-mode . ("typescript-language-server" "--stdio")))
+  ;; ;;
+  ;; (add-to-list 'eglot-server-programs '(js-ts-mode . ("typescript-language-server" "--stdio")))
 
-  ;; Tree-sitter
-    (use-package treesit-auto
-      :straight (:host github :repo "renzmann/treesit-auto")
-      :config
-      (setq treesit-auto-install 'prompt)
-      (treesit-auto-add-to-auto-mode-alist 'all)
-      (global-treesit-auto-mode)
-      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+    ;; Tree-sitter
+      (use-package treesit-auto
+        :straight (:host github :repo "renzmann/treesit-auto")
+        :config
+        (setq treesit-auto-install 'prompt)
+        (treesit-auto-add-to-auto-mode-alist 'all)
+        (global-treesit-auto-mode)
+        (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-  ;; Eldoc 
-  (use-package eldoc
-    :init
-    (global-eldoc-mode))
+    ;; Eldoc 
+    (use-package eldoc
+      :init
+      (global-eldoc-mode))
 #+END_SRC
 
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
