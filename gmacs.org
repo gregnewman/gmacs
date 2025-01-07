@@ -12,33 +12,14 @@
 
 * Packages
    I use `use-package` and Straight so that all packages are automatically installed if cloning this repo for another machine.
-
-   #+BEGIN_COMMENT emacs-lisp
-     ;; Boostrap Straight for package management
-     (setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
-     (defvar bootstrap-version)
-     (let ((bootstrap-file
-            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-           (bootstrap-version 6))
-       (unless (file-exists-p bootstrap-file)
-         (with-current-buffer
-             (url-retrieve-synchronously
-              "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-              'silent 'inhibit-cookies)
-           (goto-char (point-max))
-           (eval-print-last-sexp)))
-       (load bootstrap-file nil 'nomessage))
-
-     (straight-use-package 'org)
-
-     (straight-use-package 'use-package)
-     (setq straight-use-package-by-default t)
-
-     ;; Disable package.el in favor of straight.el
-     (setq package-enable-at-startup nil)
-
-     ;; Install use-package
-     (straight-use-package 'use-package)
+   I kept running into problems with project being loaded multiple times and could not find the offender.  This config fixes
+   it with Straight. https://github.com/radian-software/straight.el/issues/1146#issuecomment-2227133737
+   #+BEGIN_SRC emacs-lisp
+     (use-package straight
+       :custom
+       ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
+       (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
+       (straight-use-package-by-default t))
    #+END_SRC
 
 * Theme
@@ -391,10 +372,10 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                   (org-level-6 . 1.0)
                   (org-level-7 . 1.0)
                   (org-level-8 . 1.0)))
-    (set-face-attribute (car face) nil :font "Monaspace Neon" :weight 'medium :height (cdr face)))
+    (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'medium :height (cdr face)))
 
   ;; Make the document title a bit bigger
-  (set-face-attribute 'org-document-title nil :font "Monaspace Neon" :weight 'bold :height 1.1)
+  (set-face-attribute 'org-document-title nil :font "JetBrains Mono" :weight 'bold :height 1.1)
 
   ;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
   (custom-theme-set-faces
@@ -489,6 +470,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
 
      ;; Turn off whitespace-mode since my linters will handle them anyway and it's annoying
      (whitespace-mode -1)
+     (require 'ox-md)
    #+end_src
 
 ** Alerts
@@ -943,78 +925,125 @@ Using `exec-path-from-shell` fixes this.
 
      (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
-* Project
-  (use-package project
-    :ensure t)
+* Projectile and RG (Ripgrep)
+It looks like rg.el has more options for regex when searching
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :bind-keymap
+       ("C-c p" . projectile-command-map))
+
+     (use-package rg
+       :ensure-system-package rg)
+   #+end_src
+   
 * Eglot, Eldoc and Tree-sitter
 Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
 
 #+BEGIN_SRC emacs-lisp
-    (setq major-mode-remap-alist
-          '((yaml-mode . yaml-ts-mode)
-            (bash-mode . bash-ts-mode)
-            (js-mode . js-ts-mode)
-            (js2-mode . js-ts-mode)
-            (js-base-mode . js-ts-mode)
-            (typescript-mode . typescript-ts-mode)
-            (json-mode . json-ts-mode)
-            (css-mode . css-ts-mode)
-            (python-mode . python-ts-mode)))
+  ;; Tree-sitter configuration
+  (use-package treesit-auto
+    :straight (:host github :repo "renzmann/treesit-auto")
+    :config
+    (setq treesit-auto-install 'prompt)
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode)
+    ;; Enhanced syntax highlighting
+    (setq treesit-font-lock-level 4)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-    ;; Eglot
-    ;; (use-package eglot
-    ;;   ;; :ensure t
-    ;;   ;; :defer t
-    ;;   :bind (:map eglot-mode-map
-    ;;               ("C-c l a" . eglot-code-actions)
-    ;;               ("C-c l qr" . eglot-rename)
-    ;;               ("C-c l f" . eglot-format)
-    ;;               ("C-c l d" . eldoc))
-    ;;   :hook ((python-ts-mode . eglot-ensure)
-    ;;          (js-ts-mode . eglot-ensure)
-    ;;          (typescript-ts-mode . eglot-ensure)
-    ;;          (python-ts-mode . superword-mode)
-    ;;          (python-ts-mode . hs-minor-mode)
-    ;;          (python-ts-mode . (lambda () (set-fill-column 88)))))
-    ;;   ;; :config
-    ;;   ;; (setq-default eglot-workspace-configuration
-      ;;               '((:pylsp . (:configurationSources ["flake8"]
-      ;;                          :plugins (
-      ;;                                    :pycodestyle (:enabled :json-false)
-      ;;                                    :mccabe (:enabled :json-false)
-      ;;                                    :pyflakes (:enabled :json-false)
-      ;;                                    :flake8 (:enabled :json-false
-      ;;                                             :maxLineLength 88)
-      ;;                                    :ruff (:enabled t
-      ;;                                           :lineLength 88)
-      ;;                                    :pydocstyle (:enabled t
-      ;;                                                 :convention "numpy")
-      ;;                                    :yapf (:enabled :json-false)
-      ;;                                    :autopep8 (:enabled :json-false)
-      ;;                                    :black (:enabled t
-      ;;                                            :line_length 88
-      ;;                                           :cache_config t)))))))
+  ;; Mode remapping with additional modes
+  (setq major-mode-remap-alist
+        '((yaml-mode . yaml-ts-mode)
+          (bash-mode . bash-ts-mode)
+          (js-mode . js-ts-mode)
+          (js2-mode . js-ts-mode)
+          (js-base-mode . js-ts-mode)
+          (typescript-mode . typescript-ts-mode)
+          (json-mode . json-ts-mode)
+          (css-mode . css-ts-mode)
+          (python-mode . python-ts-mode)
+          (tsx-mode . tsx-ts-mode)
+          (jsx-mode . tsx-ts-mode)))
 
-    ;; (with-eval-after-load 'eglot
-  ;;     (add-to-list 'eglot-server-programs
-  ;;                  '(js-ts-mode . ("typescript-language-server" "--stdio"))))
+  ;; Eglot configuration with enhanced features
+  (use-package eglot
+    :straight t
+    :ensure t
+    :defer t
+    :custom
+    ;; Optimize performance
+    (eglot-send-changes-idle-time 0.5)
+    (eglot-extend-to-xref t)
+    ;; Configure language servers
+    (eglot-server-programs
+     '((python-ts-mode . ("pylsp" 
+                          :initializationOptions (:pylsp (:plugins (
+                             :ruff (:enabled t
+                                   :lineLength 88
+                                   :exclude ["E501"]  ; Disable line length warnings (handled by black)
+                                   :select ["E", "F", "I", "UP"])  ; Enable specific rule families
+                             :pycodestyle (:enabled nil)  ; Disable other linters since we're using ruff
+                             :pyflakes (:enabled nil)
+                             :pylint (:enabled nil)
+                             :rope_completion (:enabled t)
+                             :autopep8 (:enabled nil))))))
+       ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
+        ("typescript-language-server" "--stdio"))))
+    :bind (:map eglot-mode-map
+                ("C-c l a" . eglot-code-actions)
+                ("C-c l r" . eglot-rename)
+                ("C-c l f" . eglot-format)
+                ("C-c l d" . eldoc)
+                ("C-c l o" . eglot-code-action-organize-imports)
+                ("C-c l h" . eglot-inlay-hints-mode)
+                ("C-c l q" . eglot-shutdown-all))
+    :hook ((python-ts-mode . eglot-ensure)
+           (js-ts-mode . eglot-ensure)
+           (typescript-ts-mode . eglot-ensure)
+           (tsx-ts-mode . eglot-ensure)
+           ;; Python-specific settings
+           (python-ts-mode . (lambda ()
+                               (setq-local indent-tabs-mode nil
+                                           tab-width 4
+                                           python-indent-offset 4)
+                               (superword-mode 1)
+                               (hs-minor-mode 1)
+                               (set-fill-column 88)
+                               (display-line-numbers-mode 1)))))
 
-  ;; ;;
-  ;; (add-to-list 'eglot-server-programs '(js-ts-mode . ("typescript-language-server" "--stdio")))
+  ;; Optional: Add flycheck for more explicit error display
+  (use-package flycheck
+    :straight t
+    :hook (python-ts-mode . flycheck-mode)
+    :config
+    (setq flycheck-python-ruff-executable "ruff"))
 
-    ;; Tree-sitter
-      (use-package treesit-auto
-        :straight (:host github :repo "renzmann/treesit-auto")
-        :config
-        (setq treesit-auto-install 'prompt)
-        (treesit-auto-add-to-auto-mode-alist 'all)
-        (global-treesit-auto-mode)
-        (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  ;; Enhanced Eldoc configuration
+  (use-package eldoc
+    :init
+    (global-eldoc-mode)
+    :custom
+    (eldoc-echo-area-use-multiline-p nil)
+    (eldoc-echo-area-prefer-doc-buffer t)
+    (eldoc-documentation-strategy 'eldoc-documentation-compose))
 
-    ;; Eldoc 
-    (use-package eldoc
-      :init
-      (global-eldoc-mode))
+  ;; Add company for better completion
+  (use-package company
+    :straight t
+    :hook (prog-mode . company-mode)
+    :custom
+    (company-minimum-prefix-length 1)
+    (company-idle-delay 0.1)
+    (company-selection-wrap-around t)
+    (company-tooltip-align-annotations t))
+
+  ;; Optional: Add format-all for consistent formatting
+  (use-package format-all
+    :straight t
+    :bind ("C-c f" . format-all-buffer)
+    :hook ((python-ts-mode . format-all-mode)
+           (js-ts-mode . format-all-mode)
+           (typescript-ts-mode . format-all-mode)))
 #+END_SRC
 
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
@@ -1193,16 +1222,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (setq read-extended-command-predicate #'command-completion-default-include-p))
 
 #+END_SRC
-* Projectile and RG (Ripgrep)
-It looks like rg.el has more options for regex when searching
-   #+BEGIN_SRC emacs-lisp
-     (use-package projectile
-       :bind-keymap
-       ("C-c p" . projectile-command-map))
-
-     (use-package rg
-       :ensure-system-package rg)
-   #+end_src
 * Company
 
    #+BEGIN_SRC emacs-lisp
@@ -1227,25 +1246,26 @@ It looks like rg.el has more options for regex when searching
 
 * Magit
   #+BEGIN_SRC emacs-lisp
-     (use-package magit
-       :bind ("C-x g" . magit-status))
+    (use-package magit
+      :defer t
+      :bind ("C-x g" . magit-status))
 
-     (use-package magit-todos
-       :after magit
-       :after hl-todo
-       :config
-       (setq magit-todos-depth 2)
-       (setq magit-todos-exclude-globs '("*.js.map"))
-       (magit-todos-mode))
+    (use-package magit-todos
+      :after magit
+      :after hl-todo
+      :config
+      (setq magit-todos-depth 2)
+      (setq magit-todos-exclude-globs '("*.js.map"))
+      (magit-todos-mode))
 
-     (use-package hl-todo
-       :config
-       ;; Adding a new keyword: TEST.
-       (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
-       (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
-       :init
-       (add-hook 'python-ts-mode-hook (lambda () (hl-todo-mode t)))
-       )
+    (use-package hl-todo
+      :config
+      ;; Adding a new keyword: TEST.
+      (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
+      (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
+      :init
+      (add-hook 'python-ts-mode-hook (lambda () (hl-todo-mode t)))
+      )
    #+end_src
 
 * Docker
@@ -1347,30 +1367,6 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
     :ensure t
     :config
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
-#+END_SRC
-
-* Casual Stuff
-#+BEGIN_SRC emacs-lisp
-  ;; Casual Avy
-  ;; https://github.com/kickingvegas/casual-avy
-  (use-package casual-avy
-    :straight
-    (casual-avy
-     :type git
-     :host github
-     :repo "kickingvegas/casual-avy")
-    :bind ("M-g" . casual-avy-tmenu))
-
-  ;; Casual Dired
-  ;; https://github.com/kickingvegas/casual-dired
-  (use-package casual-dired
-    :straight
-    (casual-dired
-     :type git
-     :host github
-     :repo "kickingvegas/casual-dired")
-    :bind (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
-
 #+END_SRC
 
 * Emojis
