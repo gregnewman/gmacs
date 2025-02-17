@@ -315,21 +315,6 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
   :ensure t)
 #+END_SRC
 
-* Copilot
-#+BEGIN_SRC emacs-lisp
-  (use-package copilot
-    :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-    :ensure t
-    :diminish
-    :config
-    (setq copilot-node-executable "/opt/homebrew/bin/node")
-    (add-hook 'prog-mode-hook 'copilot-mode)
-    (setq copilot-max-char -1)
-    )
-  (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-  (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-#+END_SRC
-
 * Racket
 #+BEGIN_SRC emacs-lisp
   (use-package racket-mode)
