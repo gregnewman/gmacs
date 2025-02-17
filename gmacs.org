@@ -961,8 +961,8 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (eglot-extend-to-xref t)
     ;; Configure language servers
     (eglot-server-programs
-     '((python-ts-mode . ("pylsp" 
-                          :initializationOptions (:pylsp (:plugins (
+     '((python-ts-mode . ("basedpyright-langserver" "--stdio" 
+                          :initializationOptions (:basedpyright (:plugins (
                              :ruff (:enabled t
                                    :lineLength 88
                                    :exclude ["E501"]  ; Disable line length warnings (handled by black)
@@ -974,6 +974,20 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
                              :autopep8 (:enabled nil))))))
        ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
         ("typescript-language-server" "--stdio"))))
+    :config
+    (setq-default
+       eglot-workspace-configuration
+       '(:basedpyright (
+           :typeCheckingMode "off"
+         )
+         :basedpyright.analysis (
+           :diagnosticSeverityOverrides (
+             :reportUnusedCallResult "none"
+           )
+           :inlayHints (
+             :callArgumentNames :json-false
+           )
+         )))
     :bind (:map eglot-mode-map
                 ("C-c l a" . eglot-code-actions)
                 ("C-c l r" . eglot-rename)
