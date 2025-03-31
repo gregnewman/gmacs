@@ -864,7 +864,7 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
     (consult-notes-org-headings-mode)
     (consult-notes-denote-mode)
     ;; search only for text files in denote dir
-    (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
+    (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
  #+END_SRC
 * Path from shell
 When starting emacs gui on Mac OS, the paths are not read from .zshrc
