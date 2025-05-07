@@ -205,7 +205,7 @@
      (setq-default save-place t)
    #+end_src
 
-* Custom function to move to beginning of line
+* Custom function to move to beginning of line and move lines up and down
      Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
 
    #+BEGIN_SRC emacs-lisp
@@ -235,7 +235,26 @@
        ;; remap C-a to `smarter-move-beginning-of-line'
        (global-set-key [remap move-beginning-of-line]
                        'my/smarter-move-beginning-of-line)
+
+     (defun gn/move-line-up ()
+       "Move the current line up."
+       (interactive)
+       (transpose-lines 1)
+       (forward-line -2)
+       (indent-according-to-mode))
+
+     (defun gn/move-line-down ()
+       "Move the current line down."
+       (interactive)
+       (forward-line 1)
+       (transpose-lines 1)
+       (forward-line -1)
+       (indent-according-to-mode))
+
+     (global-set-key [(meta shift up)]  'gn/move-line-up)
+     (global-set-key [(meta shift down)]  'gn/move-line-down)
    #+end_src
+
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
@@ -869,26 +888,44 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
 * HOWM
 #+BEGIN_SRC emacs-lisp
   (use-package howm
-  :ensure t
-  :init
-  ;; 
-  ;; Options: Remove the leading ";" in the following lines if you like.
-  ;; 
-  ;; Format
-  (require 'howm-markdown) ;; Write notes in markdown-mode. (*1)
-  ;;(require 'howm-org) ;; Write notes in Org-mode. (*2)
-  ;; 
-  ;; Preferences
-  (setq howm-directory "~/Dropbox/Org/Howm") ;; Where to store the files?
-  (setq howm-follow-theme t) ;; Use your Emacs theme colors. (*3)
-  (setq howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
-  (setq howm-history-file (expand-file-name ".howm-history" howm-directory))
-  ;; 
-  ;; Performance
-  ;(setq howm-menu-expiry-hours 1) ;; Cache menu N hours. (*4)
-  ;(setq howm-menu-refresh-after-save nil) ;; Speed up note saving. (*5)
+    ;; :after org
+    :ensure t
+    :init
+    ;; 
+    ;; Options: Remove the leading ";" in the following lines if you like.
+    ;; 
+    ;; Format
+    ;;(require 'howm-markdown) ;; Write notes in markdown-mode. (*1)
+    (require 'howm-org) ;; Write notes in Org-mode. (*2)
+    ;; 
+    ;; Preferences
+    ;; Org-compatible filenames and syntax.
+    (setq howm-file-name-format "%Y-%m-%d-%H%M%S.org")
+    (setq howm-view-title-header "*")
+    (setq howm-dtime-format (format "<%s>" (cdr org-timestamp-formats)))
+    ;; Use ripgrep for fast searching.
+    (setq howm-view-use-grep t)
+    (setq howm-view-grep-command "rg")
+    (setq howm-view-grep-option "-nH --no-heading --color never")
+    (setq howm-view-grep-extended-option nil)
+    (setq howm-view-grep-fixed-option "-F")
+    (setq howm-view-grep-expr-option nil)
+    (setq howm-view-grep-file-stdin-option nil)
+    ;; Make the "comefrom links" case-insensitive.
+    (setq howm-keyword-case-fold-search t)
+    ;; Get rid of the old-fashioned separators.
+    (setq howm-view-summary-sep "\t")
+    (setq howm-directory "~/Dropbox/Org/Howm") ;; Where to store the files?
+    (setq howm-follow-theme t) ;; Use your Emacs theme colors. (*3)
+    (setq howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
+    (setq howm-history-file (expand-file-name ".howm-history" howm-directory))
+    ;; 
+    ;; Performance
+    ;(setq howm-menu-expiry-hours 1) ;; Cache menu N hours. (*4)
+    ;(setq howm-menu-refresh-after-save nil) ;; Speed up note saving. (*5)
   )
 #+END_SRC
+
 * Path from shell
 When starting emacs gui on Mac OS, the paths are not read from .zshrc
 Using `exec-path-from-shell` fixes this.
