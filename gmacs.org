@@ -84,7 +84,6 @@
   These are important in how I like my emacs to perform.
 
   #+BEGIN_SRC emacs-lisp
-    (fset 'yes-or-no-p 'y-or-n-p)
     (set-frame-font "JetBrains Mono 12")
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
@@ -143,7 +142,7 @@
 
 * Transparency
 #+BEGIN_SRC emacs-lisp
-  ;; set default to 95% opaque
+  ;; set default to 100% opaque
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
   (add-to-list 'default-frame-alist '(alpha 100 100))
 
@@ -254,6 +253,58 @@
      (global-set-key [(meta shift up)]  'gn/move-line-up)
      (global-set-key [(meta shift down)]  'gn/move-line-down)
    #+end_src
+
+* OmniFocus
+#+BEGIN_SRC emacs-lisp
+  (defun gn/omnifocus-capture ()
+    "Capture a task with optional note, due date, and location to OmniFocus via URL scheme"
+    (interactive)
+    (let* ((task-name (read-string "Task name: "))
+           (task-note (read-string "Note (optional): "))
+           ;; Use org-read-date with empty default - just press Enter to skip
+           (due-date (org-read-date nil nil nil "Due date (Enter to skip): " nil nil t))
+           (due-date-param (if (or (not due-date) (string-empty-p due-date))
+                              "" 
+                            (concat "&due=" (url-hexify-string due-date))))
+           ;; Ask about location only if in a file
+           (capture-location (and (buffer-file-name)
+                                 (string= "y" (read-string "Include current location? (y/N): " "n"))))
+           (location-info (when capture-location
+                           (format "File: %s, Line: %d" 
+                                  (file-name-nondirectory (buffer-file-name))
+                                  (line-number-at-pos))))
+           (full-note (if location-info
+                         (if (string-empty-p task-note)
+                             location-info
+                           (concat task-note "\n\nLocation: " location-info))
+                       task-note))
+           (encoded-name (url-hexify-string task-name))
+           (encoded-note (if (string-empty-p full-note) 
+                            "" 
+                          (concat "&note=" (url-hexify-string full-note))))
+           (omnifocus-url (concat "omnifocus:///add?name=" encoded-name encoded-note due-date-param "&autosave=true")))
+      (call-process "open" nil nil nil omnifocus-url)
+      (message "Task sent to OmniFocus: %s%s%s" 
+               task-name 
+               (if (string-empty-p due-date) "" (concat " (due: " due-date ")"))
+               (if location-info " [with location]" ""))))
+    
+    (defun gn/omnifocus-capture-original ()
+      "Capture a task with optional note to OmniFocus via URL scheme"
+      (interactive)
+      (let* ((task-name (read-string "Task name: "))
+             (task-note (read-string "Note (optional): "))
+             (encoded-name (url-hexify-string task-name))
+             (encoded-note (if (string-empty-p task-note) 
+                               "" 
+                             (concat "&note=" (url-hexify-string task-note))))
+             (omnifocus-url (concat "omnifocus:///add?name=" encoded-name encoded-note "&autosave=true")))
+        (call-process "open" nil nil nil omnifocus-url)
+        (message "Task sent to OmniFocus: %s" task-name)))
+
+    ;; Bind it directly to a key
+    (global-set-key (kbd "C-c o") 'gn/omnifocus-capture)
+#+END_SRC
 
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
