@@ -11,4 +11,17 @@
       use-file-dialog nil
       use-short-answers t
       inhibit-splash-screen t
-      inhibit-startup-screen t)
+      inhibit-startup-screen t
+      menu-bar-mode nil
+      tool-bar-mode nil
+      scroll-bar-mode nil
+      tooltip-mode nil
+      )
+
+;; Enable debug mode for configuration errors
+(setq debug-on-error t)
+(setq warning-minimum-level :error)
+
+;; Log package loading issues
+(setq use-package-verbose t)
+(setq use-package-debug t)
