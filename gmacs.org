@@ -61,11 +61,6 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package emacs
-      :init
-      (menu-bar-mode -1)
-      (tool-bar-mode -1)
-      (scroll-bar-mode -1)
-      (tooltip-mode -1)
       :config
       (setq inhibit-splash-screen t)
       :bind (("C-z" . nil)
@@ -159,6 +154,7 @@
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
     :ensure t
+    :defer t
     :config
     (add-to-list 'auto-mode-alist
              '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
@@ -381,16 +377,11 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
 #+end_src
 * Justfiles
 #+BEGIN_SRC emacs-lisp
-(use-package just-mode
-  :ensure t)
+  (use-package just-mode
+    :ensure t
+    :defer t)
 #+END_SRC
 
-* Racket
-#+BEGIN_SRC emacs-lisp
-  (use-package racket-mode)
-  (use-package ob-racket
-    :straight (:type git :host github :repo "hasu/emacs-ob-racket"))
-#+END_SRC
 * Org-mode
   [[https://gettingthingsdone.com/][Getting Things Done]] (GTD), is a grouping of productivity processes following five basic principles.
   
@@ -531,7 +522,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
 ** Alerts
 #+BEGIN_SRC emacs-lisp
   (use-package org-alert
-    :straight t 
     :ensure t 
     :config 
         (setq org-alert-interval 60 
@@ -540,7 +530,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
         (org-alert-enable))
 
   (use-package alert 
-    :straight t 
     :config
     (setq alert-default-style 'osx-notifier
           alert-fade-time 120))
@@ -619,7 +608,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
         (org . t)
         (sql . t)
         (ditaa . t)
-        (racket . t)
         ))
      ;; Syntax highlight in #+BEGIN_SRC blocks
      (setq org-src-fontify-natively t)
@@ -941,6 +929,7 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
   (use-package howm
     ;; :after org
     :ensure t
+    :defer t
     :init
     ;; 
     ;; Options: Remove the leading ";" in the following lines if you like.
@@ -1063,7 +1052,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
   ;; Eglot configuration with enhanced features
   (use-package eglot
-    :straight t
     :ensure t
     :defer t
     :custom
@@ -1123,7 +1111,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
   ;; Optional: Add flycheck for more explicit error display
   (use-package flycheck
-    :straight t
     :hook (python-ts-mode . flycheck-mode)
     :config
     (setq flycheck-python-ruff-executable "ruff"))
@@ -1139,7 +1126,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
   ;; Add company for better completion
   (use-package company
-    :straight t
     :hook (prog-mode . company-mode)
     :custom
     (company-minimum-prefix-length 1)
@@ -1149,7 +1135,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
   ;; Optional: Add format-all for consistent formatting
   (use-package format-all
-    :straight t
     :bind ("C-c f" . format-all-buffer)
     :hook ((python-ts-mode . format-all-mode)
            (js-ts-mode . format-all-mode)
@@ -1220,7 +1205,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     ;; candidates related to current buffers, bookmarks, and projects.  Further,
     ;; like other ~consult.el~ functions, you can use narrowing keys.  See
     ;; https://github.com/karthink/consult-dir.
-    :straight t
     :after (consult)
     :bind (("C-x C-d" . consult-dir)
            :map minibuffer-local-completion-map
@@ -1276,7 +1260,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (use-package cape
       ;; Completion at point functions, with the amazing `cape-capf-super' for
       ;; granular configuration of specific mode completion behavior.
-      :straight t
       :init
       (add-to-list 'completion-at-point-functions #'cape-dabbrev)
       (add-to-list 'completion-at-point-functions #'cape-file)
@@ -1332,28 +1315,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (setq read-extended-command-predicate #'command-completion-default-include-p))
 
 #+END_SRC
-* Company
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package company
-       :config
-       (setq company-minimum-prefix-length 1
-             company-idle-delay 0
-             company-tooltip-limit 10
-             company-transformers nil
-             company-show-numbers t)
-       (global-company-mode +1))
-
-     ; (use-package company-lsp
-     ;  :after company
-     ;  :config
-     ;  (setq company-lsp-enable-snippet nil)
-     ;  :init (add-to-list 'company-backends 'company-capf))
-
-     (use-package company-box
-       :hook (company-mode . company-box-mode))
-   #+end_src
-
 * Magit
   #+BEGIN_SRC emacs-lisp
     (use-package magit
@@ -1369,6 +1330,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
       (magit-todos-mode))
 
     (use-package hl-todo
+      :defer t
       :config
       ;; Adding a new keyword: TEST.
       (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
@@ -1384,6 +1346,7 @@ Repo and documentation https://github.com/Silex/docker.el
 #+BEGIN_SRC emacs-lisp
   (use-package docker
     :ensure t
+    :defer t
     :bind ("C-c d" . docker))
 #+end_src
 * Winner Mode
@@ -1420,7 +1383,6 @@ Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a
 Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-bars/tree/main][from jdtsmith/indent-bars]]
 #+BEGIN_SRC emacs-lisp
     (use-package indent-bars
-      :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
       :custom
       (indent-bars-treesit-support t)
       (indent-bars-no-descend-string t)
@@ -1475,6 +1437,7 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package nov
     :ensure t
+    :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
