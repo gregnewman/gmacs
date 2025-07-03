@@ -1329,16 +1329,9 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 * Magit
   #+BEGIN_SRC emacs-lisp
     (use-package magit
-      :defer t
-      :bind ("C-x g" . magit-status))
-
-    (use-package magit-todos
-      :after magit
-      :after hl-todo
-      :config
-      (setq magit-todos-depth 2)
-      (setq magit-todos-exclude-globs '("*.js.map"))
-      (magit-todos-mode))
+      :bind ("C-x g" . magit-status)
+      :custom
+      (magit-git-executable "/opt/homebrew/bin/git"))
 
     (use-package hl-todo
       :defer t
@@ -1349,6 +1342,14 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
       :init
       (add-hook 'python-ts-mode-hook (lambda () (hl-todo-mode t)))
       )
+
+    (use-package magit-todos
+      :after magit
+      :after hl-todo
+      :config
+      (setq magit-todos-depth 2)
+      (setq magit-todos-exclude-globs '("*.js.map"))
+      (magit-todos-mode))
    #+end_src
 
 * Docker
