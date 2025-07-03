@@ -1337,8 +1337,9 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
       :defer t
       :config
       ;; Adding a new keyword: TEST.
-      (add-to-list 'hl-todo-keyword-faces '("TODO" . "gold"))
-      (add-to-list 'hl-todo-keyword-faces '("Fixme" . "orange"))
+      (add-to-list 'hl-todo-keyword-faces '("TODO" . "red"))
+      (add-to-list 'hl-todo-keyword-faces '("FIXME" . "orange"))
+      (add-to-list 'hl-todo-keyword-faces '("HACK" . "gold"))
       :init
       (add-hook 'python-ts-mode-hook (lambda () (hl-todo-mode t)))
       )
