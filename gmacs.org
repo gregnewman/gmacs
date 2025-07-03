@@ -61,6 +61,11 @@
 
   #+BEGIN_SRC emacs-lisp
     (use-package emacs
+      :init
+      (menu-bar-mode -1)
+      (tool-bar-mode -1)
+      (scroll-bar-mode -1)
+      (tooltip-mode -1)
       :config
       (setq inhibit-splash-screen t)
       :bind (("C-z" . nil)
@@ -816,6 +821,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
 
    #+BEGIN_SRC emacs-lisp
      (use-package org-super-agenda
+       :defer t
        :straight
        (org-super-agenda
         :type git
@@ -900,6 +906,7 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
 
 #+BEGIN_SRC emacs-lisp
   (use-package denote
+    :defer t
     :custom
     ((denote-directory "~/Dropbox/Org/denote/")
      (denote-prompts '(title keywords))
@@ -974,7 +981,7 @@ Using `exec-path-from-shell` fixes this.
      (use-package exec-path-from-shell
        :config
        (when (memq window-system '(mac ns x))
-       (exec-path-from-shell-initialize)))
+         (exec-path-from-shell-initialize)))
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
@@ -1027,6 +1034,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+BEGIN_SRC emacs-lisp
   ;; Tree-sitter configuration
   (use-package treesit-auto
+    :defer t
     :straight (:host github :repo "renzmann/treesit-auto")
     :config
     (setq treesit-auto-install 'prompt)
@@ -1141,6 +1149,9 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            (typescript-ts-mode . format-all-mode)))
 #+END_SRC
 
+#+RESULTS:
+: format-all-buffer
+
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
@@ -1214,7 +1225,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
    ;; Embark - this config is taken directly from https://github.com/oantolin/embark
    (use-package embark
      :ensure t
-
+     :defer t
      :bind
      (("C-." . embark-act)         ;; pick some comfortable binding
       ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -1375,9 +1386,12 @@ Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet)
-  (use-package yasnippet-snippets)
-  (yas-global-mode 1)
+    (use-package yasnippet
+      :defer t
+      )
+    (use-package yasnippet-snippets
+      :defer t)
+    (yas-global-mode 1)
 #+END_SRC
 * Indent bars
 Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-bars/tree/main][from jdtsmith/indent-bars]]
@@ -1418,6 +1432,7 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package golden-ratio
     :ensure t
+    :defer t
     :diminish golden-ratio-mode
     :init
     (golden-ratio-mode 0))
@@ -1426,11 +1441,13 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package logos
     :ensure t
+    :defer t
     :config
     (setq logos-outlines-are-pages t)
     )
 
   (use-package olivetti
+    :defer t
     :ensure t)
 #+END_SRC
 * Nov Mode for epub
@@ -1454,6 +1471,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
 
 #+BEGIN_SRC emacs-lisp
   (use-package activities
+    :defer t
     :init
     (activities-mode)
     ;; (activities-tabs-mode) ;; if you want tabs
@@ -1497,5 +1515,6 @@ Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: E
 * Helper Functions
 * Lua
 #+BEGIN_SRC emacs-lisp
-  (use-package lua-mode)
+    (use-package lua-mode
+      :defer t)
 #+END_SRC
