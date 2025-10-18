@@ -29,8 +29,11 @@
 ;; Restore GC threshold after startup
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold 16777216  ; 16mb
+            (setq gc-cons-threshold 100000000  ; 100mb
                   gc-cons-percentage 0.1)))
+
+;; Improve performance with language servers.
+(setq read-process-output-max (* 1024 1024)) ;; 1 MB
 
 (load "server")
 (unless (server-running-p) (server-start))
