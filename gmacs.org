@@ -1112,7 +1112,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            (js-ts-mode . eglot-ensure)
            (typescript-ts-mode . eglot-ensure)
            (tsx-ts-mode . eglot-ensure)
-         ;; Python-specific #+setupfile: tings
+           ;; Python-specific #+setupfile: things
            (python-ts-mode . (lambda ()
                                (setq-local indent-tabs-mode nil
                                            tab-width 4
@@ -1153,9 +1153,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            (js-ts-mode . format-all-mode)
            (typescript-ts-mode . format-all-mode)))
 #+END_SRC
-
-#+RESULTS:
-: format-all-buffer
 
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
