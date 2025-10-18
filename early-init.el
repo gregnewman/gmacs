@@ -7,6 +7,8 @@
 
 (message "Early init loaded!")
 
+(setq package-enable-at-startup nil)
+
 (setq frame-resize-pixelwise t
       frame-inhibit-implied-resize 'force
       frame-title-format '("%b")

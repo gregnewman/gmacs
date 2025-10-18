@@ -378,7 +378,11 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
 
 #+BEGIN_SRC emacs-lisp
   (use-package use-package-ensure-system-package
-    :ensure t)
+  :straight (use-package-ensure-system-package 
+             :type git 
+             :host github 
+             :repo "jwiegley/use-package"
+             :files ("use-package-ensure-system-package.el")))
 #+end_src
 * Justfiles
 #+BEGIN_SRC emacs-lisp

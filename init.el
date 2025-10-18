@@ -20,6 +20,16 @@
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
 
+(setenv "PATH" (concat "/opt/homebrew/opt/gcc/bin:" (getenv "PATH")))
+(setq exec-path (cons "/opt/homebrew/opt/gcc/bin" exec-path))
+
+(setenv "LIBRARY_PATH" 
+  (string-join 
+    '("/opt/homebrew/opt/gcc/lib/gcc/15"
+      "/opt/homebrew/opt/libgccjit/lib/gcc/15"
+      "/opt/homebrew/opt/gcc/lib/gcc/current")
+    ":"))
+
 
 ;; Boostrap Straight for package management
 (setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
