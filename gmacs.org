@@ -20,6 +20,7 @@
        ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
        (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
        (straight-use-package-by-default t))
+     (setq use-package-always-defer t)
    #+END_SRC
 
 * Theme
@@ -27,6 +28,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
+       :demand t
        :config
        ;; Global settings (defaults)
        (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -159,7 +161,6 @@
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
     :ensure t
-    :defer t
     :config
     (add-to-list 'auto-mode-alist
              '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
@@ -377,18 +378,17 @@
 The :ensure-system-package keyword allows you to ensure system binaries exist alongside your package declarations.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package use-package-ensure-system-package
-  :straight (use-package-ensure-system-package 
-             :type git 
-             :host github 
-             :repo "jwiegley/use-package"
-             :files ("use-package-ensure-system-package.el")))
+  ;; (use-package use-package-ensure-system-package
+  ;; :straight (use-package-ensure-system-package 
+  ;;            :type git 
+  ;;            :host github 
+  ;;            :repo "jwiegley/use-package"
+  ;;            :files ("use-package-ensure-system-package.el")))
 #+end_src
 * Justfiles
 #+BEGIN_SRC emacs-lisp
   (use-package just-mode
-    :ensure t
-    :defer t)
+    :ensure t)
 #+END_SRC
 
 * Org-mode
@@ -825,7 +825,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
 
    #+BEGIN_SRC emacs-lisp
      (use-package org-super-agenda
-       :defer t
        :straight
        (org-super-agenda
         :type git
@@ -910,7 +909,6 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
 
 #+BEGIN_SRC emacs-lisp
   (use-package denote
-    :defer t
     :custom
     ((denote-directory "~/Dropbox/Org/denote/")
      (denote-prompts '(title keywords))
@@ -940,7 +938,6 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
   (use-package howm
     ;; :after org
     :ensure t
-    :defer t
     :init
     ;; 
     ;; Options: Remove the leading ";" in the following lines if you like.
@@ -1038,7 +1035,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+BEGIN_SRC emacs-lisp
   ;; Tree-sitter configuration
   (use-package treesit-auto
-    :defer t
     :straight (:host github :repo "renzmann/treesit-auto")
     :config
     (setq treesit-auto-install 'prompt)
@@ -1065,7 +1061,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   ;; Eglot configuration with enhanced features
   (use-package eglot
     :ensure t
-    :defer t
     :custom
     ;; Optimize performance
     (eglot-send-changes-idle-time 0.5)
@@ -1229,7 +1224,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
    ;; Embark - this config is taken directly from https://github.com/oantolin/embark
    (use-package embark
      :ensure t
-     :defer t
      :bind
      (("C-." . embark-act)         ;; pick some comfortable binding
       ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -1338,7 +1332,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
       (magit-git-executable "/opt/homebrew/bin/git"))
 
     (use-package hl-todo
-      :defer t
       :config
       ;; Adding a new keyword: TEST.
       (add-to-list 'hl-todo-keyword-faces '("TODO" . "red"))
@@ -1363,7 +1356,6 @@ Repo and documentation https://github.com/Silex/docker.el
 #+BEGIN_SRC emacs-lisp
   (use-package docker
     :ensure t
-    :defer t
     :bind ("C-c d" . docker))
 #+end_src
 * Winner Mode
@@ -1392,11 +1384,8 @@ Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC emacs-lisp
-    (use-package yasnippet
-      :defer t
-      )
-    (use-package yasnippet-snippets
-      :defer t)
+    (use-package yasnippet)
+    (use-package yasnippet-snippets)
     (yas-global-mode 1)
 #+END_SRC
 * Indent bars
@@ -1438,7 +1427,6 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package golden-ratio
     :ensure t
-    :defer t
     :diminish golden-ratio-mode
     :init
     (golden-ratio-mode 0))
@@ -1447,20 +1435,17 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package logos
     :ensure t
-    :defer t
     :config
     (setq logos-outlines-are-pages t)
     )
 
   (use-package olivetti
-    :defer t
     :ensure t)
 #+END_SRC
 * Nov Mode for epub
 #+BEGIN_SRC emacs-lisp
   (use-package nov
     :ensure t
-    :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
@@ -1477,7 +1462,6 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
 
 #+BEGIN_SRC emacs-lisp
   (use-package activities
-    :defer t
     :init
     (activities-mode)
     ;; (activities-tabs-mode) ;; if you want tabs
@@ -1521,6 +1505,5 @@ Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: E
 * Helper Functions
 * Lua
 #+BEGIN_SRC emacs-lisp
-    (use-package lua-mode
-      :defer t)
+    (use-package lua-mode)
 #+END_SRC
