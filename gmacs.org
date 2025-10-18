@@ -980,13 +980,15 @@ Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
      (use-package exec-path-from-shell
+       :demand t
        :config
        (when (memq window-system '(mac ns x))
          (exec-path-from-shell-initialize)))
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
-     (use-package pyenv-mode-auto)
+     (use-package pyenv-mode-auto
+       :demand t)
 
      (defun pyenv-activate-current-project ()
        "Automatically activates pyenv version if .python-version file exists."
@@ -1059,41 +1061,45 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
           (jsx-mode . tsx-ts-mode)))
 
   ;; Eglot configuration with enhanced features
+  ;; Eglot configuration with enhanced features
   (use-package eglot
     :ensure t
+    :defer t  ; Add this
+    :commands (eglot eglot-ensure)  ; Add this
     :custom
     ;; Optimize performance
     (eglot-send-changes-idle-time 0.5)
     (eglot-extend-to-xref t)
-    ;; Configure language servers
-    (eglot-server-programs
-     '((python-ts-mode . ("basedpyright-langserver" "--stdio" 
-                          :initializationOptions (:basedpyright (:plugins (
-                             :ruff (:enabled t
-                                   :lineLength 88
-                                   :exclude ["E501"]  ; Disable line length warnings (handled by black)
-                                   :select ["E", "F", "I", "UP"])  ; Enable specific rule families
-                             :pycodestyle (:enabled nil)  ; Disable other linters since we're using ruff
-                             :pyflakes (:enabled nil)
-                             :pylint (:enabled nil)
-                             :rope_completion (:enabled t)
-                             :autopep8 (:enabled nil))))))
-       ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
-        ("typescript-language-server" "--stdio"))))
+    (eglot-events-buffer-size 0)  ; Add this for better performance
     :config
+    ;; Move eglot-server-programs to :config block
+    (setq eglot-server-programs
+          '((python-ts-mode . ("basedpyright-langserver" "--stdio" 
+                               :initializationOptions (:basedpyright (:plugins (
+                                :ruff (:enabled t
+                                      :lineLength 88
+                                      :exclude ["E501"]
+                                      :select ["E" "F" "I" "UP"])
+                                :pycodestyle (:enabled nil)
+                                :pyflakes (:enabled nil)
+                                :pylint (:enabled nil)
+                                :rope_completion (:enabled t)
+                                :autopep8 (:enabled nil))))))
+          ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
+           ("typescript-language-server" "--stdio"))))
     (setq-default
-       eglot-workspace-configuration
-       '(:basedpyright (
-           :typeCheckingMode "off"
-         )
-         :basedpyright.analysis (
-           :diagnosticSeverityOverrides (
-             :reportUnusedCallResult "none"
-           )
-           :inlayHints (
-             :callArgumentNames :json-false
-           )
-         )))
+     eglot-workspace-configuration
+     '(:basedpyright (
+       :typeCheckingMode "off"
+     )
+     :basedpyright.analysis (
+       :diagnosticSeverityOverrides (
+         :reportUnusedCallResult "none"
+       )
+       :inlayHints (
+         :callArgumentNames :json-false
+       )
+     )))
     :bind (:map eglot-mode-map
                 ("C-c l a" . eglot-code-actions)
                 ("C-c l r" . eglot-rename)
@@ -1106,7 +1112,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            (js-ts-mode . eglot-ensure)
            (typescript-ts-mode . eglot-ensure)
            (tsx-ts-mode . eglot-ensure)
-           ;; Python-specific settings
+         ;; Python-specific #+setupfile: tings
            (python-ts-mode . (lambda ()
                                (setq-local indent-tabs-mode nil
                                            tab-width 4
