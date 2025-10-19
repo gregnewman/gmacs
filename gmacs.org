@@ -81,17 +81,19 @@
 #+BEGIN_SRC emacs-lisp
    (custom-set-faces
   ;; Default font for all text
-  '(default ((t (:family "Roboto Mono" :height 130))))
+  '(default ((t (:family "Roboto Mono" :height 120))))
   '(fixed-pitch ((t (:family "Roboto Mono" :height 120))))
 
   ;; Current line number
-  '(line-number-current-line ((t (:foreground "yellow" :inherit line-number))))
+  '(line-number-current-line ((t (:foreground "orange" :inherit line-number))))
   '(mode-line ((t (:family "Roboto Mono" :weight Bold))))
 
   ;; Comments italic
   '(font-lock-function-name-face ((t (:family "Roboto Mono":slant italic))))
   '(font-lock-variable-name-face ((t (:family "Roboto Mono":weight bold)))))
   #+END_SRC
+
+#+RESULTS:
 
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
@@ -431,14 +433,14 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
     (add-hook 'org-mode-hook 'variable-pitch-mode)
 
     ;; Resize Org headings
-    (dolist (face '((org-level-1 . 1.0)
-                    (org-level-2 . 1.0)
-                    (org-level-3 . 1.0)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.0)
-                    (org-level-6 . 1.0)
-                    (org-level-7 . 1.0)
-                    (org-level-8 . 1.0))))
+    ;; (dolist (face '((org-level-1 . 1.0)
+    ;;                 (org-level-2 . 1.0)
+    ;;                 (org-level-3 . 1.0)
+    ;;                 (org-level-4 . 1.0)
+    ;;                 (org-level-5 . 1.0)
+    ;;                 (org-level-6 . 1.0)
+    ;;                 (org-level-7 . 1.0)
+    ;;                 (org-level-8 . 1.0))))
   ;;    (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'medium :height (cdr face)))
 
     ;; Make the document title a bit bigger
