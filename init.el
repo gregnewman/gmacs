@@ -20,6 +20,7 @@
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
 
+;; due to issues with native comp not finding libgccjit
 (setenv "PATH" (concat "/opt/homebrew/opt/gcc/bin:" (getenv "PATH")))
 (setq exec-path (cons "/opt/homebrew/opt/gcc/bin" exec-path))
 
