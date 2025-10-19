@@ -1039,8 +1039,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   (use-package treesit-auto
     :straight (:host github :repo "renzmann/treesit-auto")
     :config
-    ;; Tree-sitter performance enhancement
-    (setenv "LSP_USE_PLISTS" "true")
     (setq lsp-use-plists t)
     (setq treesit-auto-install 'prompt)
     (treesit-auto-add-to-auto-mode-alist 'all)
