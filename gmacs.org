@@ -20,6 +20,11 @@
        ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
        (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
        (straight-use-package-by-default t))
+
+     (setq use-package-always-defer t)
+     (setq straight-check-for-modifications '(check-on-save find-when-checking))
+     (setq straight-vc-git-default-clone-depth 1)
+     (setq straight-cache-autoloads t)
    #+END_SRC
 
 * Theme
@@ -27,6 +32,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
+       :demand t
        :config
        ;; Global settings (defaults)
        (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -71,20 +77,17 @@
       :bind (("C-z" . nil)
              ("C-x C-z" . nil)))
   #+end_src
-
 * Font handling
   #+BEGIN_SRC emacs-lisp
     (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 120)
     (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 120)
     (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :weight 'light :height 1.0)
   #+END_SRC
-
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
   These are important in how I like my emacs to perform.
 
   #+BEGIN_SRC emacs-lisp
-    (set-frame-font "JetBrains Mono 12")
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
@@ -159,7 +162,6 @@
 #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
     :ensure t
-    :defer t
     :config
     (add-to-list 'auto-mode-alist
              '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
@@ -174,6 +176,7 @@
 
      ;; ;; Git Gutter
      (use-package git-gutter
+       :defer 1
        :diminish git-gutter-mode
        :config (global-git-gutter-mode)
        :init
@@ -311,17 +314,18 @@
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
   #+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :init
-    (which-key-mode)
-    :config
-    (which-key-setup-side-window-right-bottom)
-    (setq which-key-sort-order 'which-key-key-order-alpha
-      which-key-side-window-max-width 0.33
-      which-key-idle-delay 0.5)
-    :diminish which-key-mode)
+    (use-package which-key
+      :defer 0.5
+      :init
+      (which-key-mode)
+      :config
+      (which-key-setup-side-window-right-bottom)
+      (setq which-key-sort-order 'which-key-key-order-alpha
+        which-key-side-window-max-width 0.33
+        which-key-idle-delay 0.5)
+      :diminish which-key-mode)
 
-  (provide 'init-which-key)
+    (provide 'init-which-key)
   #+end_src
 
 * iBuffer
@@ -377,18 +381,17 @@
 The :ensure-system-package keyword allows you to ensure system binaries exist alongside your package declarations.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package use-package-ensure-system-package
-  :straight (use-package-ensure-system-package 
-             :type git 
-             :host github 
-             :repo "jwiegley/use-package"
-             :files ("use-package-ensure-system-package.el")))
+  ;; (use-package use-package-ensure-system-package
+  ;; :straight (use-package-ensure-system-package 
+  ;;            :type git 
+  ;;            :host github 
+  ;;            :repo "jwiegley/use-package"
+  ;;            :files ("use-package-ensure-system-package.el")))
 #+end_src
 * Justfiles
 #+BEGIN_SRC emacs-lisp
   (use-package just-mode
-    :ensure t
-    :defer t)
+    :ensure t)
 #+END_SRC
 
 * Org-mode
@@ -404,7 +407,6 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
     #+BEGIN_EXAMPLE bash
     gitwatch -r origin -b main . &
     #+END_EXAMPLE
-
 ** Fontification and Beautification
 Use C-u C-x = (which runs the command what-cursor-position with a prefix argument) to show information about the character under the cursor, including the face which is being used for it.
 
@@ -452,82 +454,62 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.9))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+END_SRC
-
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
    I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
+#+BEGIN_SRC emacs-lisp
+  ;; Lightweight settings - safe to run immediately
+  (setq org-modules '(org-protocol))
 
-   #+BEGIN_SRC emacs-lisp
-     (setq org-modules '(org-protocol))
-     (eval-after-load 'org
-       '(org-load-modules-maybe t))
+  (setq org-src-fontify-natively t)
 
-     ;; respects splits
-     (setq org-agenda-window-setup 'current-window)
+  ;; DEFER ALL expensive org operations until org actually loads
+  (with-eval-after-load 'org
+    (org-load-modules-maybe t)
+    
+    ;; This is EXPENSIVE - only calculate when org loads, not at startup!
+    (setq org-agenda-files 
+          (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+    
+    ;; All other org settings
+    (setq org-agenda-window-setup 'current-window
+          org-agenda-start-on-weekday 1
+          org-agenda-tags-column -102
+          org-agenda-span 7
+          org-tags-column 88
+          org-agenda-sticky nil
+          org-agenda-inhibit-startup t
+          org-agenda-use-tag-inheritance t
+          org-agenda-show-log t
+          org-agenda-skip-scheduled-if-done t
+          org-agenda-skip-deadline-if-done t
+          org-use-speed-commands t
+          org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
+          org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS"
+          org-enforce-todo-dependencies t
+          org-enforce-todo-checkbox-dependencies t
+          org-fontify-done-headline t
+          org-startup-folded t
+          org-refile-targets '((org-agenda-files :maxlevel . 5))
+          org-refile-allow-creating-parent-nodes 'confirm)
+    
+    ;; Load markdown export only when org loads
+    (require 'ox-md))
 
-     ;; agenda files
-     (setq org-agenda-files (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+  ;; Keybindings - these are cheap, keep outside
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
 
-     ;; Start the weekly agenda on Monday
-     (setq org-agenda-start-on-weekday 1)
+  ;; Hooks - these are lazy, keep outside
+  (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook #'gn/orgmode-ignore-line-numbers-mode)
 
-     ;; Display tags farther right
-     (setq org-agenda-tags-column -102)
-     (setq org-agenda-span 7)
-     (setq org-tags-column 88)
-     (setq org-agenda-sticky nil)
-     (setq org-agenda-inhibit-startup t)
-     (setq org-agenda-use-tag-inheritance t)
-     (setq org-agenda-show-log t)
-     (setq org-agenda-skip-scheduled-if-done t)
-     (setq org-agenda-skip-deadline-if-done t)
-     (setq org-use-speed-commands t)
-     (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-     (setq org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS")
-
-     ;; The following lines are always needed.  Choose your own keys.
-     (global-set-key "\C-cl" 'org-store-link)
-     (global-set-key "\C-ca" 'org-agenda)
-
-     ;; enable line breaks
-     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
-
-     ;; Don't allow parent to be marked done unless children are done
-     (setq org-enforce-todo-dependencies t)
-     (setq org-enforce-todo-checkbox-dependencies t)
-
-     (setq org-fontify-done-headline t)
-     (setq org-startup-folded t)
-     (setq org-src-fontify-natively nil)
-
-     ;; Refiling
-     (setq org-refile-targets '((org-agenda-files :maxlevel . 5)))
-     (setq org-refile-allow-creating-parent-nodes 'confirm)
-
-     ;; Visual Line Mode
-     (add-hook 'org-mode-hook 'visual-line-mode)
-
-     ;; Org indent mode
-     (add-hook 'org-mode-hook 'org-indent-mode)
-
-     ;; Line numbers
-     (defun gn/orgmode-ignore-line-numbers-mode ()
-       (interactive)
-       "turns off line numbers mode in org buffers"
-       (display-line-numbers-mode -1))
-
-     (add-hook 'org-mode-hook #'gn/orgmode-ignore-line-numbers-mode)
-
-     (defun gn/orgmode-ignore-whitespace-mode ()
-       (interactive)
-       "turns off whitespace mode in org buffers"
-       (whitespace-mode -1))
-
-     ;; Turn off whitespace-mode since my linters will handle them anyway and it's annoying
-     (whitespace-mode -1)
-     (require 'ox-md)
-   #+end_src
-
+  ;; Remove duplicate hook - this was already added above
+  ;; (add-hook 'org-mode-hook 'visual-line-mode)  <-- DELETE if you see this duplicated
+#+END_SRC
 ** Alerts
 #+BEGIN_SRC emacs-lisp
   (use-package org-alert
@@ -607,22 +589,22 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    #+end_src
 
 ** Org Babel
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '(
-        (python . t)
-        (js . t)
-        (emacs-lisp . t)
-        (org . t)
-        (sql . t)
-        (ditaa . t)
-        ))
-     ;; Syntax highlight in #+BEGIN_SRC blocks
-     (setq org-src-fontify-natively t)
-     ;; Don't prompt before running code in org
-     (setq org-confirm-babel-evaluate nil)
-   #+end_src
+** Org Babel
+#+BEGIN_SRC emacs-lisp
+  ;; Load babel only when org loads
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t)
+       (js . t)
+       (emacs-lisp . t)
+       (org . t)
+       (sql . t)
+       (ditaa . t)))
+    
+    ;; Don't prompt before running code in org
+    (setq org-confirm-babel-evaluate nil))
+#+END_SRC
 
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
@@ -653,17 +635,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
      (add-to-list 'org-agenda-custom-commands
                '("b" "Agenda" gn/org-agenda-with-tip))
 
-     (add-to-list 'org-agenda-custom-commands
-          '("N" "Notes" tags "NOTE"
-                 ((org-agenda-overriding-header "Notes")
-                  (org-tags-match-list-sublevels t))))
-
-     (add-to-list 'org-agenda-custom-commands
-        '("k" "Knowledge Investments" tags "KI"
-               ((org-agenda-overriding-header "Knowledge Investments")
-                (org-tags-match-list-sublevels t))))
-
-     ;; Taken from doc.norang.ca/org-mode.html
+         ;; Taken from doc.norang.ca/org-mode.html
      (add-to-list 'org-agenda-custom-commands
           '("c" "Simple agenda view"
                ((agenda "")
@@ -759,73 +731,12 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                              ((org-agenda-overriding-header "FLAGGED"))))
                  ((org-agenda-todo-ignore-scheduled 'future)))  t)
 
-     (add-to-list 'org-agenda-custom-commands
-               '("r" . "REVIEW...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("ra" . "All Tasks...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("rt" . "Timesheet...") t)
-
-     ;; Show what happened today.
-     (add-to-list 'org-agenda-custom-commands
-               '("rtd" "Daily Timesheet"
-                 ((agenda ""))
-                 ((org-agenda-log-mode-items '(clock closed))
-                  (org-agenda-overriding-header "DAILY TIMESHEET")
-                  (org-agenda-show-log 'clockcheck)
-                  (org-agenda-span 'day)
-                  (org-agenda-start-with-clockreport-mode t)
-                  (org-agenda-time-grid nil))) t)
-
-     ;; Show what happened this week.
-     (add-to-list 'org-agenda-custom-commands
-               '("rtw" "Weekly Timesheet"
-                 ((agenda ""))
-                 (
-                  ;; (org-agenda-format-date "")
-                  (org-agenda-overriding-header "WEEKLY TIMESHEET")
-                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
-                  (org-agenda-span 'week)
-                  (org-agenda-start-on-weekday 1)
-                  (org-agenda-start-with-clockreport-mode t)
-                  (org-agenda-time-grid nil))) t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("rw" "Weekly review"
-                 ((tags "CATEGORY={@REFILE}&LEVEL<=2"
-                        ((org-agenda-overriding-header "NEW TASKS")))
-                  (agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-format-date
-                            (concat "\n"
-                                    "%Y-%m-%d" " %a "
-                                    (make-string (window-width) ?_)))
-                           (org-agenda-overriding-header "PAST WEEK")
-                           (org-agenda-prefix-format " %?-11t %i %-12:c% s")
-                           (org-agenda-show-log 'clockcheck)
-                           (org-agenda-span 7)
-                           (org-agenda-start-day "-1w")
-                           (org-deadline-warning-days 0)))
-                  (agenda ""
-                          ((org-agenda-overriding-header "NEXT 30 DAYS")
-                           (org-agenda-span 'month)
-                           (org-agenda-start-day "+0d")
-                           (org-deadline-warning-days 0)))
-                  (tags "PROJECT"
-                        ((org-agenda-overriding-header "PROJECT LIST")))
-                  (todo "DONE|PROJECTDONE"
-                        ((org-agenda-overriding-header
-                          "Candidates to be archived"))))))
-
    #+end_src
 
    Org-Super-Agenda commands
 
    #+BEGIN_SRC emacs-lisp
      (use-package org-super-agenda
-       :defer t
        :straight
        (org-super-agenda
         :type git
@@ -865,52 +776,11 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
        (setq org-fancy-priorities-list '("🅰️" "🅱️" "1️⃣" "☕")))
 
    #+end_src
-* Org-Roam
-#+BEGIN_SRC emacs-lisp
-#+end_src
-  (use-package org-roam
-    ;; :straight t (org-roam :type git :host github :repo "org-roam/org-roam")
-      :straight t
-          :init
-      (setq org-roam-directory (file-truename "~/Dropbox/Org/"))
-      (setq org-roam-file-extensions '("org" "md"))
-      (setq org-roam-dailies-directory "dailies")
-      (setq find-file-visit-truename t)
-      (setq org-roam-mode-sections
-                (list #'org-roam-backlinks-section
-                     #'org-roam-reflinks-section
-                     #'org-roam-unlinked-references-section
-                     ))
-      :custom
-      (org-roam-dailies-capture-templates
-       '(("d" "default" entry "* %<%I:%M %p>: %?"
-          :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-      ;;(org-roam-database-connector 'sqlite-builtin)
-
-      :bind (("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n t" . org-roam-dailies-goto-today)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert))
-       :config
-       (org-roam-setup)
-       )
-
-  ;; Documenation: https://github.com/nobiot/md-roam
-  (use-package md-roam
-    :straight (:host github :repo "nobiot/md-roam")
-    :after org-roam
-    )
-  (md-roam-mode 1)
-  (setq md-roam-file-extension "md")
-
-  (org-roam-db-autosync-mode)
-
 * Denote
 [[https://protesilaos.com/emacs/denote][Denote]] for taking notes and [[https://github.com/mclear-tools/consult-notes][consult-notes]] for quickly searching
 
 #+BEGIN_SRC emacs-lisp
   (use-package denote
-    :defer t
     :custom
     ((denote-directory "~/Dropbox/Org/denote/")
      (denote-prompts '(title keywords))
@@ -935,91 +805,49 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
     ;; search only for text files in denote dir
     (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
  #+END_SRC
-* HOWM
-#+BEGIN_SRC emacs-lisp
-  (use-package howm
-    ;; :after org
-    :ensure t
-    :defer t
-    :init
-    ;; 
-    ;; Options: Remove the leading ";" in the following lines if you like.
-    ;; 
-    ;; Format
-    ;;(require 'howm-markdown) ;; Write notes in markdown-mode. (*1)
-    (require 'howm-org) ;; Write notes in Org-mode. (*2)
-    ;; 
-    ;; Preferences
-    ;; Org-compatible filenames and syntax.
-    (setq howm-file-name-format "%Y-%m-%d-%H%M%S.org")
-    (setq howm-view-title-header "*")
-    (setq howm-dtime-format (format "<%s>" (cdr org-timestamp-formats)))
-    ;; Use ripgrep for fast searching.
-    (setq howm-view-use-grep t)
-    (setq howm-view-grep-command "rg")
-    (setq howm-view-grep-option "-nH --no-heading --color never")
-    (setq howm-view-grep-extended-option nil)
-    (setq howm-view-grep-fixed-option "-F")
-    (setq howm-view-grep-expr-option nil)
-    (setq howm-view-grep-file-stdin-option nil)
-    ;; Make the "comefrom links" case-insensitive.
-    (setq howm-keyword-case-fold-search t)
-    ;; Get rid of the old-fashioned separators.
-    (setq howm-view-summary-sep "\t")
-    (setq howm-directory "~/Dropbox/Org/Howm") ;; Where to store the files?
-    (setq howm-follow-theme t) ;; Use your Emacs theme colors. (*3)
-    (setq howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
-    (setq howm-history-file (expand-file-name ".howm-history" howm-directory))
-    ;; 
-    ;; Performance
-    ;(setq howm-menu-expiry-hours 1) ;; Cache menu N hours. (*4)
-    ;(setq howm-menu-refresh-after-save nil) ;; Speed up note saving. (*5)
-  )
-#+END_SRC
-
 * Path from shell
 When starting emacs gui on Mac OS, the paths are not read from .zshrc
 Using `exec-path-from-shell` fixes this.
 
    #+BEGIN_SRC emacs-lisp
      (use-package exec-path-from-shell
+       :demand t
        :config
        (when (memq window-system '(mac ns x))
          (exec-path-from-shell-initialize)))
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
-     (use-package pyenv-mode-auto)
+      (use-package pyenv-mode-auto
+        :demand t)
 
-     (defun pyenv-activate-current-project ()
-       "Automatically activates pyenv version if .python-version file exists."
-       (interactive)
-       (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
-       (if python-version-directory
-          (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
-                 (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
-            (pyenv-mode-set pyenv-current-version)
-            (message (concat "Setting virtualenv to " pyenv-current-version))))))
+      (defun pyenv-activate-current-project ()
+        "Automatically activates pyenv version if .python-version file exists."
+        (interactive)
+        (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
+        (if python-version-directory
+           (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
+                  (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
+             (pyenv-mode-set pyenv-current-version)
+             (message (concat "Setting virtualenv to " pyenv-current-version))))))
 
-     (defvar pyenv-current-version nil nil)
+      (defvar pyenv-current-version nil nil)
 
-     (defun pyenv-init()
-     "Initialize pyenv's current version to the global one."
-     (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
-      (message (concat "Setting pyenv version to " global-pyenv))
-      (pyenv-mode-set global-pyenv)
-      (setq pyenv-current-version global-pyenv)))
+      (defun pyenv-init()
+      "Initialize pyenv's current version to the global one."
+      (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
+       (message (concat "Setting pyenv version to " global-pyenv))
+       (pyenv-mode-set global-pyenv)
+       (setq pyenv-current-version global-pyenv)))
 
-     (add-hook 'after-init-hook 'pyenv-init)
+      (add-hook 'after-init-hook 'pyenv-init)
 
-     (use-package pyenv-mode)
+      (use-package pyenv-mode
+        :config
+        (with-eval-after-load 'pyenv-mode
+          (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
 
-     ;; Fixes an issue where pyenv conflicts with org-mode
-     (eval-after-load 'pyenv-mode
-       '(progn
-        (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
-
-     (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
+        (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 * Projectile and RG (Ripgrep)
 It looks like rg.el has more options for regex when searching
@@ -1038,7 +866,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+BEGIN_SRC emacs-lisp
   ;; Tree-sitter configuration
   (use-package treesit-auto
-    :defer t
     :straight (:host github :repo "renzmann/treesit-auto")
     :config
     (setq treesit-auto-install 'prompt)
@@ -1063,42 +890,45 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
           (jsx-mode . tsx-ts-mode)))
 
   ;; Eglot configuration with enhanced features
+  ;; Eglot configuration with enhanced features
   (use-package eglot
     :ensure t
-    :defer t
+    :defer t  ; Add this
+    :commands (eglot eglot-ensure)  ; Add this
     :custom
     ;; Optimize performance
     (eglot-send-changes-idle-time 0.5)
     (eglot-extend-to-xref t)
-    ;; Configure language servers
-    (eglot-server-programs
-     '((python-ts-mode . ("basedpyright-langserver" "--stdio" 
-                          :initializationOptions (:basedpyright (:plugins (
-                             :ruff (:enabled t
-                                   :lineLength 88
-                                   :exclude ["E501"]  ; Disable line length warnings (handled by black)
-                                   :select ["E", "F", "I", "UP"])  ; Enable specific rule families
-                             :pycodestyle (:enabled nil)  ; Disable other linters since we're using ruff
-                             :pyflakes (:enabled nil)
-                             :pylint (:enabled nil)
-                             :rope_completion (:enabled t)
-                             :autopep8 (:enabled nil))))))
-       ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
-        ("typescript-language-server" "--stdio"))))
+    (eglot-events-buffer-size 0)  ; Add this for better performance
     :config
+    ;; Move eglot-server-programs to :config block
+    (setq eglot-server-programs
+          '((python-ts-mode . ("basedpyright-langserver" "--stdio" 
+                               :initializationOptions (:basedpyright (:plugins (
+                                :ruff (:enabled t
+                                      :lineLength 88
+                                      :exclude ["E501"]
+                                      :select ["E" "F" "I" "UP"])
+                                :pycodestyle (:enabled nil)
+                                :pyflakes (:enabled nil)
+                                :pylint (:enabled nil)
+                                :rope_completion (:enabled t)
+                                :autopep8 (:enabled nil))))))
+          ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
+           ("typescript-language-server" "--stdio"))))
     (setq-default
-       eglot-workspace-configuration
-       '(:basedpyright (
-           :typeCheckingMode "off"
-         )
-         :basedpyright.analysis (
-           :diagnosticSeverityOverrides (
-             :reportUnusedCallResult "none"
-           )
-           :inlayHints (
-             :callArgumentNames :json-false
-           )
-         )))
+     eglot-workspace-configuration
+     '(:basedpyright (
+       :typeCheckingMode "off"
+     )
+     :basedpyright.analysis (
+       :diagnosticSeverityOverrides (
+         :reportUnusedCallResult "none"
+       )
+       :inlayHints (
+         :callArgumentNames :json-false
+       )
+     )))
     :bind (:map eglot-mode-map
                 ("C-c l a" . eglot-code-actions)
                 ("C-c l r" . eglot-rename)
@@ -1111,7 +941,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            (js-ts-mode . eglot-ensure)
            (typescript-ts-mode . eglot-ensure)
            (tsx-ts-mode . eglot-ensure)
-           ;; Python-specific settings
+           ;; Python-specific #+setupfile: things
            (python-ts-mode . (lambda ()
                                (setq-local indent-tabs-mode nil
                                            tab-width 4
@@ -1136,15 +966,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (eldoc-echo-area-prefer-doc-buffer t)
     (eldoc-documentation-strategy 'eldoc-documentation-compose))
 
-  ;; Add company for better completion
-  (use-package company
-    :hook (prog-mode . company-mode)
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.1)
-    (company-selection-wrap-around t)
-    (company-tooltip-align-annotations t))
-
   ;; Optional: Add format-all for consistent formatting
   (use-package format-all
     :bind ("C-c f" . format-all-buffer)
@@ -1153,13 +974,11 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            (typescript-ts-mode . format-all-mode)))
 #+END_SRC
 
-#+RESULTS:
-: format-all-buffer
-
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
   (use-package vertico
+    :defer 0.1
      :custom
      (vertico-count 13)                    ; Number of candidates to display
      (vertico-resize t)
@@ -1168,6 +987,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (vertico-mode))
 
    (use-package savehist
+     :defer 0.1
      :init
      (savehist-mode))
 
@@ -1183,6 +1003,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
    ;; Enable rich annotations using the Marginalia package
    (use-package marginalia
+     :defer 0.1
      ;; Either bind `marginalia-cycle' globally or only in the minibuffer
      :bind (("M-A" . marginalia-cycle)
             :map minibuffer-local-map
@@ -1195,18 +1016,17 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      :init
      (marginalia-mode))
 
-   ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
-   (require 'consult-imenu)
-   (dolist (python '(python-mode python-ts-mode))
-     (add-to-list 'consult-imenu-config
-                  `(,python
-                    :toplevel "Method"
-                    :types ((?f "Field" font-lock-variable-name-face)
-                            (?c "Class" font-lock-property-use-face)
-                            (?m "Method" font-lock-function-name-face)
-                            (?M "Module" font-lock-builtin-face)
-                            (?v "Variable" font-lock-variable-name-face)
-                           ))))
+  ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
+  (with-eval-after-load 'consult-imenu
+    (dolist (python '(python-mode python-ts-mode))
+      (add-to-list 'consult-imenu-config
+                 `(,python
+                   :toplevel "Method"
+                   :types ((?f "Field" font-lock-variable-name-face)
+                           (?c "Class" font-lock-property-use-face)
+                           (?m "Method" font-lock-function-name-face)
+                           (?M "Module" font-lock-builtin-face)
+                           (?v "Variable" font-lock-variable-name-face))))))
 
   (use-package consult-projectile
     :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
@@ -1229,7 +1049,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
    ;; Embark - this config is taken directly from https://github.com/oantolin/embark
    (use-package embark
      :ensure t
-     :defer t
      :bind
      (("C-." . embark-act)         ;; pick some comfortable binding
       ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -1338,7 +1157,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
       (magit-git-executable "/opt/homebrew/bin/git"))
 
     (use-package hl-todo
-      :defer t
       :config
       ;; Adding a new keyword: TEST.
       (add-to-list 'hl-todo-keyword-faces '("TODO" . "red"))
@@ -1363,7 +1181,6 @@ Repo and documentation https://github.com/Silex/docker.el
 #+BEGIN_SRC emacs-lisp
   (use-package docker
     :ensure t
-    :defer t
     :bind ("C-c d" . docker))
 #+end_src
 * Winner Mode
@@ -1392,11 +1209,8 @@ Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC emacs-lisp
-    (use-package yasnippet
-      :defer t
-      )
-    (use-package yasnippet-snippets
-      :defer t)
+    (use-package yasnippet)
+    (use-package yasnippet-snippets)
     (yas-global-mode 1)
 #+END_SRC
 * Indent bars
@@ -1438,7 +1252,6 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package golden-ratio
     :ensure t
-    :defer t
     :diminish golden-ratio-mode
     :init
     (golden-ratio-mode 0))
@@ -1447,20 +1260,17 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+BEGIN_SRC emacs-lisp
   (use-package logos
     :ensure t
-    :defer t
     :config
     (setq logos-outlines-are-pages t)
     )
 
   (use-package olivetti
-    :defer t
     :ensure t)
 #+END_SRC
 * Nov Mode for epub
 #+BEGIN_SRC emacs-lisp
   (use-package nov
     :ensure t
-    :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 #+END_SRC
@@ -1477,7 +1287,6 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
 
 #+BEGIN_SRC emacs-lisp
   (use-package activities
-    :defer t
     :init
     (activities-mode)
     ;; (activities-tabs-mode) ;; if you want tabs
@@ -1521,6 +1330,10 @@ Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: E
 * Helper Functions
 * Lua
 #+BEGIN_SRC emacs-lisp
-    (use-package lua-mode
-      :defer t)
+    (use-package lua-mode)
+#+END_SRC
+* Startup Profiling
+#+BEGIN_SRC emacs-lisp
+  (use-package esup
+    :commands esup)
 #+END_SRC
