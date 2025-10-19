@@ -81,17 +81,18 @@
 #+BEGIN_SRC emacs-lisp
    (custom-set-faces
     ;; Default font for all text
-    '(default ((t (:family "Fira Code" :height 130))))
-    '(fixed-pitch ((t (:family "Fira Code" :height 110))))
+    '(default ((t (:family "JetBrains Mono" :height 130))))
+    '(fixed-pitch ((t (:family "JetBrains Mono" :height 110))))
 
     ;; Current line number
     '(line-number-current-line ((t (:foreground "orange" :inherit line-number))))
-    '(mode-line ((t (:family "Fira Code" :weight Bold))))
+    '(mode-line ((t (:family "JetBrains Mono" :weight Bold))))
 
     ;; Comments italic
-    '(font-lock-function-name-face ((t (:family "Fira Code":slant italic))))
-    '(font-lock-variable-name-face ((t (:family "Fira Code":weight bold)))))
+    '(font-lock-function-name-face ((t (:family "JetBrains Mono":slant italic))))
+    '(font-lock-variable-name-face ((t (:family "JetBrains Mono":weight bold)))))
   #+END_SRC
+
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
   These are important in how I like my emacs to perform.
@@ -447,7 +448,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
   ;;   (custom-theme-set-faces
   ;;    'user
   ;; ;;   '(variable-pitch ((t (:family "Monaspace Neon" :height 120 :weight thin))))
-  ;; ;;   '(fixed-pitch ((t ( :family "Fira Code" :height 115))))
+  ;; ;;   '(fixed-pitch ((t ( :family "JetBrains Mono" :height 115))))
   ;;    '(org-block ((t (:inherit fixed-pitch))))
   ;;    '(org-code ((t (:inherit (shadow fixed-pitch)))))
   ;;    '(org-formula ((t (:inherit fixed-pitch))))
