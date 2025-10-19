@@ -794,46 +794,6 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
        (setq org-fancy-priorities-list '("🅰️" "🅱️" "1️⃣" "☕")))
 
    #+end_src
-* Org-Roam
-#+BEGIN_SRC emacs-lisp
-#+end_src
-  (use-package org-roam
-    ;; :straight t (org-roam :type git :host github :repo "org-roam/org-roam")
-      :straight t
-          :init
-      (setq org-roam-directory (file-truename "~/Dropbox/Org/"))
-      (setq org-roam-file-extensions '("org" "md"))
-      (setq org-roam-dailies-directory "dailies")
-      (setq find-file-visit-truename t)
-      (setq org-roam-mode-sections
-                (list #'org-roam-backlinks-section
-                     #'org-roam-reflinks-section
-                     #'org-roam-unlinked-references-section
-                     ))
-      :custom
-      (org-roam-dailies-capture-templates
-       '(("d" "default" entry "* %<%I:%M %p>: %?"
-          :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-      ;;(org-roam-database-connector 'sqlite-builtin)
-
-      :bind (("C-c n l" . org-roam-buffer-toggle)
-           ("C-c n t" . org-roam-dailies-goto-today)
-           ("C-c n f" . org-roam-node-find)
-           ("C-c n i" . org-roam-node-insert))
-       :config
-       (org-roam-setup)
-       )
-
-  ;; Documenation: https://github.com/nobiot/md-roam
-  (use-package md-roam
-    :straight (:host github :repo "nobiot/md-roam")
-    :after org-roam
-    )
-  (md-roam-mode 1)
-  (setq md-roam-file-extension "md")
-
-  (org-roam-db-autosync-mode)
-
 * Denote
 [[https://protesilaos.com/emacs/denote][Denote]] for taking notes and [[https://github.com/mclear-tools/consult-notes][consult-notes]] for quickly searching
 
@@ -876,38 +836,36 @@ Using `exec-path-from-shell` fixes this.
    #+end_src
 * Pyenv
    #+BEGIN_SRC emacs-lisp
-     (use-package pyenv-mode-auto
-       :demand t)
+      (use-package pyenv-mode-auto
+        :demand t)
 
-     (defun pyenv-activate-current-project ()
-       "Automatically activates pyenv version if .python-version file exists."
-       (interactive)
-       (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
-       (if python-version-directory
-          (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
-                 (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
-            (pyenv-mode-set pyenv-current-version)
-            (message (concat "Setting virtualenv to " pyenv-current-version))))))
+      (defun pyenv-activate-current-project ()
+        "Automatically activates pyenv version if .python-version file exists."
+        (interactive)
+        (let ((python-version-directory (locate-dominating-file (buffer-file-name) ".python-version")))
+        (if python-version-directory
+           (let* ((pyenv-version-path (f-expand ".python-version" python-version-directory))
+                  (pyenv-current-version (s-trim (f-read-text pyenv-version-path 'utf-8))))
+             (pyenv-mode-set pyenv-current-version)
+             (message (concat "Setting virtualenv to " pyenv-current-version))))))
 
-     (defvar pyenv-current-version nil nil)
+      (defvar pyenv-current-version nil nil)
 
-     (defun pyenv-init()
-     "Initialize pyenv's current version to the global one."
-     (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
-      (message (concat "Setting pyenv version to " global-pyenv))
-      (pyenv-mode-set global-pyenv)
-      (setq pyenv-current-version global-pyenv)))
+      (defun pyenv-init()
+      "Initialize pyenv's current version to the global one."
+      (let ((global-pyenv (replace-regexp-in-string "\n" "" (shell-command-to-string "pyenv global"))))
+       (message (concat "Setting pyenv version to " global-pyenv))
+       (pyenv-mode-set global-pyenv)
+       (setq pyenv-current-version global-pyenv)))
 
-     (add-hook 'after-init-hook 'pyenv-init)
+      (add-hook 'after-init-hook 'pyenv-init)
 
-     (use-package pyenv-mode)
+      (use-package pyenv-mode
+        :config
+        (with-eval-after-load 'pyenv-mode
+          (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
 
-     ;; Fixes an issue where pyenv conflicts with org-mode
-     (eval-after-load 'pyenv-mode
-       '(progn
-        (define-key pyenv-mode-map (kbd "C-c C-s") nil)))
-
-     (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
+        (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 * Projectile and RG (Ripgrep)
 It looks like rg.el has more options for regex when searching
@@ -928,7 +886,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
   (use-package treesit-auto
     :straight (:host github :repo "renzmann/treesit-auto")
     :config
-    (setq lsp-use-plists t)
     (setq treesit-auto-install 'prompt)
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode)
@@ -1026,15 +983,6 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (eldoc-echo-area-use-multiline-p nil)
     (eldoc-echo-area-prefer-doc-buffer t)
     (eldoc-documentation-strategy 'eldoc-documentation-compose))
-
-  ;; Add company for better completion
-  (use-package company
-    :hook (prog-mode . company-mode)
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.1)
-    (company-selection-wrap-around t)
-    (company-tooltip-align-annotations t))
 
   ;; Optional: Add format-all for consistent formatting
   (use-package format-all

@@ -4,7 +4,7 @@
 ;;(setenv "LIBRARY_PATH" "/opt/homebrew/opt/gcc/lib/gcc/14:/opt/homebrew/opt/libgccjit/lib/gcc/current:/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin24/14")
 
 ;;; early-init.el --- Early Emacs initialization -*- lexical-binding: t -*-
-
+(defvar my/emacs-load-start-time (current-time))
 (message "Early init loaded!")
 
 ;; set this early for lsp to use plists instead of hash tables
@@ -41,3 +41,12 @@
 
 (load "server")
 (unless (server-running-p) (server-start))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            (message "Emacs loaded in %.2f seconds with %d garbage collections"
+                     (float-time (time-subtract after-init-time 
+                                                my/emacs-load-start-time))
+                     gcs-done)
+            (message "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")))
