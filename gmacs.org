@@ -653,17 +653,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
      (add-to-list 'org-agenda-custom-commands
                '("b" "Agenda" gn/org-agenda-with-tip))
 
-     (add-to-list 'org-agenda-custom-commands
-          '("N" "Notes" tags "NOTE"
-                 ((org-agenda-overriding-header "Notes")
-                  (org-tags-match-list-sublevels t))))
-
-     (add-to-list 'org-agenda-custom-commands
-        '("k" "Knowledge Investments" tags "KI"
-               ((org-agenda-overriding-header "Knowledge Investments")
-                (org-tags-match-list-sublevels t))))
-
-     ;; Taken from doc.norang.ca/org-mode.html
+         ;; Taken from doc.norang.ca/org-mode.html
      (add-to-list 'org-agenda-custom-commands
           '("c" "Simple agenda view"
                ((agenda "")
@@ -758,66 +748,6 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                   (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
                              ((org-agenda-overriding-header "FLAGGED"))))
                  ((org-agenda-todo-ignore-scheduled 'future)))  t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("r" . "REVIEW...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("ra" . "All Tasks...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("rt" . "Timesheet...") t)
-
-     ;; Show what happened today.
-     (add-to-list 'org-agenda-custom-commands
-               '("rtd" "Daily Timesheet"
-                 ((agenda ""))
-                 ((org-agenda-log-mode-items '(clock closed))
-                  (org-agenda-overriding-header "DAILY TIMESHEET")
-                  (org-agenda-show-log 'clockcheck)
-                  (org-agenda-span 'day)
-                  (org-agenda-start-with-clockreport-mode t)
-                  (org-agenda-time-grid nil))) t)
-
-     ;; Show what happened this week.
-     (add-to-list 'org-agenda-custom-commands
-               '("rtw" "Weekly Timesheet"
-                 ((agenda ""))
-                 (
-                  ;; (org-agenda-format-date "")
-                  (org-agenda-overriding-header "WEEKLY TIMESHEET")
-                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp))
-                  (org-agenda-span 'week)
-                  (org-agenda-start-on-weekday 1)
-                  (org-agenda-start-with-clockreport-mode t)
-                  (org-agenda-time-grid nil))) t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("rw" "Weekly review"
-                 ((tags "CATEGORY={@REFILE}&LEVEL<=2"
-                        ((org-agenda-overriding-header "NEW TASKS")))
-                  (agenda ""
-                          ((org-agenda-clockreport-mode t)
-                           (org-agenda-format-date
-                            (concat "\n"
-                                    "%Y-%m-%d" " %a "
-                                    (make-string (window-width) ?_)))
-                           (org-agenda-overriding-header "PAST WEEK")
-                           (org-agenda-prefix-format " %?-11t %i %-12:c% s")
-                           (org-agenda-show-log 'clockcheck)
-                           (org-agenda-span 7)
-                           (org-agenda-start-day "-1w")
-                           (org-deadline-warning-days 0)))
-                  (agenda ""
-                          ((org-agenda-overriding-header "NEXT 30 DAYS")
-                           (org-agenda-span 'month)
-                           (org-agenda-start-day "+0d")
-                           (org-deadline-warning-days 0)))
-                  (tags "PROJECT"
-                        ((org-agenda-overriding-header "PROJECT LIST")))
-                  (todo "DONE|PROJECTDONE"
-                        ((org-agenda-overriding-header
-                          "Candidates to be archived"))))))
 
    #+end_src
 
@@ -933,47 +863,6 @@ Using org buillets and hiding leading stars.  I'm also fontifying headings, quot
     ;; search only for text files in denote dir
     (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
  #+END_SRC
-* HOWM
-#+BEGIN_SRC emacs-lisp
-  (use-package howm
-    ;; :after org
-    :ensure t
-    :init
-    ;; 
-    ;; Options: Remove the leading ";" in the following lines if you like.
-    ;; 
-    ;; Format
-    ;;(require 'howm-markdown) ;; Write notes in markdown-mode. (*1)
-    (require 'howm-org) ;; Write notes in Org-mode. (*2)
-    ;; 
-    ;; Preferences
-    ;; Org-compatible filenames and syntax.
-    (setq howm-file-name-format "%Y-%m-%d-%H%M%S.org")
-    (setq howm-view-title-header "*")
-    (setq howm-dtime-format (format "<%s>" (cdr org-timestamp-formats)))
-    ;; Use ripgrep for fast searching.
-    (setq howm-view-use-grep t)
-    (setq howm-view-grep-command "rg")
-    (setq howm-view-grep-option "-nH --no-heading --color never")
-    (setq howm-view-grep-extended-option nil)
-    (setq howm-view-grep-fixed-option "-F")
-    (setq howm-view-grep-expr-option nil)
-    (setq howm-view-grep-file-stdin-option nil)
-    ;; Make the "comefrom links" case-insensitive.
-    (setq howm-keyword-case-fold-search t)
-    ;; Get rid of the old-fashioned separators.
-    (setq howm-view-summary-sep "\t")
-    (setq howm-directory "~/Dropbox/Org/Howm") ;; Where to store the files?
-    (setq howm-follow-theme t) ;; Use your Emacs theme colors. (*3)
-    (setq howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
-    (setq howm-history-file (expand-file-name ".howm-history" howm-directory))
-    ;; 
-    ;; Performance
-    ;(setq howm-menu-expiry-hours 1) ;; Cache menu N hours. (*4)
-    ;(setq howm-menu-refresh-after-save nil) ;; Speed up note saving. (*5)
-  )
-#+END_SRC
-
 * Path from shell
 When starting emacs gui on Mac OS, the paths are not read from .zshrc
 Using `exec-path-from-shell` fixes this.
