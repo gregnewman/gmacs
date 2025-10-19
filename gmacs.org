@@ -20,7 +20,11 @@
        ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
        (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
        (straight-use-package-by-default t))
+
      (setq use-package-always-defer t)
+     (setq straight-check-for-modifications '(check-on-save find-when-checking))
+     (setq straight-vc-git-default-clone-depth 1)
+     (setq straight-cache-autoloads t)
    #+END_SRC
 
 * Theme
@@ -73,20 +77,17 @@
       :bind (("C-z" . nil)
              ("C-x C-z" . nil)))
   #+end_src
-
 * Font handling
   #+BEGIN_SRC emacs-lisp
     (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'light :height 120)
     (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'light :height 120)
     (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :weight 'light :height 1.0)
   #+END_SRC
-
 * One liners preferences
   Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
   These are important in how I like my emacs to perform.
 
   #+BEGIN_SRC emacs-lisp
-    (set-frame-font "JetBrains Mono 12")
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
     (setq-default indent-tabs-mode nil)
@@ -175,6 +176,7 @@
 
      ;; ;; Git Gutter
      (use-package git-gutter
+       :defer 1
        :diminish git-gutter-mode
        :config (global-git-gutter-mode)
        :init
@@ -312,17 +314,18 @@
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
   #+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :init
-    (which-key-mode)
-    :config
-    (which-key-setup-side-window-right-bottom)
-    (setq which-key-sort-order 'which-key-key-order-alpha
-      which-key-side-window-max-width 0.33
-      which-key-idle-delay 0.5)
-    :diminish which-key-mode)
+    (use-package which-key
+      :defer 0.5
+      :init
+      (which-key-mode)
+      :config
+      (which-key-setup-side-window-right-bottom)
+      (setq which-key-sort-order 'which-key-key-order-alpha
+        which-key-side-window-max-width 0.33
+        which-key-idle-delay 0.5)
+      :diminish which-key-mode)
 
-  (provide 'init-which-key)
+    (provide 'init-which-key)
   #+end_src
 
 * iBuffer
@@ -404,7 +407,6 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
     #+BEGIN_EXAMPLE bash
     gitwatch -r origin -b main . &
     #+END_EXAMPLE
-
 ** Fontification and Beautification
 Use C-u C-x = (which runs the command what-cursor-position with a prefix argument) to show information about the character under the cursor, including the face which is being used for it.
 
@@ -452,82 +454,62 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.9))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+END_SRC
-
 ** Configuration
    This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
    I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
+#+BEGIN_SRC emacs-lisp
+  ;; Lightweight settings - safe to run immediately
+  (setq org-modules '(org-protocol))
 
-   #+BEGIN_SRC emacs-lisp
-     (setq org-modules '(org-protocol))
-     (eval-after-load 'org
-       '(org-load-modules-maybe t))
+  (setq org-src-fontify-natively t)
 
-     ;; respects splits
-     (setq org-agenda-window-setup 'current-window)
+  ;; DEFER ALL expensive org operations until org actually loads
+  (with-eval-after-load 'org
+    (org-load-modules-maybe t)
+    
+    ;; This is EXPENSIVE - only calculate when org loads, not at startup!
+    (setq org-agenda-files 
+          (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+    
+    ;; All other org settings
+    (setq org-agenda-window-setup 'current-window
+          org-agenda-start-on-weekday 1
+          org-agenda-tags-column -102
+          org-agenda-span 7
+          org-tags-column 88
+          org-agenda-sticky nil
+          org-agenda-inhibit-startup t
+          org-agenda-use-tag-inheritance t
+          org-agenda-show-log t
+          org-agenda-skip-scheduled-if-done t
+          org-agenda-skip-deadline-if-done t
+          org-use-speed-commands t
+          org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
+          org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS"
+          org-enforce-todo-dependencies t
+          org-enforce-todo-checkbox-dependencies t
+          org-fontify-done-headline t
+          org-startup-folded t
+          org-refile-targets '((org-agenda-files :maxlevel . 5))
+          org-refile-allow-creating-parent-nodes 'confirm)
+    
+    ;; Load markdown export only when org loads
+    (require 'ox-md))
 
-     ;; agenda files
-     (setq org-agenda-files (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+  ;; Keybindings - these are cheap, keep outside
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
 
-     ;; Start the weekly agenda on Monday
-     (setq org-agenda-start-on-weekday 1)
+  ;; Hooks - these are lazy, keep outside
+  (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (add-hook 'org-mode-hook #'gn/orgmode-ignore-line-numbers-mode)
 
-     ;; Display tags farther right
-     (setq org-agenda-tags-column -102)
-     (setq org-agenda-span 7)
-     (setq org-tags-column 88)
-     (setq org-agenda-sticky nil)
-     (setq org-agenda-inhibit-startup t)
-     (setq org-agenda-use-tag-inheritance t)
-     (setq org-agenda-show-log t)
-     (setq org-agenda-skip-scheduled-if-done t)
-     (setq org-agenda-skip-deadline-if-done t)
-     (setq org-use-speed-commands t)
-     (setq org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
-     (setq org-columns-default-format "%14SCHEDULED %Effort{:} %CLOCKSUM_T{:} %1PRIORITY %TODO %50ITEM %TAGS")
-
-     ;; The following lines are always needed.  Choose your own keys.
-     (global-set-key "\C-cl" 'org-store-link)
-     (global-set-key "\C-ca" 'org-agenda)
-
-     ;; enable line breaks
-     (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
-
-     ;; Don't allow parent to be marked done unless children are done
-     (setq org-enforce-todo-dependencies t)
-     (setq org-enforce-todo-checkbox-dependencies t)
-
-     (setq org-fontify-done-headline t)
-     (setq org-startup-folded t)
-     (setq org-src-fontify-natively nil)
-
-     ;; Refiling
-     (setq org-refile-targets '((org-agenda-files :maxlevel . 5)))
-     (setq org-refile-allow-creating-parent-nodes 'confirm)
-
-     ;; Visual Line Mode
-     (add-hook 'org-mode-hook 'visual-line-mode)
-
-     ;; Org indent mode
-     (add-hook 'org-mode-hook 'org-indent-mode)
-
-     ;; Line numbers
-     (defun gn/orgmode-ignore-line-numbers-mode ()
-       (interactive)
-       "turns off line numbers mode in org buffers"
-       (display-line-numbers-mode -1))
-
-     (add-hook 'org-mode-hook #'gn/orgmode-ignore-line-numbers-mode)
-
-     (defun gn/orgmode-ignore-whitespace-mode ()
-       (interactive)
-       "turns off whitespace mode in org buffers"
-       (whitespace-mode -1))
-
-     ;; Turn off whitespace-mode since my linters will handle them anyway and it's annoying
-     (whitespace-mode -1)
-     (require 'ox-md)
-   #+end_src
-
+  ;; Remove duplicate hook - this was already added above
+  ;; (add-hook 'org-mode-hook 'visual-line-mode)  <-- DELETE if you see this duplicated
+#+END_SRC
 ** Alerts
 #+BEGIN_SRC emacs-lisp
   (use-package org-alert
@@ -607,22 +589,22 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    #+end_src
 
 ** Org Babel
-   #+BEGIN_SRC emacs-lisp
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '(
-        (python . t)
-        (js . t)
-        (emacs-lisp . t)
-        (org . t)
-        (sql . t)
-        (ditaa . t)
-        ))
-     ;; Syntax highlight in #+BEGIN_SRC blocks
-     (setq org-src-fontify-natively t)
-     ;; Don't prompt before running code in org
-     (setq org-confirm-babel-evaluate nil)
-   #+end_src
+** Org Babel
+#+BEGIN_SRC emacs-lisp
+  ;; Load babel only when org loads
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((python . t)
+       (js . t)
+       (emacs-lisp . t)
+       (org . t)
+       (sql . t)
+       (ditaa . t)))
+    
+    ;; Don't prompt before running code in org
+    (setq org-confirm-babel-evaluate nil))
+#+END_SRC
 
 ** Agenda commands
     Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
@@ -996,6 +978,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+BEGIN_SRC emacs-lisp
   ;; Enable vertico
   (use-package vertico
+    :defer 0.1
      :custom
      (vertico-count 13)                    ; Number of candidates to display
      (vertico-resize t)
@@ -1004,6 +987,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (vertico-mode))
 
    (use-package savehist
+     :defer 0.1
      :init
      (savehist-mode))
 
@@ -1019,6 +1003,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
    ;; Enable rich annotations using the Marginalia package
    (use-package marginalia
+     :defer 0.1
      ;; Either bind `marginalia-cycle' globally or only in the minibuffer
      :bind (("M-A" . marginalia-cycle)
             :map minibuffer-local-map
@@ -1031,18 +1016,17 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      :init
      (marginalia-mode))
 
-   ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
-   (require 'consult-imenu)
-   (dolist (python '(python-mode python-ts-mode))
-     (add-to-list 'consult-imenu-config
-                  `(,python
-                    :toplevel "Method"
-                    :types ((?f "Field" font-lock-variable-name-face)
-                            (?c "Class" font-lock-property-use-face)
-                            (?m "Method" font-lock-function-name-face)
-                            (?M "Module" font-lock-builtin-face)
-                            (?v "Variable" font-lock-variable-name-face)
-                           ))))
+  ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
+  (with-eval-after-load 'consult-imenu
+    (dolist (python '(python-mode python-ts-mode))
+      (add-to-list 'consult-imenu-config
+                 `(,python
+                   :toplevel "Method"
+                   :types ((?f "Field" font-lock-variable-name-face)
+                           (?c "Class" font-lock-property-use-face)
+                           (?m "Method" font-lock-function-name-face)
+                           (?M "Module" font-lock-builtin-face)
+                           (?v "Variable" font-lock-variable-name-face))))))
 
   (use-package consult-projectile
     :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
@@ -1347,4 +1331,9 @@ Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: E
 * Lua
 #+BEGIN_SRC emacs-lisp
     (use-package lua-mode)
+#+END_SRC
+* Startup Profiling
+#+BEGIN_SRC emacs-lisp
+  (use-package esup
+    :commands esup)
 #+END_SRC

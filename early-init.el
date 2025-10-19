@@ -7,6 +7,24 @@
 (defvar my/emacs-load-start-time (current-time))
 (message "Early init loaded!")
 
+;; due to issues with native comp not finding libgccjit
+(setenv "PATH" (concat "/opt/homebrew/opt/gcc/bin:" (getenv "PATH")))
+(setq exec-path (cons "/opt/homebrew/opt/gcc/bin" exec-path))
+
+(setenv "LIBRARY_PATH" 
+  (string-join 
+    '("/opt/homebrew/opt/gcc/lib/gcc/15"
+      "/opt/homebrew/opt/libgccjit/lib/gcc/15"
+      "/opt/homebrew/opt/gcc/lib/gcc/current")
+    ":"))
+
+;; Setting ‘native-comp’ speed and flags. They are important for getting the performance.
+;; https://github.com/D4lj337/Emacs-performance
+(setq native-comp-speed 3)
+(setq native-comp-async-report-warnings-errors nil)
+(setq native-comp-deferred-compilation t)
+(native-compile-async "/opt/homebrew/Cellar/emacs-plus@30/30.2/Emacs.app/Contents/native-lisp/" 'recursively)
+
 ;; set this early for lsp to use plists instead of hash tables
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
 (setenv "LSP_USE_PLISTS" "true")
@@ -33,7 +51,7 @@
 ;; Restore GC threshold after startup
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold 100000000  ; 100mb
+            (setq gc-cons-threshold 16777216  ; 16MB 
                   gc-cons-percentage 0.1)))
 
 ;; Improve performance with language servers.

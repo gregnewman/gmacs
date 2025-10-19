@@ -20,26 +20,6 @@
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
 
-;; due to issues with native comp not finding libgccjit
-(setenv "PATH" (concat "/opt/homebrew/opt/gcc/bin:" (getenv "PATH")))
-(setq exec-path (cons "/opt/homebrew/opt/gcc/bin" exec-path))
-
-(setenv "LIBRARY_PATH" 
-  (string-join 
-    '("/opt/homebrew/opt/gcc/lib/gcc/15"
-      "/opt/homebrew/opt/libgccjit/lib/gcc/15"
-      "/opt/homebrew/opt/gcc/lib/gcc/current")
-    ":"))
-
-;; Setting ‘native-comp’ speed and flags. They are important for getting the performance.
-;; https://github.com/D4lj337/Emacs-performance
-(setq native-comp-speed 3)
-
-(native-compile-async "/opt/homebrew/Cellar/emacs-plus@30/30.2/Emacs.app/Contents/native-lisp/" 'recursively)
-(setq native-comp-compiler-options '("-march=znver3" "-Ofast" "-g0" "-fno-finite-math-only" "-fgraphite-identity" "-floop-nest-optimize" "-fdevirtualize-at-ltrans" "-fipa-pta" "-fno-semantic-interposition" "-flto=auto" "-fuse-linker-plugin"))
-
-(setq native-comp-driver-options '("-march=znver3" "-Ofast" "-g0" "-fno-finite-math-only" "-fgraphite-identity" "-floop-nest-optimize" "-fdevirtualize-at-ltrans" "-fipa-pta" "-fno-semantic-interposition" "-flto=auto" "-fuse-linker-plugin"))
-
 ;; Boostrap Straight for package management
 (setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
 (defvar bootstrap-version)
