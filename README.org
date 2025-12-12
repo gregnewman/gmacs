@@ -1,6 +1,8 @@
-* My Evolving Emacs Configuration
+* Greg Newman's Emacs Configuration
 
 A literate, GTD-focused Emacs configuration emphasizing modern LSP tooling, comprehensive documentation, and keyboard-driven workflows. All configuration lives in =gmacs.org= with detailed explanations of not just *what* is configured, but *why* each choice was made.
+
+[[https://github.com/gregnewman/gmacs][View on GitHub]]
 
 ** Philosophy
 
