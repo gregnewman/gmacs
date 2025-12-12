@@ -11,9 +11,7 @@
   functions work, use M-x edebug-defun to set up debugging for that function, and then call it.
 
 * Packages
-   I use `use-package` and Straight so that all packages are automatically installed if cloning this repo for another machine.
-   I kept running into problems with project being loaded multiple times and could not find the offender.  This config fixes
-   it with Straight. https://github.com/radian-software/straight.el/issues/1146#issuecomment-2227133737
+   Package management using Straight.el combined with use-package for declarative configuration. Straight provides reproducible package installations by managing packages through git, making it easy to clone this config to a new machine and have all packages automatically installed. The configuration includes built-in pseudo-packages to prevent Straight from downloading duplicate versions of packages that come with Emacs (like project, flymake, and xref). Additional settings optimize Straight's performance through shallow git clones, caching autoloads, and checking modifications only on save.
    #+BEGIN_SRC emacs-lisp
      (use-package straight
        :custom
@@ -28,7 +26,7 @@
    #+END_SRC
 
 * Theme
-   My current configuration uses doom-theme, specifically doom-dracula (everywhere!) and some default settings.
+   Visual theme configuration using Doom Themes, specifically the doom-dracula color scheme for consistency across all contexts. Doom Themes provides carefully crafted color schemes with good contrast and readability. The configuration enables bold and italic fonts for better visual hierarchy, includes a visual bell (flashing mode-line instead of beeping), and improves Org-mode's native fontification. The doom-modeline package provides an informative and aesthetically pleasing mode line showing battery status, time with an analogue clock icon, and other useful information.
 
    #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
@@ -78,6 +76,8 @@
              ("C-x C-z" . nil)))
   #+end_src
 * Font handling
+  Font configuration using Fira Code for both default and fixed-pitch text. Fira Code is a monospace font with programming ligatures that improves code readability. Custom faces are configured for line numbers, mode line, and syntax highlighting to create a consistent and readable editing experience.
+
 #+BEGIN_SRC emacs-lisp
    (custom-set-faces
     ;; Default font for all text
@@ -94,66 +94,77 @@
   #+END_SRC
 
 * One liners preferences
-  Small settings and packages that really don't have a place anywhere else in this document that warrants it's own section heading for each one.
-  These are important in how I like my emacs to perform.
+  Fundamental Emacs settings that configure basic editor behavior, file handling, display preferences, and system integration. These settings don't warrant individual sections but are essential for daily use. Grouped by function for easier navigation and maintenance.
 
   #+BEGIN_SRC emacs-lisp
+    ;; Personal information
     (setq user-full-name "Greg Newman"
           user-mail-address "greg@gregnewman.org")
-    (setq-default indent-tabs-mode nil)
-    (setq ring-bell-function (lambda ()))
-    (setq confirm-kill-emacs 'yes-or-no-p)
-    (setq require-final-newline t)
-    (setq-default line-spacing 0.15)
-    (setq explicit-shell-file-name "/bin/zsh")
+
+    ;; Editor defaults
+    (setq-default indent-tabs-mode nil)  ; Use spaces, not tabs
+    (setq ring-bell-function (lambda ()))  ; Disable audible bell
+    (setq confirm-kill-emacs 'yes-or-no-p)  ; Prevent accidental exits
+    (setq require-final-newline t)  ; POSIX compliance
+    (setq-default line-spacing 0.15)  ; Slightly more readable line spacing
+    (setq explicit-shell-file-name "/bin/zsh")  ; Use zsh for shell commands
+
+    ;; Backup file configuration - centralized location with version control
     (setq backup-directory-alist `(("." . "~/.saves")))
-    (setq backup-by-copying t)
-    (setq delete-old-versions t)
+    (setq backup-by-copying t)  ; Don't clobber symlinks
+    (setq delete-old-versions t)  ; Clean up old backups automatically
     (setq kept-new-versions 10)
     (setq kept-old-versions 10)
-    (setq version-control t)
+    (setq version-control t)  ; Use version numbers for backups
+
+    ;; Display settings
     (global-display-line-numbers-mode)
-    (setq-default display-fill-column-indicator-column 88)
-    ;; always show paren highlights
-    (show-paren-mode 1)
-    ; highlight current line
-    (global-hl-line-mode 1)
-    (set-face-background 'hl-line "#1C1B1A")
-    ;; javascript indents.  This can probably be removed once I settle on a "good" js config
-    (setq js-indent-level 2)
-    ; Desktop setup.
+    (setq-default display-fill-column-indicator-column 88)  ; Python line length (Black/ruff)
+    (show-paren-mode 1)  ; Highlight matching parentheses
+    (global-hl-line-mode 1)  ; Highlight current line
+    (set-face-background 'hl-line "#1C1B1A")  ; Subtle highlight color
+
+    ;; Language-specific indentation
+    (setq js-indent-level 2)  ; JavaScript/TypeScript standard
+
+    ;; Desktop mode - save/restore sessions across restarts
     (desktop-save-mode 1)
     (setq desktop-dirname "~/.emacs.d/desktops/")
-    (setq desktop-base-file-name (concat ".desktop." (system-name)))
+    (setq desktop-base-file-name (concat ".desktop." (system-name)))  ; Per-machine sessions
     (setq desktop-path (list desktop-dirname))
     (setq desktop-base-lock-name "lock")
     (setq desktop-load-locked-desktop t)
-    ; Very useful if dealing with git repos and also files that can change from Dropbox
+
+    ;; Auto-revert mode - keep buffers in sync with disk changes (useful for git/Dropbox)
     (global-auto-revert-mode 1)
-    (setq auto-revert-use-notify nil)
-    (setq auto-revert-interval 5)
-    ;; Configure where TAGS are stored
+    (setq auto-revert-use-notify nil)  ; Use polling instead of filesystem events
+    (setq auto-revert-interval 5)  ; Check every 5 seconds
+
+    ;; TAGS configuration
     (setq tags-table-list (list "~/.emacs.d/TAGS"))
-    ;; isearch improvements
+
+    ;; Isearch improvements - show match count during search
     (setq isearch-lazy-count t)
     (setq lazy-count-prefix-format nil)
     (setq lazy-count-suffix-format "   (%s/%s)")
 
-    ;; some useful settings found in http://yummymelon.com/devnull/surprise-and-emacs-defaults.html
-    (setq sentence-end-double-space nil)
-    (setq delete-selection-mode t)
-    (setq dired-auto-revert-buffer t)
+    ;; Modern defaults
+    (setq sentence-end-double-space nil)  ; Single space after sentences
+    (setq delete-selection-mode t)  ; Typing deletes selection
+    (setq dired-auto-revert-buffer t)  ; Keep dired buffers fresh
 
-    ;; associate some of these files with modes
+    ;; File associations
     (add-to-list 'auto-mode-alist '("\\.astro\\'" . js-ts-mode))
-    ;; (add-to-list 'auto-mode-alist '("\\.mdx\\'" . markdown-ts-mode))
 
+    ;; Location for calendar/sunrise-sunset calculations
     (setq calendar-latitude 35.064905)
     (setq calendar-longitude -80.769724)
     (setq calendar-location-name "Charlotte, NC")
    #+end_src
 
 * Transparency
+  Frame transparency control for visual customization. By default, frames are set to 100% opaque. The gn/transparency function (bound to C-c t) allows interactive adjustment of frame transparency from 0 (fully transparent) to 100 (fully opaque), useful for seeing underlying windows or creating aesthetic effects when working with multiple applications.
+
 #+BEGIN_SRC emacs-lisp
   ;; set default to 100% opaque
   (set-frame-parameter (selected-frame) 'alpha '(100 100))
@@ -180,6 +191,8 @@
 #+END_SRC
 
 * Icons, Git Gutter and Recent files
+  Visual enhancements and file access utilities. All-the-icons provides icon fonts used throughout the UI by packages like doom-modeline and all-the-icons-completion. Git-gutter displays visual indicators in the fringe showing added, modified, and deleted lines compared to the git repository, with keybindings for navigating between changes (C-x n/p) and reverting hunks (C-x v r). Recentf mode maintains a list of recently opened files (up to 200, showing 15 in menus), making it easy to quickly reopen files you've worked on recently.
+
    #+BEGIN_SRC emacs-lisp
      ;; icons
      (use-package all-the-icons)
@@ -211,7 +224,7 @@
    #+end_src
 
 * Saveplace
-   Remember my place in files across sessions
+  Remembers cursor position in files across Emacs sessions. When reopening a file, the cursor automatically returns to where you were last editing, saving time and maintaining context. This is particularly useful for long files or when working on multiple files across different sessions.
 
    #+BEGIN_SRC emacs-lisp
      (save-place-mode +1)
@@ -269,6 +282,8 @@
    #+end_src
 
 * OmniFocus
+  Quick capture integration with OmniFocus task manager via URL scheme. The gn/omnifocus-capture function (bound to C-c o) creates tasks in OmniFocus with optional notes, due dates (using org-read-date for familiar date input), and location information from the current file and line number. This enables capturing tasks from within Emacs while maintaining context about where the task originated, creating a seamless bridge between coding and task management workflows.
+
 #+BEGIN_SRC emacs-lisp
   (defun gn/omnifocus-capture ()
     "Capture a task with optional note, due date, and location to OmniFocus via URL scheme"
@@ -378,6 +393,8 @@
    #+end_src
 
 * Hydra
+  Create sticky keybinding menus for related commands. Hydra allows grouping multiple related commands under a single prefix key, keeping the binding active until you explicitly quit. The hydra-zoom example (F2) provides easy text scaling: press F2, then repeatedly press 'g' to zoom in or 'l' to zoom out without re-pressing F2. This makes repetitive operations much more fluid. Hydras are useful for any set of commands you use in succession, like window management, git operations, or navigation.
+
    #+BEGIN_SRC  emacs-lisp
      (use-package hydra)
 
@@ -388,17 +405,19 @@
    #+end_src
 
 * System packages
-The :ensure-system-package keyword allows you to ensure system binaries exist alongside your package declarations.
+  Automatic system binary verification for package dependencies. The :ensure-system-package keyword allows packages to declare required system binaries (like ripgrep, git, etc.) and automatically check or install them. Currently disabled as system packages are managed manually via Homebrew or other package managers. Kept in configuration for potential future use if automatic system package management becomes desirable.
 
 #+BEGIN_SRC emacs-lisp
   ;; (use-package use-package-ensure-system-package
-  ;; :straight (use-package-ensure-system-package 
-  ;;            :type git 
-  ;;            :host github 
+  ;; :straight (use-package-ensure-system-package
+  ;;            :type git
+  ;;            :host github
   ;;            :repo "jwiegley/use-package"
   ;;            :files ("use-package-ensure-system-package.el")))
 #+end_src
 * Justfiles
+  Syntax highlighting and editing support for Justfiles. Just is a command runner similar to make but with a simpler syntax. This mode provides proper fontification and indentation for Justfile recipes, making it easier to write and maintain build commands and task runners in modern projects.
+
 #+BEGIN_SRC emacs-lisp
   (use-package just-mode
     :ensure t)
@@ -418,7 +437,7 @@ The :ensure-system-package keyword allows you to ensure system binaries exist al
     gitwatch -r origin -b main . &
     #+END_EXAMPLE
 ** Fontification and Beautification
-Use C-u C-x = (which runs the command what-cursor-position with a prefix argument) to show information about the character under the cursor, including the face which is being used for it.
+   Visual improvements for Org documents to create a more pleasant reading and editing experience. Emphasis markers (like *bold* and /italic/) are hidden to reduce visual noise, and visual-line-mode along with variable-pitch-mode make prose more readable. The configuration includes commented-out custom face settings for further typography customization if desired. Use C-u C-x = to inspect faces and customize appearance.
 
 #+BEGIN_SRC emacs-lisp
     ;; Load org-faces to make sure we can set appropriate faces
@@ -465,8 +484,8 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
   ;;    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+END_SRC
 ** Configuration
-   This will be a expanding collection of org customization.  I live in text files throughout my days and orgmode gives me a nice interface for collecting notes.
-   I use org from the git repo to stay up to date with fixes and new features.  I can probably move this to be installed via Straight but for now this works fine.
+   Core Org-mode settings optimized for performance and GTD workflow. The configuration uses deferred loading to prevent slow startup times - expensive operations like recursively finding agenda files only run when Org actually loads. Settings control agenda behavior (7-day span starting Monday), task dependencies (enforcing TODO relationships), refile targets (up to 5 levels deep in agenda files), and various display preferences. The org-protocol module enables capturing from external applications. Keybindings for store-link (C-c l), agenda (C-c a), and capture (C-c c) are globally accessible.
+
 #+BEGIN_SRC emacs-lisp
   ;; Lightweight settings - safe to run immediately
   (setq org-modules '(org-protocol))
@@ -521,6 +540,8 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
   ;; (add-hook 'org-mode-hook 'visual-line-mode)  <-- DELETE if you see this duplicated
 #+END_SRC
 ** Alerts
+   Desktop notifications for Org agenda items. Org-alert monitors upcoming deadlines and scheduled items, sending macOS notifications when tasks are approaching their due time. Configured to check every 60 seconds and notify 5 minutes before events, with a 2-minute window after events start. Notifications fade after 2 minutes to avoid cluttering the desktop.
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-alert
     :ensure t 
@@ -536,7 +557,8 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
           alert-fade-time 120))
 #+END_SRC
 ** Todo Keywords
-    Setting up my todo keywords which are global and their relative colors.
+   Custom TODO keywords aligned with GTD workflow. Two sequences are defined: active task states (TODO → NEXT → DONE/PROJECTDONE) and deferred states (WAITING/SOMEDAY → CANCELLED). The @ symbol in keywords like "WAITING(w@/!)" triggers a note prompt when entering that state, creating an audit trail for why tasks are waiting or cancelled. Color-coding provides visual distinction: active states in bright colors (green/cyan), waiting states in red/magenta, and completed states in gray. All tasks automatically timestamp when marked DONE.
+
    #+BEGIN_SRC emacs-lisp
      ;; Keywords
      (setq org-todo-keywords
@@ -599,7 +621,8 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
    #+end_src
 
 ** Org Babel
-** Org Babel
+   Org Babel enables executable code blocks within Org documents for literate programming and reproducible research. Configured to support multiple languages including Python, JavaScript, Emacs Lisp, SQL, and Ditaa for diagrams. Code evaluation is enabled without confirmation prompts for a smoother workflow. This allows mixing documentation with executable code, making it ideal for literate configurations, data analysis notebooks, and technical documentation.
+
 #+BEGIN_SRC emacs-lisp
   ;; Load babel only when org loads
   (with-eval-after-load 'org
@@ -617,8 +640,7 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
 #+END_SRC
 
 ** Agenda commands
-    Pulled some ideas from https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html
-    Some of these have been yanked from [[http://bnbeckwith.com/bnb-emacs/][bnb-emacs]]
+   Custom agenda views tailored for GTD workflow. These commands provide different perspectives on tasks: a simple agenda view (c) showing high-priority items first, a comprehensive due-date grouped view (d) organizing all tasks by when they're due, and focused views (f., fh) for daily planning and hotlist management. The custom commands use helper functions to filter by priority and organize tasks into meaningful groups. Org-super-agenda provides additional grouping capabilities by category for a comprehensive task overview.
 
    #+BEGIN_SRC emacs-lisp
      (defun gn/org-skip-subtree-if-priority (priority)
@@ -760,8 +782,9 @@ Use C-u C-x = (which runs the command what-cursor-position with a prefix argumen
                                   '((:name "All Tasks" :auto-category t)))))))))
    #+end_src
 
-** Org bullets and misc settings'
-Using org buillets and hiding leading stars.  I'm also fontifying headings, quotes and done headlines.
+** Org bullets and misc settings
+   Visual enhancements for Org documents using org-bullets to replace plain asterisks with attractive Unicode bullets. Leading stars are hidden and indentation is managed by org-indent-mode for a cleaner outline appearance. Additional fontification settings improve the display of headings, quotes, verse blocks, and completed headlines. Org-download enables easy image insertion with drag-and-drop, storing images in a central directory. Org-fancy-priorities replaces A/B/C priority indicators with emoji for visual appeal.
+
  #+BEGIN_SRC emacs-lisp
      (use-package org-bullets
        :commands org-bullets-mode
@@ -827,6 +850,8 @@ Using `exec-path-from-shell` fixes this.
          (exec-path-from-shell-initialize)))
    #+end_src
 * Pyenv
+  Python version management using pyenv integration. This configuration automatically activates the correct Python virtual environment based on .python-version files in project directories. The pyenv-mode-auto package handles automatic switching, while custom functions (pyenv-activate-current-project and pyenv-init) ensure proper initialization and project-specific version activation. On Emacs startup, the global pyenv version is set as the default. When opening Python files, if a .python-version file exists in the project root, that specific Python version is activated automatically. The Python mode also enables the fill-column indicator at 88 characters for Black/ruff compatibility.
+
    #+BEGIN_SRC emacs-lisp
       (use-package pyenv-mode-auto
         :demand t)
@@ -860,7 +885,8 @@ Using `exec-path-from-shell` fixes this.
         (add-hook 'python-ts-mode-hook #'display-fill-column-indicator-mode)
    #+end_src
 * Projectile and RG (Ripgrep)
-It looks like rg.el has more options for regex when searching
+  Project management and fast code searching tools. Projectile provides project-aware commands for navigating files, switching between projects, running tests, and more. All projectile commands are available under the C-c p prefix. The rg package integrates ripgrep (a faster alternative to grep) with Emacs, offering powerful regex search capabilities across project files with better performance than traditional grep. Together, these tools make it easy to work with large codebases by understanding project boundaries and providing fast search across entire projects.
+
    #+BEGIN_SRC emacs-lisp
      (use-package projectile
        :bind-keymap
@@ -871,7 +897,10 @@ It looks like rg.el has more options for regex when searching
    #+end_src
    
 * Eglot, Eldoc and Tree-sitter
-Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
+  This section configures the Language Server Protocol (LSP) stack for modern IDE-like features in programming modes. The stack consists of tree-sitter for fast, accurate syntax parsing, Eglot as the LSP client providing code intelligence, and supporting tools for documentation display, error checking, and automatic formatting. This setup replaces heavier alternatives like LSP-mode with a lighter, faster, built-in approach that integrates seamlessly with Emacs 29+.
+
+** Tree-sitter Configuration
+   Tree-sitter provides fast, incremental syntax parsing using proper grammar files for significantly better highlighting, indentation, and code understanding compared to traditional regexp-based modes. The treesit-auto package automatically installs and activates tree-sitter grammars for supported languages, with graceful fallback to traditional modes if tree-sitter is unavailable. Maximum syntax highlighting level (4) is enabled for the best visual distinction of code elements.
 
 #+BEGIN_SRC emacs-lisp
   ;; Tree-sitter configuration
@@ -884,8 +913,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     ;; Enhanced syntax highlighting
     (setq treesit-font-lock-level 4)
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+END_SRC
 
-  ;; Mode remapping with additional modes
+** Major Mode Remapping
+   Automatically activates tree-sitter modes when available instead of traditional modes. This mapping ensures that opening Python, JavaScript, TypeScript, YAML, and other supported files will use the faster, more accurate tree-sitter parsers by default. The remapping is transparent - no changes needed to file associations or hooks.
+
+#+BEGIN_SRC emacs-lisp
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
           (bash-mode . bash-ts-mode)
@@ -898,9 +931,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
           (python-mode . python-ts-mode)
           (tsx-mode . tsx-ts-mode)
           (jsx-mode . tsx-ts-mode)))
+#+END_SRC
 
-  ;; Eglot configuration with enhanced features
-  ;; Eglot configuration with enhanced features
+** Eglot LSP Configuration
+   Eglot is the built-in LSP client (as of Emacs 29) providing IDE-like features including code completion, documentation, go-to-definition, refactoring, and more. Configured for optimal performance with deferred loading and minimal event logging. Language servers are configured per-mode: basedpyright for Python (with integrated ruff for linting), and typescript-language-server for JavaScript/TypeScript. The Python configuration integrates ruff for fast linting while keeping type checking disabled for performance. Keybindings use the C-c l prefix for all LSP actions. Python mode includes additional setup for proper indentation, code folding, and line length (88 chars for Black/ruff compatibility).
+
+#+BEGIN_SRC emacs-lisp
   (use-package eglot
     :ensure t
     :defer t  ; Add this
@@ -960,14 +996,22 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
                                (hs-minor-mode 1)
                                (set-fill-column 88)
                                (display-line-numbers-mode 1)))))
+#+END_SRC
 
-  ;; Optional: Add flycheck for more explicit error display
+** Flycheck Integration
+   Flycheck provides additional on-the-fly syntax checking beyond what LSP offers, giving immediate feedback on code errors as you type. Configured to use ruff for Python linting, which provides extremely fast linting for common Python errors and style violations.
+
+#+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :hook (python-ts-mode . flycheck-mode)
     :config
     (setq flycheck-python-ruff-executable "ruff"))
+#+END_SRC
 
-  ;; Enhanced Eldoc configuration
+** Eldoc Documentation
+   Eldoc displays function signatures, variable documentation, and other contextual information in the echo area or a dedicated buffer as you code. Configured to prefer the documentation buffer for longer content and to compose documentation from multiple sources (LSP, built-in help, etc.) for comprehensive information display.
+
+#+BEGIN_SRC emacs-lisp
   (use-package eldoc
     :init
     (global-eldoc-mode)
@@ -975,8 +1019,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
     (eldoc-echo-area-use-multiline-p nil)
     (eldoc-echo-area-prefer-doc-buffer t)
     (eldoc-documentation-strategy 'eldoc-documentation-compose))
+#+END_SRC
 
-  ;; Optional: Add format-all for consistent formatting
+** Format-all Integration
+   Automatic code formatting on save for consistent code style across projects. Format-all auto-detects the appropriate formatter for each language (ruff for Python, prettier for JavaScript/TypeScript, etc.) and applies formatting according to project configuration files. Bound to C-c f for manual formatting when needed.
+
+#+BEGIN_SRC emacs-lisp
   (use-package format-all
     :bind ("C-c f" . format-all-buffer)
     :hook ((python-ts-mode . format-all-mode)
@@ -985,8 +1033,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+END_SRC
 
 * Vertico, Marginalia, Savehist, Orderless, Embark, Embark Consult
+  Modern completion framework stack replacing older systems like Helm and Ivy. This modular approach combines several focused packages that work together: Vertico provides the vertical completion UI, Orderless enables flexible matching, Marginalia adds rich annotations, Savehist persists history across sessions, and Embark provides context-aware actions on completion candidates. Consult extensions integrate this framework with project management and navigation tools. This setup provides fast, powerful completion for commands, files, buffers, and more.
+
+** Vertico - Completion UI
+   Vertico provides a fast, minimalist vertical completion interface in the minibuffer. Configured to show 13 candidates at a time with dynamic resizing. Unlike Helm or Ivy, Vertico focuses purely on the UI and delegates matching and annotation to other packages, making it lightweight and fast.
+
 #+BEGIN_SRC emacs-lisp
-  ;; Enable vertico
   (use-package vertico
     :defer 0.1
      :custom
@@ -995,13 +1047,22 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
      :init
      (vertico-mode))
+#+END_SRC
 
+** Savehist - History Persistence
+   Saves minibuffer history across Emacs sessions, making frequently-used commands, file paths, and search terms readily available. This creates a better completion experience by learning from your usage patterns over time.
+
+#+BEGIN_SRC emacs-lisp
    (use-package savehist
      :defer 0.1
      :init
      (savehist-mode))
+#+END_SRC
 
-   ;; Optionally use the `orderless' completion style.
+** Orderless - Matching Strategy
+   Flexible, space-separated matching that allows finding candidates by typing parts of the name in any order. For example, "buf py" matches "python-buffer.py". This is far more intuitive than traditional prefix matching and dramatically speeds up navigation. File completion uses partial-completion for path segments while other completions use orderless.
+
+#+BEGIN_SRC emacs-lisp
    (use-package orderless
      :init
      ;; Configure a custom style dispatcher (see the Consult wiki)
@@ -1010,8 +1071,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
      (setq completion-styles '(orderless basic)
            completion-category-defaults nil
            completion-category-overrides '((file (styles partial-completion)))))
+#+END_SRC
 
-   ;; Enable rich annotations using the Marginalia package
+** Marginalia - Rich Annotations
+   Adds helpful annotations to completion candidates showing file permissions, buffer modes, command keybindings, and other contextual information. These annotations appear in the right margin of the completion list, making it easier to identify the correct candidate. M-A cycles through different annotation levels.
+
+#+BEGIN_SRC emacs-lisp
    (use-package marginalia
      :defer 0.1
      ;; Either bind `marginalia-cycle' globally or only in the minibuffer
@@ -1025,8 +1090,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 
      :init
      (marginalia-mode))
+#+END_SRC
 
-  ;; borrowed from Jeremy https://github.com/jeremyf/dotemacs/blob/4bdb58ea43e5dfcdd2025d54193598be0a9dd5b9/emacs.d/jf-completing.el#L219-L227
+** Consult Extensions
+   Consult-based extensions for improved navigation and project integration. Consult-imenu provides enhanced Python symbol navigation (methods, classes, variables). Consult-projectile integrates project management with the completion framework. Consult-dir makes directory navigation easier by suggesting recent directories, bookmarks, and project roots.
+
+#+BEGIN_SRC emacs-lisp
   (with-eval-after-load 'consult-imenu
     (dolist (python '(python-mode python-ts-mode))
       (add-to-list 'consult-imenu-config
@@ -1055,8 +1124,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
            :map minibuffer-local-completion-map
            ("C-x C-d" . consult-dir)
            ("C-x C-j" . consult-dir-jump-file)))
+#+END_SRC
 
-   ;; Embark - this config is taken directly from https://github.com/oantolin/embark
+** Embark - Context Actions
+   Provides context-aware actions on completion targets and other objects. Press C-. on a completion candidate to see available actions (e.g., on a file: open, rename, delete; on a command: execute, describe, where-is). Embark-dwim (C-;) performs the most likely action automatically. This creates a powerful "act-on-thing-at-point" interface throughout Emacs. Embark-consult integration provides preview capabilities in Embark collect buffers.
+
+#+BEGIN_SRC emacs-lisp
    (use-package embark
      :ensure t
      :bind
@@ -1085,8 +1158,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
                   '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                     nil
                     (window-parameters (mode-line-format . none)))))
+#+END_SRC
 
-  ;; Consult users will also want the embark-consult package.
+** Visual Enhancements
+   Embark-consult provides preview integration so completion candidates can be previewed in Embark collect buffers. All-the-icons-completion adds file type icons to completion candidates in the marginalia annotations, making it easier to visually distinguish files, directories, and different file types at a glance.
+
+#+BEGIN_SRC emacs-lisp
   (use-package embark-consult
     :ensure t ; only need to install it, embark loads it after consult if found
     :hook
@@ -1100,10 +1177,13 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+end_src
 
 * Cape and Corfu
+  In-buffer completion framework providing IDE-like autocomplete popups as you type. Cape (Completion At Point Extensions) supplies completion backends for various sources like files, keywords, dabbrev (dynamic abbreviations), and more. Corfu provides the sleek popup UI that displays completion candidates directly at point. Together they create a fast, unobtrusive completion experience that works alongside LSP completion from Eglot. This complements the minibuffer completion framework (Vertico) by handling in-buffer completions.
+
+** Cape - Completion Backends
+   Cape provides multiple completion sources (backends) that can suggest completions from different contexts: dabbrev for words from open buffers, file for file paths, keyword for programming language keywords, and more. These backends are globally available and can be manually triggered with C-c h prefix. Cape intelligently combines results from multiple sources for comprehensive suggestions.
+
 #+BEGIN_SRC emacs-lisp
     (use-package cape
-      ;; Completion at point functions, with the amazing `cape-capf-super' for
-      ;; granular configuration of specific mode completion behavior.
       :init
       (add-to-list 'completion-at-point-functions #'cape-dabbrev)
       (add-to-list 'completion-at-point-functions #'cape-file)
@@ -1114,9 +1194,13 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
              ("C-c h h" . cape-history)
              ;; ("C-c h s" . cape-symbol)
              ("C-c h w" . cape-dict)))
+#+END_SRC
 
+** Corfu - Completion UI
+   Corfu displays completion candidates in a small popup window at point (where you're typing) rather than in the minibuffer. Configured for automatic completion with cycling through candidates. Enabled globally but especially useful in prog-mode, shell-mode, and eshell-mode. The popup is fast, lightweight, and stays out of the way while providing immediate feedback as you type.
+
+#+BEGIN_SRC emacs-lisp
     (use-package corfu
-      ;; Optional customizations
       :custom
       (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
       (corfu-auto t)                 ;; Enable auto completion
@@ -1138,8 +1222,12 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
       ;; `global-corfu-modes' to exclude certain modes.
       :init
       (global-corfu-mode))
+#+END_SRC
 
-  ;; A few more useful configurations...
+** Integration Settings
+   General Emacs completion settings that integrate Cape and Corfu with the rest of the completion system. TAB is configured to handle both indentation and completion intelligently (tab-always-indent 'complete), trying completion when indentation doesn't make sense. Ispell completion is disabled in favor of cape-dict. The command completion predicate hides mode-specific commands that don't apply to the current buffer, reducing noise in M-x completion.
+
+#+BEGIN_SRC emacs-lisp
   (use-package emacs
     :init
     ;; TAB cycle if there are only few candidates
@@ -1161,6 +1249,8 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 #+END_SRC
 
 * Magit
+  Magit is a powerful Git interface for Emacs, providing a comprehensive porcelain for version control operations. Access the status buffer with C-x g to stage, commit, push, pull, branch, merge, rebase, and more through an intuitive keyboard-driven interface. The configuration integrates hl-todo to highlight TODO/FIXME/HACK keywords in code with color coding, and magit-todos to display these keywords directly in the Magit status buffer, making it easy to track TODOs across the project during git workflows. This creates a seamless workflow for tracking both code changes and outstanding tasks.
+
   #+BEGIN_SRC emacs-lisp
     (use-package magit
       :bind ("C-x g" . magit-status)
@@ -1187,7 +1277,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
    #+end_src
 
 * Docker
-Repo and documentation https://github.com/Silex/docker.el
+  Docker container and image management directly from Emacs. Provides an interface (C-c d) for listing, managing, inspecting, and controlling Docker containers, images, networks, and volumes without leaving the editor. Particularly useful for development workflows that involve containers, allowing you to start/stop services, view logs, and inspect container state alongside your code. See https://github.com/Silex/docker.el for full documentation.
 
 #+BEGIN_SRC emacs-lisp
   (use-package docker
@@ -1195,6 +1285,8 @@ Repo and documentation https://github.com/Silex/docker.el
     :bind ("C-c d" . docker))
 #+end_src
 * Winner Mode
+  Window configuration undo/redo system. Winner mode records window layout changes, allowing you to undo (C-c left) or redo (C-c right) window configuration changes. Extremely useful when you accidentally close a window, split incorrectly, or want to return to a previous layout. The configuration excludes boring buffers like *Completions* and *Help* from being restored, keeping the history focused on meaningful layouts.
+
 #+BEGIN_SRC emacs-lisp
   (use-package winner
     :ensure t
@@ -1214,11 +1306,15 @@ Avy makes searching and selecting so much easier. `M-s` is my keybinding, type a
         :bind ("M-s" . avy-goto-char-timer))
 #+end_src
 * Rainbow Mode
+  Visual feedback for color codes by displaying the actual color as the background. When editing CSS, Emacs Lisp, web-mode, or Python files, hex color codes (#ff0000) and RGB values are highlighted with their actual color, making it immediately clear what color the code represents. This eliminates the need to preview colors separately and speeds up color-related editing.
+
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
     :hook (emacs-lisp-mode web-mode python-ts-mode))
 #+END_SRC
 * Yasnippet
+  Template expansion system for reducing repetitive typing. Yasnippet allows you to type abbreviations that expand into code templates with tab stops for filling in variables. For example, typing "def" and expanding might create a full function definition with placeholders for the function name, parameters, and body. Yasnippet-snippets provides a large collection of pre-made snippets for many languages, and you can create custom snippets for your own patterns.
+
 #+BEGIN_SRC emacs-lisp
     (use-package yasnippet)
     (use-package yasnippet-snippets)
@@ -1251,6 +1347,8 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+END_SRC
 
 * Mac Link
+  Integration for grabbing links from macOS applications into Org-mode. The org-mac-grab-link function (C-c g in org-mode) can pull links and metadata from Safari, Chrome, Mail, and other Mac applications, creating properly formatted org-mode links. This is particularly useful for capturing web references, emails, or other resources into your Org notes while maintaining context about where information came from.
+
 #+BEGIN_SRC emacs-lisp
   ;; Org-mac-link is being pulled from Jeremy's fork. I was getting errors with the main repo.
   (use-package org-mac-link
@@ -1260,6 +1358,8 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+end_src
 
 * Golden Ratio
+  Automatic window resizing based on the golden ratio for optimal visual balance. When enabled, the active window is automatically resized to take up a larger proportion of the frame following the golden ratio (approximately 1.618:1), making it easier to focus on the current task while keeping other windows visible but smaller. Currently disabled (mode 0) but available to enable if desired for automatic window management.
+
 #+BEGIN_SRC emacs-lisp
   (use-package golden-ratio
     :ensure t
@@ -1267,7 +1367,9 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
     :init
     (golden-ratio-mode 0))
 #+END_SRC
-* Logos (writing) and Olivetti 
+* Logos (writing) and Olivetti
+  Distraction-free writing modes for focused prose editing. Logos provides commands for narrowing focus to page-like sections (treating org headings or form feeds as pages), while Olivetti creates a centered, narrow text column similar to writeroom or zen modes. Together they transform Emacs into a minimal writing environment, ideal for drafting documents, writing long-form content, or editing prose without programming-related distractions. Useful for working with Org documents, Markdown, or any text-heavy files.
+
 #+BEGIN_SRC emacs-lisp
   (use-package logos
     :ensure t
@@ -1279,6 +1381,8 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
     :ensure t)
 #+END_SRC
 * Nov Mode for epub
+  EPUB e-book reader built into Emacs. Nov mode allows reading EPUB files directly within Emacs, providing a comfortable reading experience with proper text rendering, navigation between chapters, and integration with Emacs features like bookmarks and search. Useful for reading technical books, documentation, or any EPUB content without leaving your editor. Files with .epub extension automatically open in nov-mode.
+
 #+BEGIN_SRC emacs-lisp
   (use-package nov
     :ensure t
@@ -1287,6 +1391,8 @@ Trying out some nicer looking indent bars [[https://github.com/jdtsmith/indent-b
 #+END_SRC
 
 * Emojis
+  Emoji display and rendering support across Emacs. Emojify mode converts emoji shortcodes (:smile:, :rocket:, etc.) and Unicode emoji into actual graphical emojis, making text more expressive and visually engaging. Particularly useful for Org-mode documents, Markdown files, commit messages, and any text where emoji add clarity or personality. Enabled globally after initialization.
+
 #+BEGIN_SRC emacs-lisp
   (use-package emojify
     :hook (after-init . global-emojify-mode))
@@ -1316,7 +1422,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
      ("C-x C-a l" . activities-list)))
 #+END_SRC
 * Bookmarks
-http://emacswiki.org/emacs/BookMarks
+  Persistent bookmarks for quick navigation to frequently accessed files and locations. Unlike recent files, bookmarks persist across sessions and can mark specific positions within files, not just file paths. Set bookmarks with C-x r m, jump to them with C-x r b, and view all bookmarks with C-x r l. The configuration enables automatic saving, visual indicators in the fringe, and confirmation before deletion. Particularly useful for marking key files in large projects or important locations in long documents. See http://emacswiki.org/emacs/BookMarks for more information.
 
 | Keystroke           | Action                  |
 |---------------------+-------------------------|
@@ -1331,19 +1437,23 @@ http://emacswiki.org/emacs/BookMarks
       bookmark-menu-confirm-deletion t)
 #+END_SRC
 * imenu-list
-Documentation [[https://github.com/bmag/imenu-list][NANOG — bmag/imenu-list: Emacs plugin to show the current buffer's imenu entries in a separate buffer]]
+  Sidebar displaying the current buffer's structure via imenu. Shows functions, classes, methods, and other symbols in a dedicated sidebar window, providing an IDE-like code outline view. Toggle with C-' (imenu-list-smart-toggle), and the window automatically focuses after activation for quick navigation. The sidebar updates as you switch buffers, always showing the structure of the active file. Particularly useful for navigating large code files or understanding unfamiliar codebases. See https://github.com/bmag/imenu-list for full documentation.
+
 #+BEGIN_SRC emacs-lisp
   (use-package imenu-list)
   (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
   (setq imenu-list-focus-after-activation t)
 #+END_SRC
 
-* Helper Functions
 * Lua
+  Lua programming language support with syntax highlighting, indentation, and basic editing features. Useful for working with Lua scripts, Neovim configuration files, or any project that uses Lua for scripting or configuration. Provides a foundation for Lua development within Emacs.
+
 #+BEGIN_SRC emacs-lisp
     (use-package lua-mode)
 #+END_SRC
 * Startup Profiling
+  Performance analysis tool for identifying slow Emacs startup. ESUP (Emacs Start Up Profiler) measures how long each part of your configuration takes to load, helping identify bottlenecks and optimize startup time. Run M-x esup to profile the init process and see a detailed breakdown of where time is spent. Useful for maintaining fast startup times as your configuration grows.
+
 #+BEGIN_SRC emacs-lisp
   (use-package esup
     :commands esup)

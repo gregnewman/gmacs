@@ -1,20 +1,348 @@
-* My Emacs configuration
+* Greg's Emacs Configuration
 
-** What To Expect
+A literate, GTD-focused Emacs configuration emphasizing modern LSP tooling, comprehensive documentation, and keyboard-driven workflows. All configuration lives in =gmacs.org= with detailed explanations of not just *what* is configured, but *why* each choice was made.
 
-As a software craftsman, I use Emacs daily for the following.  My config is stable for what I do and constantly evolving.
+[[https://github.com/gregnewman/gmacs][View on GitHub]]
 
-- Org mode!!
-- Python and Django using Eglot and LSP
-- Racket, Lisp, Emacs Lisp, Scheme
-- Javascript, Typescript and React
-- HTML/CSS/Tailwind
-- Magit!!
+** Philosophy
 
-| Operating System | Emacs version |
+This configuration prioritizes:
+
+- *Literate Programming* - All configuration is documented in =gmacs.org= with explanations of WHY choices were made, not just WHAT they do
+- *GTD Workflow* - Org-mode configured for Getting Things Done methodology with custom capture templates and agenda views
+- *Performance* - Deferred loading, optimized startup time, tree-sitter for fast parsing
+- *Modern Tools* - Built-in Emacs 29+ features (Eglot, tree-sitter) over third-party alternatives where possible
+- *Keyboard-driven* - Extensive keybindings, minimal mouse usage
+
+** System Information
+
+| Operating System | Emacs Version |
 |------------------+---------------|
-| Mac / Ventura    | Emacs 29.0.60 |
+| macOS Tahoe      | Emacs 30.2    |
+
+** Key Features
+
+*** Modern LSP-based Development
+- *Eglot integration* with tree-sitter for fast, accurate syntax parsing
+- *Python*: basedpyright + ruff for type checking and linting, automatic formatting
+- *JavaScript/TypeScript*: typescript-language-server with full IDE features
+- *Automatic formatting* on save with format-all
+- *Flycheck* integration for additional syntax checking
+
+*** GTD Workflow with Org-mode
+- Complete Getting Things Done implementation with custom agenda views
+- Custom capture templates for todos, meetings, knowledge investments
+- Desktop notifications for upcoming deadlines
+- OmniFocus integration for task capture with context
+- Gitwatch for automatic Org file commits
+
+*** Modern Completion Framework
+- *Vertico* + Orderless for flexible, fast completion
+- *Corfu* for in-buffer popup completion (IDE-like autocomplete)
+- *Embark* for context-aware actions on completion targets
+- *Consult* extensions for enhanced navigation and search
+- *Marginalia* for rich annotations on completion candidates
+
+*** Developer Tools
+- *Magit* for Git operations with integrated TODO tracking
+- *Projectile* for project-aware navigation and commands
+- *Ripgrep* integration for blazing-fast code search
+- *Docker* management directly from Emacs
+- *Pyenv* automatic virtual environment activation
+
+*** Visual & UX Enhancements
+- Doom themes (doom-dracula) with doom-modeline
+- Git-gutter for visual diff indicators
+- Rainbow-mode for color code visualization
+- Indent-bars for visual code structure
+- Winner-mode for window configuration undo/redo
+
+** Installation
+
+*** Prerequisites
+
+**** System Requirements
+- Emacs 30.0 or later (recommended: Emacs Plus with native compilation)
+- Git
+- Homebrew (for macOS)
+
+**** System Packages
+Install required command-line tools:
+
+#+begin_src bash
+# Core tools
+brew install git ripgrep
+
+# Python development
+brew install pyenv
+pip install basedpyright ruff
+
+# JavaScript/TypeScript development
+npm install -g typescript-language-server typescript
+
+# Optional but recommended
+brew install just  # For Justfile support
+#+end_src
+
+*** Quick Start
+
+1. *Backup existing configuration* (if any):
+   #+begin_src bash
+   mv ~/.emacs.d ~/.emacs.d.backup
+   #+end_src
+
+2. *Clone this repository*:
+   #+begin_src bash
+   git clone https://github.com/gregnewman/gmacs ~/.emacs.d
+   #+end_src
+
+3. *Start Emacs* - packages will install automatically via Straight.el:
+   #+begin_src bash
+   emacs
+   #+end_src
+
+   First startup will take a few minutes as packages are downloaded and compiled.
+
+4. *Customize personal settings* in =gmacs.org=:
+   - User information (name, email)
+   - Calendar coordinates (for sunrise/sunset)
+   - Theme preferences (if desired)
+   - Font preferences (currently Fira Code)
+
+** Configuration Structure
+
+This is a literate configuration written in Org-mode. The main file is =gmacs.org=, which contains all configuration with extensive documentation explaining each choice.
+
+*** Main Sections in gmacs.org
+
+**** Infrastructure
+- Package management (Straight.el + use-package)
+- Themes and visual appearance
+- Fonts and typography
+- Basic editor preferences
+
+**** Org-mode (GTD Implementation)
+- Fontification and beautification
+- Core configuration with performance optimization
+- Alert notifications
+- Custom TODO keywords and capture templates
+- Advanced agenda commands
+- Babel for executable code blocks
+
+**** Development Stack
+- *Eglot/LSP*: Tree-sitter, major mode remapping, Eglot configuration, Flycheck, Eldoc, format-all
+- *Completion*: Vertico, Savehist, Orderless, Marginalia, Consult, Embark
+- *In-buffer completion*: Cape backends, Corfu UI
+
+**** Development Tools
+- Magit (Git interface)
+- Projectile (project management)
+- Pyenv (Python environments)
+
+**** Utilities & Enhancements
+- Navigation (Avy, imenu-list)
+- Window management (Winner mode, Golden Ratio)
+- File handling (bookmarks, recent files)
+- Writing modes (Logos, Olivetti)
+- And 20+ more utility packages
+
+*** Key Files
+
+- =gmacs.org= - Main literate configuration with comprehensive documentation
+- =init.el= - Bootstrap file that loads the configuration
+- =early-init.el= - Early initialization settings for performance
+
+** Usage
+
+*** Languages Supported
+
+As a software craftsman, this config provides excellent support for:
+
+- *Python* - Full LSP with basedpyright, ruff linting, automatic formatting, pyenv integration
+- *JavaScript/TypeScript* - TypeScript language server, JSX/TSX support, formatting
+- *Lisp family* - Emacs Lisp, Racket, Scheme with proper indentation and REPL support
+- *Web* - HTML, CSS, Tailwind support
+- *Others* - Markdown, YAML, JSON, Lua, shell scripts
+
+*** Daily Workflow
+
+**** GTD with Org-mode
+- =C-c c= - Quick capture (todos, meetings, notes, knowledge investments)
+- =C-c a= - Open agenda
+- Custom agenda views: =c= (simple), =d= (by due date), =f.= (today's focus), =fh= (hotlist)
+- =C-c o= - Capture to OmniFocus with context
+
+**** Coding
+- =C-c p= - Projectile commands (find file, switch project, search, etc.)
+- =C-c l= prefix - All LSP commands (code actions, rename, format, organize imports)
+- =C-x g= - Magit status
+- =M-s= - Jump to any character with Avy
+
+**** Navigation & Search
+- =C-'= - Toggle imenu-list sidebar (code outline)
+- =C-.= - Embark actions on thing at point
+- Consult commands for enhanced search and navigation
+
+** Important Keybindings
+
+*** Global Bindings
+
+| Key         | Command                      |
+|-------------+------------------------------|
+| C-x g       | Magit status                 |
+| C-c o       | OmniFocus capture            |
+| C-c p       | Projectile command map       |
+| C-c d       | Docker management            |
+| M-s         | Avy jump to char             |
+| C-'         | Toggle imenu-list sidebar    |
+| C-.         | Embark act                   |
+| C-;         | Embark dwim                  |
+| F2 g/l      | Zoom in/out (Hydra)          |
+| C-c t       | Adjust transparency          |
+
+*** Org-mode Bindings
+
+| Key     | Command                |
+|---------+------------------------|
+| C-c c   | Org capture            |
+| C-c a   | Org agenda             |
+| C-c l   | Store link             |
+| C-c g   | Grab Mac link          |
+
+*** LSP (Eglot) Bindings
+
+| Key       | Command                  |
+|-----------+--------------------------|
+| C-c l a   | Code actions             |
+| C-c l r   | Rename symbol            |
+| C-c l f   | Format buffer            |
+| C-c l d   | Show documentation       |
+| C-c l o   | Organize imports         |
+| C-c l h   | Toggle inlay hints       |
+| C-c l q   | Shutdown LSP server      |
+
+*** Window Management
+
+| Key          | Command                    |
+|--------------+----------------------------|
+| C-c left     | Winner undo                |
+| C-c right    | Winner redo                |
+
+*** Git Navigation (git-gutter)
+
+| Key       | Command                  |
+|-----------+--------------------------|
+| C-x n     | Next hunk                |
+| C-x p     | Previous hunk            |
+| C-x v =   | Show hunk                |
+| C-x v r   | Revert hunk              |
+
+** Customization
+
+*** Personal Settings
+
+Edit =gmacs.org= and search for these sections:
+
+- *Personal information*: Search for "user-full-name" to set your name and email
+- *Theme*: Search for "doom-dracula" to change color scheme
+- *Font*: Search for "Fira Code" to change font family and size
+- *Calendar location*: Search for "Charlotte, NC" to set your coordinates
+
+*** Adding New Packages
+
+Follow the use-package pattern found throughout =gmacs.org=:
+
+#+begin_src emacs-lisp
+(use-package package-name
+  :ensure t
+  :defer t  ; Load lazily for better startup time
+  :config
+  ;; your configuration here
+  )
+#+end_src
+
+Document your additions with a descriptive paragraph explaining why the package is useful and how it's configured.
+
+*** Enabling/Disabling Features
+
+Some features are disabled by default but available:
+
+- *Golden Ratio mode* - Automatic window sizing (set mode to 1 to enable)
+- *System packages* - Automatic binary verification (uncomment to enable)
+
+** Troubleshooting
+
+*** Slow Startup
+
+1. Run =M-x esup= to profile startup and identify bottlenecks
+2. Check for expensive operations in =*Messages*= buffer
+3. Consider deferring more packages or removing unused ones
+
+*** LSP Not Working
+
+1. Ensure language servers are installed:
+   #+begin_src bash
+   # Python
+   pip install basedpyright ruff
+
+   # JavaScript/TypeScript
+   npm install -g typescript-language-server
+   #+end_src
+
+2. Check the LSP stderr buffer: =M-x eglot-stderr-buffer=
+3. Verify the server is running: =M-x eglot-events-buffer=
+
+*** Package Installation Issues
+
+1. Try updating all packages: =M-x straight-pull-all=
+2. Rebuild packages: =M-x straight-rebuild-all=
+3. Check =*Messages*= buffer for specific errors
+4. Delete =~/.emacs.d/straight/= and restart to rebuild from scratch
+
+*** Python Virtual Environments Not Activating
+
+1. Ensure =.python-version= file exists in your project root
+2. Verify pyenv is installed and configured
+3. Check that the Python version in =.python-version= is installed in pyenv
+
+*** Fonts Not Displaying Correctly
+
+1. Install Fira Code: =brew install --cask font-fira-code=
+2. Install all-the-icons fonts: =M-x all-the-icons-install-fonts=
+3. Restart Emacs after font installation
+
+** Performance Tips
+
+- Startup is optimized with deferred loading - first launch takes longer as packages compile
+- Tree-sitter grammars are installed on-demand when first opening supported file types
+- Org agenda file discovery is deferred until Org is actually used
+- Use =M-x esup= to profile and optimize further
+
+** Credits & Inspiration
+
+Configuration inspired by and code borrowed from:
+
+- [[https://github.com/jeremyf/dotemacs][Jeremy Friesen's dotemacs]] - Consult-imenu Python configuration
+- [[https://blog.aaronbieber.com/2016/09/24/an-agenda-for-life-with-org-mode.html][Aaron Bieber's Org-mode workflow]] - Agenda command ideas
+- [[http://bnbeckwith.com/bnb-emacs/][bnbeckwith's bnb-emacs]] - Additional agenda configurations
+
+Built with excellent packages:
+
+- [[https://github.com/radian-software/straight.el][Straight.el]] for reproducible package management
+- [[https://github.com/doomemacs/themes][Doom themes]] for beautiful aesthetics
+- [[https://github.com/minad/vertico][Vertico]] modern completion framework
+- [[https://magit.vc/][Magit]] the best Git interface ever created
+
+** Contributing
+
+This is a personal configuration, but suggestions and improvements are welcome!
+
+- Found a bug? Open an issue
+- Have an improvement? Submit a pull request
+- Want to discuss a configuration choice? Start a discussion
 
 ** License
 
-The code provided here is licensed under a GPL v3 license: see =license.txt= for details. Some smaller parts from other authors but included in my configuration might have a different license. Please check the source - it's included in the comments.
+The code provided here is licensed under a GPL v3 license: see =license.txt= for details.
+
+Some smaller parts from other authors are included in this configuration with attribution in the source comments. These may have different licenses - please check the inline comments for specifics.
