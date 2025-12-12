@@ -333,14 +333,6 @@ Built with excellent packages:
 - [[https://github.com/minad/vertico][Vertico]] modern completion framework
 - [[https://magit.vc/][Magit]] the best Git interface ever created
 
-** Contributing
-
-This is a personal configuration, but suggestions and improvements are welcome!
-
-- Found a bug? Open an issue
-- Have an improvement? Submit a pull request
-- Want to discuss a configuration choice? Start a discussion
-
 ** License
 
 The code provided here is licensed under a GPL v3 license: see =license.txt= for details.
