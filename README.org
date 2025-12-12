@@ -34,7 +34,6 @@ This configuration prioritizes:
 - Custom capture templates for todos, meetings, knowledge investments
 - Desktop notifications for upcoming deadlines
 - OmniFocus integration for task capture with context
-- Gitwatch for automatic Org file commits
 
 *** Modern Completion Framework
 - *Vertico* + Orderless for flexible, fast completion
