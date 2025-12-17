@@ -933,8 +933,44 @@ Using `exec-path-from-shell` fixes this.
           (jsx-mode . tsx-ts-mode)))
 #+END_SRC
 
+** Python LSP Server Selection
+   Dual language server setup supporting both basedpyright and Ty (Astral's new Rust-based type checker). Toggle between servers by changing =my/python-lsp-server= and reloading, or use =M-x my/switch-python-lsp= to toggle and reconnect interactively. Ty offers significantly faster incremental type checking (10-80x faster than basedpyright) with better diagnostics, but is currently in Beta. Basedpyright remains the stable fallback option.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Python LSP Server Selection
+  (defvar my/python-lsp-server 'ty
+    "Which Python language server to use: 'basedpyright or 'ty")
+
+  (defun my/python-lsp-command ()
+    "Return the LSP command based on selected server."
+    (pcase my/python-lsp-server
+      ('ty '("ty" "server"))
+      ('basedpyright '("basedpyright-langserver" "--stdio"
+                       :initializationOptions (:basedpyright (:plugins (
+                         :ruff (:enabled t
+                               :lineLength 88
+                               :exclude ["E501"]
+                               :select ["E" "F" "I" "UP"])
+                         :pycodestyle (:enabled nil)
+                         :pyflakes (:enabled nil)
+                         :pylint (:enabled nil)
+                         :rope_completion (:enabled t)
+                         :autopep8 (:enabled nil))))))))
+
+  (defun my/switch-python-lsp ()
+    "Toggle between Ty and basedpyright, restart Eglot."
+    (interactive)
+    (setq my/python-lsp-server
+          (if (eq my/python-lsp-server 'ty) 'basedpyright 'ty))
+    (when (eglot-managed-p)
+      (ignore-errors (eglot-shutdown (eglot-current-server)))
+      (sleep-for 0.5)  ; Give it a moment to shut down
+      (eglot-ensure))
+    (message "Switched to %s" my/python-lsp-server))
+#+END_SRC
+
 ** Eglot LSP Configuration
-   Eglot is the built-in LSP client (as of Emacs 29) providing IDE-like features including code completion, documentation, go-to-definition, refactoring, and more. Configured for optimal performance with deferred loading and minimal event logging. Language servers are configured per-mode: basedpyright for Python (with integrated ruff for linting), and typescript-language-server for JavaScript/TypeScript. The Python configuration integrates ruff for fast linting while keeping type checking disabled for performance. Keybindings use the C-c l prefix for all LSP actions. Python mode includes additional setup for proper indentation, code folding, and line length (88 chars for Black/ruff compatibility).
+   Eglot is the built-in LSP client (as of Emacs 29) providing IDE-like features including code completion, documentation, go-to-definition, refactoring, and more. Configured for optimal performance with deferred loading and minimal event logging. Language servers are configured per-mode: dynamically selected Python server (basedpyright or Ty), and typescript-language-server for JavaScript/TypeScript. The Python configuration integrates ruff for fast linting while keeping type checking disabled for performance. Keybindings use the C-c l prefix for all LSP actions. Python mode includes additional setup for proper indentation, code folding, and line length (88 chars for Black/ruff compatibility).
 
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
@@ -949,19 +985,9 @@ Using `exec-path-from-shell` fixes this.
     :config
     ;; Move eglot-server-programs to :config block
     (setq eglot-server-programs
-          '((python-ts-mode . ("basedpyright-langserver" "--stdio" 
-                               :initializationOptions (:basedpyright (:plugins (
-                                :ruff (:enabled t
-                                      :lineLength 88
-                                      :exclude ["E501"]
-                                      :select ["E" "F" "I" "UP"])
-                                :pycodestyle (:enabled nil)
-                                :pyflakes (:enabled nil)
-                                :pylint (:enabled nil)
-                                :rope_completion (:enabled t)
-                                :autopep8 (:enabled nil))))))
-          ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
-           ("typescript-language-server" "--stdio"))))
+          '((python-ts-mode . (lambda (&rest _) (my/python-lsp-command)))
+            ((js-ts-mode typescript-ts-mode tsx-ts-mode) .
+             ("typescript-language-server" "--stdio"))))
     (setq-default
      eglot-workspace-configuration
      '(:basedpyright (
