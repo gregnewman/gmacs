@@ -24,7 +24,7 @@ This configuration prioritizes:
 
 *** Modern LSP-based Development
 - *Eglot integration* with tree-sitter for fast, accurate syntax parsing
-- *Python*: basedpyright + ruff for type checking and linting, automatic formatting
+- *Python*: Ty (Astral's Rust-based type checker, 10-80x faster) or basedpyright, with ruff for linting and automatic formatting
 - *JavaScript/TypeScript*: typescript-language-server with full IDE features
 - *Automatic formatting* on save with format-all
 - *Flycheck* integration for additional syntax checking
@@ -74,7 +74,8 @@ brew install git ripgrep
 
 # Python development
 brew install pyenv
-pip install basedpyright ruff
+uv tool install ty@latest  # Primary: Astral's fast Rust-based type checker
+pip install basedpyright ruff  # Optional: fallback type checker
 
 # JavaScript/TypeScript development
 npm install -g typescript-language-server typescript
@@ -157,7 +158,7 @@ This is a literate configuration written in Org-mode. The main file is =gmacs.or
 
 As a software craftsman, this config provides excellent support for:
 
-- *Python* - Full LSP with basedpyright, ruff linting, automatic formatting, pyenv integration
+- *Python* - Full LSP with Ty (or basedpyright fallback), ruff linting, automatic formatting, pyenv integration. Toggle between LSP servers with =M-x my/switch-python-lsp=
 - *JavaScript/TypeScript* - TypeScript language server, JSX/TSX support, formatting
 - *Lisp family* - Emacs Lisp, Racket, Scheme with proper indentation and REPL support
 - *Web* - HTML, CSS, Tailwind support
@@ -281,15 +282,19 @@ Some features are disabled by default but available:
 
 1. Ensure language servers are installed:
    #+begin_src bash
-   # Python
+   # Python (Ty - primary)
+   uv tool install ty@latest
+
+   # Python (basedpyright - fallback)
    pip install basedpyright ruff
 
    # JavaScript/TypeScript
    npm install -g typescript-language-server
    #+end_src
 
-2. Check the LSP stderr buffer: =M-x eglot-stderr-buffer=
-3. Verify the server is running: =M-x eglot-events-buffer=
+2. Try toggling Python LSP server: =M-x my/switch-python-lsp=
+3. Check the LSP stderr buffer: =M-x eglot-stderr-buffer=
+4. Verify the server is running: =M-x eglot-events-buffer=
 
 *** Package Installation Issues
 
