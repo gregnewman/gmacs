@@ -23,7 +23,7 @@ This configuration prioritizes:
 ** Key Features
 
 *** Modern LSP-based Development
-- *Eglot integration* with tree-sitter for fast, accurate syntax parsing
+- *Eglot integration* with tree-sitter for fast, accurate syntax parsing and Combobulate for intelligent code navigation
 - *Python*: Ty (Astral's Rust-based type checker, 10-80x faster) or basedpyright, with ruff for linting and automatic formatting
 - *JavaScript/TypeScript*: typescript-language-server with full IDE features
 - *Automatic formatting* on save with format-all
@@ -48,6 +48,7 @@ This configuration prioritizes:
 - *Ripgrep* integration for blazing-fast code search
 - *Docker* management directly from Emacs
 - *Pyenv* automatic virtual environment activation
+- *Combobulate* for tree-sitter-aware structured editing and code manipulation
 
 *** Visual & UX Enhancements
 - Doom themes (doom-dracula) with doom-modeline
