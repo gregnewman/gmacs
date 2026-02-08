@@ -915,6 +915,24 @@ Using `exec-path-from-shell` fixes this.
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 #+END_SRC
 
+** Combobulate - Structured Editing
+   Combobulate provides tree-sitter-aware structured editing and navigation for programming languages. Unlike traditional regexp-based approaches, Combobulate uses the concrete syntax tree maintained by tree-sitter to understand code structure, enabling intelligent navigation between functions, classes, statements, and other language constructs. It enhances standard Emacs structural movement commands (C-M-n/p/f/b/u/d) with tree-sitter awareness and adds powerful code manipulation features like dragging code blocks, cloning nodes, and progressive selection expansion. Works seamlessly with existing LSP, completion, and navigation tools.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package combobulate
+    :straight (:host github :repo "mickeynp/combobulate")
+    :demand t
+    :hook ((python-ts-mode . combobulate-mode)
+           (js-ts-mode . combobulate-mode)
+           (typescript-ts-mode . combobulate-mode)
+           (tsx-ts-mode . combobulate-mode)
+           (css-ts-mode . combobulate-mode)
+           (html-ts-mode . combobulate-mode)
+           (json-ts-mode . combobulate-mode)
+           (yaml-ts-mode . combobulate-mode)
+           (toml-ts-mode . combobulate-mode)))
+#+END_SRC
+
 ** Major Mode Remapping
    Automatically activates tree-sitter modes when available instead of traditional modes. This mapping ensures that opening Python, JavaScript, TypeScript, YAML, and other supported files will use the faster, more accurate tree-sitter parsers by default. The remapping is transparent - no changes needed to file associations or hooks.
 
