@@ -56,6 +56,10 @@ This configuration prioritizes:
 - Rainbow-mode for color code visualization
 - Indent-bars for visual code structure
 - Winner-mode for window configuration undo/redo
+- =org-modern= for beautiful Org rendering (bullets, keywords, tables, blocks)
+- =org-appear= for distraction-free markup (hides =*bold*= markers until cursor touches them)
+- =olivetti= for centered, focused writing columns
+- =mixed-pitch= for properly mixed variable/fixed-pitch fonts in Org
 
 ** Installation
 
@@ -108,7 +112,7 @@ brew install just  # For Justfile support
    - User information (name, email)
    - Calendar coordinates (for sunrise/sunset)
    - Theme preferences (if desired)
-   - Font preferences (currently Fira Code)
+   - Font preferences (currently Maple Mono)
 
 ** Configuration Structure
 
@@ -246,7 +250,7 @@ Edit =gmacs.org= and search for these sections:
 
 - *Personal information*: Search for "user-full-name" to set your name and email
 - *Theme*: Search for "doom-dracula" to change color scheme
-- *Font*: Search for "Fira Code" to change font family and size
+- *Font*: Search for "Maple Mono" to change font family and size
 - *Calendar location*: Search for "Charlotte, NC" to set your coordinates
 
 *** Adding New Packages
@@ -312,7 +316,7 @@ Some features are disabled by default but available:
 
 *** Fonts Not Displaying Correctly
 
-1. Install Fira Code: =brew install --cask font-fira-code=
+1. Install Maple Mono: download from [[https://github.com/subframe7536/maple-font][github.com/subframe7536/maple-font]]
 2. Install all-the-icons fonts: =M-x all-the-icons-install-fonts=
 3. Restart Emacs after font installation
 

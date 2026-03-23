@@ -483,6 +483,38 @@
   ;;    '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.9))))
   ;;    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 #+END_SRC
+** Appearance Packages
+   Packages that make Org documents more beautiful and enjoyable to write in.
+   - =org-modern= renders bullets, TODO keywords, tags, tables, and block delimiters as clean unicode.
+   - =org-appear= hides emphasis markers (=*bold*=, =/italic/=) until the cursor touches them.
+   - =olivetti= centers text in a comfortable writing column.
+   - =mixed-pitch= properly mixes variable-pitch (prose) and fixed-pitch (code/tables) fonts.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-modern
+    :hook (org-mode . org-modern-mode)
+    :config
+    (setq org-modern-star '("◉" "○" "✸" "✿")
+          org-modern-list '((45 . "–") (43 . "•") (42 . "▸"))
+          org-modern-todo t
+          org-modern-tag t
+          org-modern-table t
+          org-modern-block-name t))
+
+  (use-package org-appear
+    :hook (org-mode . org-appear-mode)
+    :config
+    (setq org-appear-autolinks t
+          org-appear-autosubmarkers t))
+
+  (use-package olivetti
+    :hook (org-mode . olivetti-mode)
+    :config
+    (setq olivetti-body-width 90))
+
+  (use-package mixed-pitch
+    :hook (org-mode . mixed-pitch-mode))
+#+END_SRC
 ** Configuration
    Core Org-mode settings optimized for performance and GTD workflow. The configuration uses deferred loading to prevent slow startup times - expensive operations like recursively finding agenda files only run when Org actually loads. Settings control agenda behavior (7-day span starting Monday), task dependencies (enforcing TODO relationships), refile targets (up to 5 levels deep in agenda files), and various display preferences. The org-protocol module enables capturing from external applications. Keybindings for store-link (C-c l), agenda (C-c a), and capture (C-c c) are globally accessible.
 
