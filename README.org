@@ -45,7 +45,8 @@ This configuration prioritizes:
 *** Email with mu4e
 - *mu4e* email client with three-account setup (personal, work, iCloud) via mu4e contexts
 - *mbsync* (isync) for fast IMAP sync to local Maildir
-- *GPG-encrypted* credentials via =~/.authinfo.gpg= — shared by both mbsync and SMTP sending
+- *msmtp* for outgoing mail, selected automatically by From address
+- *GPG-encrypted* credentials via =~/.authinfo.gpg= — shared by mbsync, msmtp, and Emacs auth-source
 - Run =M-x mu4e= to open; =C-c C-x= to switch context when composing
 
 *** Developer Tools
@@ -95,7 +96,7 @@ npm install -g typescript-language-server typescript
 brew install just  # For Justfile support
 
 # Email
-brew install mu isync
+brew install mu isync msmtp
 #+end_src
 
 *** Quick Start
@@ -258,7 +259,8 @@ As a software craftsman, this config provides excellent support for:
 Email is not fully portable from this repo — you need to configure two files manually:
 
 1. =~/.config/isync/config= — mbsync account config (IMAP servers, Maildir paths). A template matching this config's three-account structure is in the repo.
-2. =~/.authinfo.gpg= — GPG-encrypted credentials for all accounts (IMAP + SMTP). *Never commit this file.*
+2. =~/.config/msmtp/config= — msmtp outgoing mail config (SMTP servers, one account per sender). Also in the repo.
+3. =~/.authinfo.gpg= — GPG-encrypted credentials for all accounts (IMAP + SMTP). *Never commit this file.*
 
 After creating both files:
 #+begin_src bash

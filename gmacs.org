@@ -1548,8 +1548,11 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
             mu4e-confirm-quit nil
             mu4e-use-fancy-chars t)
 
-      ;; sending mail
-      (setq message-send-mail-function 'smtpmail-send-it)
+      ;; sending mail via msmtp
+      (setq message-send-mail-function 'message-send-mail-with-sendmail
+            sendmail-program "/opt/homebrew/bin/msmtp"
+            message-sendmail-extra-arguments '("--read-envelope-from")
+            message-sendmail-f-is-evil t)
 
       ;; ── Contexts ──────────────────────────────────────────────────────────
       (setq mu4e-contexts
@@ -1560,15 +1563,12 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
                             (when msg
                               (string-prefix-p "/gregnewman.org"
                                                (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address     . "greg@gregnewman.org")
-                      (user-full-name        . "Greg Newman")
-                      (mu4e-sent-folder      . "/gregnewman.org/[Gmail]/Sent Mail")
-                      (mu4e-drafts-folder    . "/gregnewman.org/[Gmail]/Drafts")
-                      (mu4e-trash-folder     . "/gregnewman.org/[Gmail]/Trash")
-                      (mu4e-refile-folder    . "/gregnewman.org/[Gmail]/Archive")
-                      (smtpmail-smtp-server  . "smtp.gmail.com")
-                      (smtpmail-smtp-service . 465)
-                      (smtpmail-stream-type  . ssl)))
+              :vars '((user-mail-address  . "greg@gregnewman.org")
+                      (user-full-name     . "Greg Newman")
+                      (mu4e-sent-folder   . "/gregnewman.org/[Gmail]/Sent Mail")
+                      (mu4e-drafts-folder . "/gregnewman.org/[Gmail]/Drafts")
+                      (mu4e-trash-folder  . "/gregnewman.org/[Gmail]/Trash")
+                      (mu4e-refile-folder . "/gregnewman.org/[Gmail]/Archive")))
 
              (make-mu4e-context
               :name "NANOG"
@@ -1576,15 +1576,12 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
                             (when msg
                               (string-prefix-p "/NANOG"
                                                (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address     . "gnewman@nanog.org")
-                      (user-full-name        . "Greg Newman")
-                      (mu4e-sent-folder      . "/NANOG/[Gmail]/Sent Mail")
-                      (mu4e-drafts-folder    . "/NANOG/[Gmail]/Drafts")
-                      (mu4e-trash-folder     . "/NANOG/[Gmail]/Trash")
-                      (mu4e-refile-folder    . "/NANOG/[Gmail]/Archive")
-                      (smtpmail-smtp-server  . "smtp.gmail.com")
-                      (smtpmail-smtp-service . 465)
-                      (smtpmail-stream-type  . ssl)))
+              :vars '((user-mail-address  . "gnewman@nanog.org")
+                      (user-full-name     . "Greg Newman")
+                      (mu4e-sent-folder   . "/NANOG/[Gmail]/Sent Mail")
+                      (mu4e-drafts-folder . "/NANOG/[Gmail]/Drafts")
+                      (mu4e-trash-folder  . "/NANOG/[Gmail]/Trash")
+                      (mu4e-refile-folder . "/NANOG/[Gmail]/Archive")))
 
              (make-mu4e-context
               :name "Apple"
@@ -1592,15 +1589,12 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
                             (when msg
                               (string-prefix-p "/Apple"
                                                (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address     . "newman.greg@me.com")
-                      (user-full-name        . "Greg Newman")
-                      (mu4e-sent-folder      . "/Apple/Sent Messages")
-                      (mu4e-drafts-folder    . "/Apple/Drafts")
-                      (mu4e-trash-folder     . "/Apple/Deleted Messages")
-                      (mu4e-refile-folder    . "/Apple/Archive")
-                      (smtpmail-smtp-server  . "smtp.mail.me.com")
-                      (smtpmail-smtp-service . 587)
-                      (smtpmail-stream-type  . starttls)))))
+              :vars '((user-mail-address  . "newman.greg@me.com")
+                      (user-full-name     . "Greg Newman")
+                      (mu4e-sent-folder   . "/Apple/Sent Messages")
+                      (mu4e-drafts-folder . "/Apple/Drafts")
+                      (mu4e-trash-folder  . "/Apple/Deleted Messages")
+                      (mu4e-refile-folder . "/Apple/Archive")))))
 
       (setq mu4e-context-policy 'pick-first
             mu4e-compose-context-policy 'ask-if-none))
