@@ -44,10 +44,13 @@ This configuration prioritizes:
 
 *** Email with mu4e
 - *mu4e* email client with three-account setup (personal, work, iCloud) via mu4e contexts
-- *mbsync* (isync) for fast IMAP sync to local Maildir
-- *msmtp* for outgoing mail, selected automatically by From address
+- *mbsync* (isync) for fast IMAP sync to local Maildir at =~/.mailbox=
+- *msmtp* for outgoing mail, account selected automatically from the From address
+- *mu4e-views* with xwidgets webkit for proper HTML rendering; press =v= to switch renderers
 - *GPG-encrypted* credentials via =~/.authinfo.gpg= — shared by mbsync, msmtp, and Emacs auth-source
-- Run =M-x mu4e= to open; =C-c C-x= to switch context when composing
+- *gnus-icalendar* for accepting/declining calendar invites directly in mu4e
+- Custom bookmarks scoped to INBOX folders to avoid mailing list noise in unread counts
+- Run =M-x mu4e= to open; =C-c C-c= to send; =C-c C-x= to switch context when composing
 
 *** Developer Tools
 - *Magit* for Git operations with integrated TODO tracking
@@ -264,15 +267,22 @@ Email is not fully portable from this repo — you need to configure two files m
 
 After creating both files:
 #+begin_src bash
-mkdir -p ~/Mail
-mbsync -c ~/.config/isync/config -a   # initial sync (may take a while)
-mu init --maildir=~/Mail \
+mkdir -p ~/.mailbox
+mbsync -c ~/.config/isync/config -a   # initial sync (may take a while for large mailboxes)
+mu init --maildir=~/.mailbox \
   --my-address=you@domain1.com \
-  --my-address=you@domain2.com
+  --my-address=you@domain2.com \
+  --my-address=you@domain3.com
 mu index
 #+end_src
 
-Then run =M-x mu4e=.
+Then run =M-x mu4e=. mu4e will keep the index current by running mbsync and re-indexing every 5 minutes automatically.
+
+**** Gmail notes
+Gmail's IMAP throttles large initial syncs. If mbsync hits a bandwidth limit (=OVERQUOTA= error), wait a few minutes and re-run — it resumes where it left off. Use =caffeinate mbsync -c ~/.config/isync/config -a= on macOS to prevent sleep during the initial sync.
+
+**** App passwords
+Gmail requires an app-specific password (not your account password) when using IMAP with 2FA enabled. Generate one at [[https://myaccount.google.com/apppasswords][myaccount.google.com/apppasswords]] and store it in =~/.authinfo.gpg=.
 
 *** Personal Settings
 
@@ -280,8 +290,9 @@ Edit =gmacs.org= and search for these sections:
 
 - *Personal information*: Search for "user-full-name" to set your name and email
 - *Theme*: Search for "doom-dracula" to change color scheme
-- *Font*: Search for "Maple Mono" to change font family and size
+- *Font*: Search for "Iosevka NF" to change font family and size
 - *Calendar location*: Search for "Charlotte, NC" to set your coordinates
+- *Email accounts*: Search for "gregnewman.org" to update account names, addresses, and folder paths
 
 *** Adding New Packages
 
