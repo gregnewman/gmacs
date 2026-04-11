@@ -1527,6 +1527,85 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
 #+BEGIN_SRC emacs-lisp
     (use-package lua-mode)
 #+END_SRC
+* Email - mu4e
+  mu4e is an Emacs mail client backed by mu, a fast maildir indexer. Mail is fetched locally via mbsync (~/.config/isync/config) and indexed by mu. Three accounts are configured via contexts: gregnewman.org (personal Gmail), NANOG (work Gmail), and Apple (iCloud). Switching contexts with =C-c C-x= when composing selects the correct From address and SMTP server. Mail syncs every 5 minutes automatically. Run =M-x mu4e= to open.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package mu4e
+      :straight nil
+      :load-path (lambda ()
+                   (list (expand-file-name
+                          "share/emacs/site-lisp/mu/mu4e"
+                          (string-trim (shell-command-to-string "brew --prefix mu")))))
+      :commands mu4e
+      :config
+      (setq mu4e-maildir "~/Mail"
+            mu4e-get-mail-command "mbsync -c ~/.config/isync/config -a"
+            mu4e-update-interval 300
+            mu4e-compose-dont-reply-to-self t
+            mu4e-view-show-images t
+            mu4e-view-show-addresses t
+            mu4e-confirm-quit nil
+            mu4e-use-fancy-chars t)
+
+      ;; sending mail
+      (setq message-send-mail-function 'smtpmail-send-it)
+
+      ;; ── Contexts ──────────────────────────────────────────────────────────
+      (setq mu4e-contexts
+            (list
+             (make-mu4e-context
+              :name "gregnewman.org"
+              :match-func (lambda (msg)
+                            (when msg
+                              (string-prefix-p "/gregnewman.org"
+                                               (mu4e-message-field msg :maildir))))
+              :vars '((user-mail-address     . "greg@gregnewman.org")
+                      (user-full-name        . "Greg Newman")
+                      (mu4e-sent-folder      . "/gregnewman.org/[Gmail]/Sent Mail")
+                      (mu4e-drafts-folder    . "/gregnewman.org/[Gmail]/Drafts")
+                      (mu4e-trash-folder     . "/gregnewman.org/[Gmail]/Trash")
+                      (mu4e-refile-folder    . "/gregnewman.org/[Gmail]/Archive")
+                      (smtpmail-smtp-server  . "smtp.gmail.com")
+                      (smtpmail-smtp-service . 465)
+                      (smtpmail-stream-type  . ssl)))
+
+             (make-mu4e-context
+              :name "NANOG"
+              :match-func (lambda (msg)
+                            (when msg
+                              (string-prefix-p "/NANOG"
+                                               (mu4e-message-field msg :maildir))))
+              :vars '((user-mail-address     . "gnewman@nanog.org")
+                      (user-full-name        . "Greg Newman")
+                      (mu4e-sent-folder      . "/NANOG/[Gmail]/Sent Mail")
+                      (mu4e-drafts-folder    . "/NANOG/[Gmail]/Drafts")
+                      (mu4e-trash-folder     . "/NANOG/[Gmail]/Trash")
+                      (mu4e-refile-folder    . "/NANOG/[Gmail]/Archive")
+                      (smtpmail-smtp-server  . "smtp.gmail.com")
+                      (smtpmail-smtp-service . 465)
+                      (smtpmail-stream-type  . ssl)))
+
+             (make-mu4e-context
+              :name "Apple"
+              :match-func (lambda (msg)
+                            (when msg
+                              (string-prefix-p "/Apple"
+                                               (mu4e-message-field msg :maildir))))
+              :vars '((user-mail-address     . "newman.greg@me.com")
+                      (user-full-name        . "Greg Newman")
+                      (mu4e-sent-folder      . "/Apple/Sent Messages")
+                      (mu4e-drafts-folder    . "/Apple/Drafts")
+                      (mu4e-trash-folder     . "/Apple/Deleted Messages")
+                      (mu4e-refile-folder    . "/Apple/Archive")
+                      (smtpmail-smtp-server  . "smtp.mail.me.com")
+                      (smtpmail-smtp-service . 587)
+                      (smtpmail-stream-type  . starttls)))))
+
+      (setq mu4e-context-policy 'pick-first
+            mu4e-compose-context-policy 'ask-if-none))
+  #+END_SRC
+
 * Startup Profiling
   Performance analysis tool for identifying slow Emacs startup. ESUP (Emacs Start Up Profiler) measures how long each part of your configuration takes to load, helping identify bottlenecks and optimize startup time. Run M-x esup to profile the init process and see a detailed breakdown of where time is spent. Useful for maintaining fast startup times as your configuration grows.
 

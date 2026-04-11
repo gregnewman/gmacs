@@ -42,6 +42,12 @@ This configuration prioritizes:
 - *Consult* extensions for enhanced navigation and search
 - *Marginalia* for rich annotations on completion candidates
 
+*** Email with mu4e
+- *mu4e* email client with three-account setup (personal, work, iCloud) via mu4e contexts
+- *mbsync* (isync) for fast IMAP sync to local Maildir
+- *GPG-encrypted* credentials via =~/.authinfo.gpg= — shared by both mbsync and SMTP sending
+- Run =M-x mu4e= to open; =C-c C-x= to switch context when composing
+
 *** Developer Tools
 - *Magit* for Git operations with integrated TODO tracking
 - *Projectile* for project-aware navigation and commands
@@ -87,6 +93,9 @@ npm install -g typescript-language-server typescript
 
 # Optional but recommended
 brew install just  # For Justfile support
+
+# Email
+brew install mu isync
 #+end_src
 
 *** Quick Start
@@ -243,6 +252,25 @@ As a software craftsman, this config provides excellent support for:
 | C-x v r   | Revert hunk              |
 
 ** Customization
+
+*** Email Setup
+
+Email is not fully portable from this repo — you need to configure two files manually:
+
+1. =~/.config/isync/config= — mbsync account config (IMAP servers, Maildir paths). A template matching this config's three-account structure is in the repo.
+2. =~/.authinfo.gpg= — GPG-encrypted credentials for all accounts (IMAP + SMTP). *Never commit this file.*
+
+After creating both files:
+#+begin_src bash
+mkdir -p ~/Mail
+mbsync -c ~/.config/isync/config -a   # initial sync (may take a while)
+mu init --maildir=~/Mail \
+  --my-address=you@domain1.com \
+  --my-address=you@domain2.com
+mu index
+#+end_src
+
+Then run =M-x mu4e=.
 
 *** Personal Settings
 
