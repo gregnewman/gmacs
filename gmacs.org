@@ -1530,7 +1530,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
 * Email - mu4e
   mu4e is an Emacs mail client backed by =mu=, a fast Xapian-indexed maildir searcher. The
   architecture is: mbsync fetches mail from IMAP to local Maildir (~/.mailbox), mu indexes
-  it, and mu4e reads the index. This means search is instantaneous — mu never touches the
+  it, and mu4e reads the index. This means search is instantaneous - mu never touches the
   network. Three accounts are configured via mu4e contexts: gregnewman.org (personal Gmail
   with custom domain), NANOG (work Gmail), and Apple (iCloud). Outgoing mail is sent via
   msmtp, which reads credentials from =~/.authinfo.gpg= and selects the correct SMTP server
@@ -1636,7 +1636,8 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
                       (mu4e-refile-folder . "/Apple/Archive")))))
 
       ;; pick-first: auto-select the matching context without prompting.
-      ;; ask-if-none: only ask which context to use when composing a new message
+      ;; ask-if-none: only ask which context to use when composing a new me
+ssage
       ;; if none can be inferred (e.g. composing from the main screen).
       (setq mu4e-context-policy 'pick-first
             mu4e-compose-context-policy 'ask-if-none)
@@ -1651,7 +1652,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
       ;; ── Header icons ──────────────────────────────────────────────────────
       ;; Replace mu4e's default ASCII flags with emoji for a cleaner headers view.
       ;; Each entry is (ascii-fallback . emoji-string). The seen-mark is blank
-      ;; intentionally — read messages shouldn't draw the eye.
+      ;; intentionally - read messages shouldn't draw the eye.
       (setq mu4e-headers-unread-mark    '("u" . "📩 ")
             mu4e-headers-draft-mark     '("D" . "🚧 ")
             mu4e-headers-flagged-mark   '("F" . "🚩 ")
@@ -1670,7 +1671,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
       ;; ── Bookmarks ─────────────────────────────────────────────────────────
       ;; mu4e-headers-include-related is disabled globally. When enabled, a date
       ;; query like "date:today..now" pulls in every message in any thread that
-      ;; received a message today — including hundreds of old unread messages from
+      ;; received a message today - including hundreds of old unread messages from
       ;; mailing lists archived months ago. Disabling it means queries return only
       ;; messages that literally match the query. Toggle per-search with W.
       (setq mu4e-headers-include-related nil)
@@ -1725,6 +1726,42 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
       (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window))
 
   #+END_SRC
+
+
+* IRC - ERC via ZNC
+  ERC is Emacs' built-in IRC client. It connects to a ZNC bouncer on the homelab at
+  =znc.tailebe1e.ts.net:8080= (reachable over Tailscale). ZNC replays missed messages on
+  reconnect. Credentials are read from =~/.authinfo.gpg= - never stored here.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package erc
+    :straight nil
+    :commands (erc erc-tls)
+    :custom
+    (erc-prompt-for-password nil)
+    (erc-server-auto-reconnect t)
+    (erc-server-reconnect-attempts 10)
+    (erc-server-reconnect-timeout 5)
+    (erc-hide-list '("JOIN" "PART" "QUIT"))
+    (erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                               "324" "329" "332" "333" "353" "477"))
+    ;; ZNC is on a private Tailscale network - trust its self-signed cert.
+    (network-security-level 'low))
+
+  (defun gn/erc-znc ()
+    "Connect to ZNC bouncer at znc.tailebe1e.ts.net:8080 via Tailscale."
+    (interactive)
+    (erc-tls :server "znc.tailebe1e.ts.net"
+             :port 8080
+             :nick "gnewman"
+             :full-name "Greg Newman"
+             :password (auth-source-pick-first-password
+                        :host "znc.tailebe1e.ts.net"
+                        :user "gnewman"
+                        :port "8080")))
+
+  (add-hook 'emacs-startup-hook #'gn/erc-znc)
+#+END_SRC
 
 * Startup Profiling
   Performance analysis tool for identifying slow Emacs startup. ESUP (Emacs Start Up Profiler) measures how long each part of your configuration takes to load, helping identify bottlenecks and optimize startup time. Run M-x esup to profile the init process and see a detailed breakdown of where time is spent. Useful for maintaining fast startup times as your configuration grows.
