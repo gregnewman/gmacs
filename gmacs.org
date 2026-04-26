@@ -1541,6 +1541,8 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
     (use-package notmuch
       :straight t
       :commands notmuch
+      :bind (:map notmuch-hello-mode-map
+                  ("U" . gn/notmuch-sync))
       :config
 
       ;; ── Identities ────────────────────────────────────────────────────────
@@ -1572,10 +1574,16 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
             message-sendmail-f-is-evil      t)
 
       ;; ── Core settings ─────────────────────────────────────────────────────
-      (setq notmuch-search-oldest-first       nil
-            notmuch-show-logo                 nil
-            message-kill-buffer-on-exit       t
-            notmuch-compose-dont-reply-to-self t)
+      (setq-default notmuch-search-oldest-first nil)
+      (setq notmuch-search-oldest-first        nil
+            notmuch-show-logo                  nil
+            message-kill-buffer-on-exit        t
+            notmuch-compose-dont-reply-to-self t
+            ;; Show saved searches as a vertical list with key shortcuts visible.
+            notmuch-hello-sections '(notmuch-hello-insert-saved-searches
+                                     notmuch-hello-insert-search
+                                     notmuch-hello-insert-recent-searches
+                                     notmuch-hello-insert-alltags))
 
       ;; ── Saved searches ────────────────────────────────────────────────────
       ;; Mirrors the previous mu4e bookmarks. folder: matches the Maildir path
@@ -1609,7 +1617,34 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
               (:name "Apple"
                :query "folder:Apple/INBOX"
                :key "a"
+               :sort-order newest-first)
+              (:name "emacs-orgmode"
+               :query "folder:gregnewman.org/emacs-orgmode"
+               :key "o"
                :sort-order newest-first)))
+
+      ;; ── Hello screen key bindings ──────────────────────────────────────────
+      ;; Explicit bindings since the :key property in saved searches is not
+      ;; reliably activated in the hello widget display.
+      (defun gn/notmuch-search-for (query)
+        (notmuch-search query))
+
+      (define-key notmuch-hello-mode-map "u"
+        (lambda () (interactive) (notmuch-search "tag:unread AND NOT tag:trash AND (folder:gregnewman.org/INBOX OR folder:NANOG/INBOX OR folder:Apple/INBOX)")))
+      (define-key notmuch-hello-mode-map "t"
+        (lambda () (interactive) (notmuch-search "date:today.. AND NOT tag:trash")))
+      (define-key notmuch-hello-mode-map "w"
+        (lambda () (interactive) (notmuch-search "date:7d.. AND NOT tag:trash")))
+      (define-key notmuch-hello-mode-map "f"
+        (lambda () (interactive) (notmuch-search "tag:flagged AND NOT tag:trash")))
+      (define-key notmuch-hello-mode-map "g"
+        (lambda () (interactive) (notmuch-search "folder:gregnewman.org/INBOX")))
+      (define-key notmuch-hello-mode-map "n"
+        (lambda () (interactive) (notmuch-search "folder:NANOG/INBOX")))
+      (define-key notmuch-hello-mode-map "a"
+        (lambda () (interactive) (notmuch-search "folder:Apple/INBOX")))
+      (define-key notmuch-hello-mode-map "o"
+        (lambda () (interactive) (notmuch-search "folder:gregnewman.org/emacs-orgmode")))
 
       ;; ── Auto-sync ─────────────────────────────────────────────────────────
       ;; Poll every 5 minutes: fetch with mbsync then re-index with notmuch new.
@@ -1619,7 +1654,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
         (set-process-sentinel
          (start-process-shell-command
           "notmuch-sync" " *notmuch-sync*"
-          "mbsync -c ~/.config/isync/config -a && notmuch new")
+          "mbsync -c ~/.config/isync/config -a; notmuch new")
          (lambda (proc _event)
            (when (eq (process-status proc) 'exit)
              (message "notmuch: sync complete")))))
@@ -1644,9 +1679,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
     :commands (erc erc-tls)
     :custom
     (erc-prompt-for-password nil)
-    (erc-server-auto-reconnect t)
-    (erc-server-reconnect-attempts 10)
-    (erc-server-reconnect-timeout 5)
+    (erc-server-auto-reconnect nil)
     (erc-hide-list '("JOIN" "PART" "QUIT"))
     (erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                "324" "329" "332" "333" "353" "477"))
