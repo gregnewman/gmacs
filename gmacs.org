@@ -1527,204 +1527,109 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
 #+BEGIN_SRC emacs-lisp
     (use-package lua-mode)
 #+END_SRC
-* Email - mu4e
-  mu4e is an Emacs mail client backed by =mu=, a fast Xapian-indexed maildir searcher. The
-  architecture is: mbsync fetches mail from IMAP to local Maildir (~/.mailbox), mu indexes
-  it, and mu4e reads the index. This means search is instantaneous - mu never touches the
-  network. Three accounts are configured via mu4e contexts: gregnewman.org (personal Gmail
-  with custom domain), NANOG (work Gmail), and Apple (iCloud). Outgoing mail is sent via
-  msmtp, which reads credentials from =~/.authinfo.gpg= and selects the correct SMTP server
-  based on the From address. Run =M-x mu4e= to open; =C-c C-c= to send a composed message.
+* Email - notmuch
+  notmuch is a fast, tag-based mail indexer backed by Xapian. The architecture is: mbsync
+  fetches mail from IMAP to local Maildir (~/.mailbox), notmuch indexes it, and notmuch.el
+  reads the index. Three accounts are configured via =notmuch-identities= and
+  =notmuch-fcc-dirs=: gregnewman.org (personal Gmail with custom domain), NANOG (work Gmail),
+  and Apple (iCloud). Outgoing mail is sent via msmtp, which reads credentials from
+  =~/.authinfo.gpg= and selects the correct SMTP server based on the From address.
+  Config lives at =~/.config/notmuch/default/config=. Run =M-x notmuch= to open;
+  =C-c C-c= to send a composed message.
 
   #+BEGIN_SRC emacs-lisp
-    (use-package mu4e
-      ;; mu4e ships with the mu binary installed via Homebrew, not from MELPA.
-      ;; :straight nil tells straight.el not to manage it; load-path is resolved
-      ;; dynamically from `brew --prefix mu` so it works regardless of Homebrew prefix
-      ;; (Intel /usr/local vs Apple Silicon /opt/homebrew).
-      :straight nil
-      :load-path (lambda ()
-                   (list (expand-file-name
-                          "share/emacs/site-lisp/mu/mu4e"
-                          (string-trim (shell-command-to-string "brew --prefix mu")))))
-      :commands mu4e
+    (use-package notmuch
+      :straight t
+      :commands notmuch
       :config
 
-      ;; ── Faces ─────────────────────────────────────────────────────────────
-      ;; Flagged messages get a warm orange to stand out; replied messages get
-      ;; a muted green so you can see at a glance what's been handled.
-      (custom-set-faces
-       '(mu4e-flagged-face  ((t (:foreground "#FF9500" :weight bold))))
-       '(mu4e-replied-face  ((t (:foreground "#5AF78E" :weight normal)))))
+      ;; ── Identities ────────────────────────────────────────────────────────
+      ;; All three email addresses. notmuch-always-prompt-for-sender ensures the
+      ;; From header is always confirmed when composing, preventing accidental
+      ;; sends from the wrong account.
+      (setq notmuch-identities
+            '("Greg Newman <greg@gregnewman.org>"
+              "Greg Newman <gnewman@nanog.org>"
+              "Greg Newman <newman.greg@me.com>")
+            notmuch-always-prompt-for-sender t)
 
-      ;; Headers list is denser at one step smaller than the default font size.
-      (add-hook 'mu4e-headers-mode-hook
-                (lambda () (text-scale-set -1)))
-
-      ;; mu ships its own Info manual; add it to the info path so C-h i can find it.
-      (add-to-list 'Info-directory-list
-                   (expand-file-name "share/info"
-                                     (string-trim (shell-command-to-string "brew --prefix mu"))))
-
-      ;; ── Core settings ─────────────────────────────────────────────────────
-      (setq mu4e-maildir "~/.mailbox"
-            ;; Drive sync from mu4e rather than relying solely on the launchd service.
-            ;; mu4e runs mbsync then re-indexes automatically every 5 minutes.
-            mu4e-get-mail-command "mbsync -c ~/.config/isync/config -a"
-            mu4e-update-interval 300
-            mu4e-compose-dont-reply-to-self t
-            mu4e-view-show-images t
-            mu4e-view-show-addresses t
-            mu4e-confirm-quit nil
-            mu4e-use-fancy-chars t)
+      ;; ── Sent mail (FCC) ───────────────────────────────────────────────────
+      ;; Saves a copy of each sent message into the matching local Maildir folder.
+      ;; The key is a regexp matched against the From address; nil is the fallback.
+      ;; mbsync pushes these back to the IMAP Sent folder on the next sync.
+      (setq notmuch-fcc-dirs
+            '(("greg@gregnewman.org" . "gregnewman.org/[Gmail]/Sent Mail")
+              ("gnewman@nanog.org"   . "NANOG/[Gmail]/Sent Mail")
+              ("newman.greg@me.com"  . "Apple/Sent Messages")
+              (nil                   . "gregnewman.org/[Gmail]/Sent Mail")))
 
       ;; ── Outgoing mail via msmtp ───────────────────────────────────────────
-      ;; macOS's built-in smtpmail has TLS issues; msmtp is more reliable and
-      ;; selects the correct SMTP account based on the envelope From address,
-      ;; so multi-account sending Just Works without extra configuration.
-      (setq message-send-mail-function 'message-send-mail-with-sendmail
-            sendmail-program "/opt/homebrew/bin/msmtp"
-            ;; --read-envelope-from tells msmtp to pick the account from the From header.
+      ;; Identical to the previous mu4e setup - msmtp selects the correct SMTP
+      ;; account via --read-envelope-from, so multi-account sending just works.
+      (setq message-send-mail-function      'message-send-mail-with-sendmail
+            sendmail-program                "/opt/homebrew/bin/msmtp"
             message-sendmail-extra-arguments '("--read-envelope-from")
-            ;; Prevent message.el from adding a redundant -f flag that confuses msmtp.
-            message-sendmail-f-is-evil t)
+            message-sendmail-f-is-evil      t)
 
-      ;; ── Contexts ──────────────────────────────────────────────────────────
-      ;; Each context sets the From address, full name, and folder paths for one
-      ;; account. The match-func fires on every message mu4e displays; the first
-      ;; context whose match-func returns non-nil becomes active. Matching is done
-      ;; on the maildir path prefix, which is unique per account.
-      (setq mu4e-contexts
-            (list
-             (make-mu4e-context
-              :name "gregnewman.org"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/gregnewman.org"
-                                               (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address  . "greg@gregnewman.org")
-                      (user-full-name     . "Greg Newman")
-                      (mu4e-sent-folder   . "/gregnewman.org/[Gmail]/Sent Mail")
-                      (mu4e-drafts-folder . "/gregnewman.org/[Gmail]/Drafts")
-                      (mu4e-trash-folder  . "/gregnewman.org/[Gmail]/Trash")
-                      (mu4e-refile-folder . "/gregnewman.org/[Gmail]/Archive")))
+      ;; ── Core settings ─────────────────────────────────────────────────────
+      (setq notmuch-search-oldest-first       nil
+            notmuch-show-logo                 nil
+            message-kill-buffer-on-exit       t
+            notmuch-compose-dont-reply-to-self t)
 
-             (make-mu4e-context
-              :name "NANOG"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/NANOG"
-                                               (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address  . "gnewman@nanog.org")
-                      (user-full-name     . "Greg Newman")
-                      (mu4e-sent-folder   . "/NANOG/[Gmail]/Sent Mail")
-                      (mu4e-drafts-folder . "/NANOG/[Gmail]/Drafts")
-                      (mu4e-trash-folder  . "/NANOG/[Gmail]/Trash")
-                      (mu4e-refile-folder . "/NANOG/[Gmail]/Archive")))
-
-             (make-mu4e-context
-              :name "Apple"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/Apple"
-                                               (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address  . "newman.greg@me.com")
-                      (user-full-name     . "Greg Newman")
-                      (mu4e-sent-folder   . "/Apple/Sent Messages")
-                      (mu4e-drafts-folder . "/Apple/Drafts")
-                      (mu4e-trash-folder  . "/Apple/Deleted Messages")
-                      (mu4e-refile-folder . "/Apple/Archive")))))
-
-      ;; pick-first: auto-select the matching context without prompting.
-      ;; ask-if-none: only ask which context to use when composing a new me
-ssage
-      ;; if none can be inferred (e.g. composing from the main screen).
-      (setq mu4e-context-policy 'pick-first
-            mu4e-compose-context-policy 'ask-if-none)
-
-      ;; ── Maildir shortcuts ─────────────────────────────────────────────────
-      ;; Press j in the headers view to jump to a shortcut folder.
-      (setq mu4e-maildir-shortcuts
-            '((:maildir "/gregnewman.org/INBOX" :key ?g :name "gregnewman.org")
-              (:maildir "/NANOG/INBOX"           :key ?n :name "NANOG")
-              (:maildir "/Apple/INBOX"           :key ?a :name "Apple"))))
-
-      ;; ── Header icons ──────────────────────────────────────────────────────
-      ;; Replace mu4e's default ASCII flags with emoji for a cleaner headers view.
-      ;; Each entry is (ascii-fallback . emoji-string). The seen-mark is blank
-      ;; intentionally - read messages shouldn't draw the eye.
-      (setq mu4e-headers-unread-mark    '("u" . "📩 ")
-            mu4e-headers-draft-mark     '("D" . "🚧 ")
-            mu4e-headers-flagged-mark   '("F" . "🚩 ")
-            mu4e-headers-new-mark       '("N" . "✨ ")
-            mu4e-headers-passed-mark    '("P" . "↪ ")
-            mu4e-headers-replied-mark   '("R" . "↩ ")
-            mu4e-headers-seen-mark      '("S" . "  ")
-            mu4e-headers-trashed-mark   '("T" . "🗑️")
-            mu4e-headers-attach-mark    '("a" . "🔗 ")
-            mu4e-headers-encrypted-mark '("x" . "🔑 ")
-            mu4e-headers-signed-mark    '("s" . "✍️ ")
-            mu4e-headers-personal-mark  '("p" . "🐙 ")
-            mu4e-headers-calendar-mark  '("c" . "📅 ")
-            mu4e-headers-list-mark      '("l" . "💬 "))
-
-      ;; ── Bookmarks ─────────────────────────────────────────────────────────
-      ;; mu4e-headers-include-related is disabled globally. When enabled, a date
-      ;; query like "date:today..now" pulls in every message in any thread that
-      ;; received a message today - including hundreds of old unread messages from
-      ;; mailing lists archived months ago. Disabling it means queries return only
-      ;; messages that literally match the query. Toggle per-search with W.
-      (setq mu4e-headers-include-related nil)
-
-      ;; Custom bookmarks replace the defaults. "Unread (INBOX)" scopes to only
-      ;; the three INBOX folders so mailing list noise in Archive doesn't inflate
-      ;; the unread count.
-      (setq mu4e-bookmarks
+      ;; ── Saved searches ────────────────────────────────────────────────────
+      ;; Mirrors the previous mu4e bookmarks. folder: matches the Maildir path
+      ;; under ~/.mailbox. The per-account INBOX searches replace mu4e's j-key
+      ;; maildir shortcuts.
+      (setq notmuch-saved-searches
             '((:name "Unread (INBOX)"
-               :query "flag:unread AND NOT flag:trashed AND (maildir:/gregnewman.org/INBOX OR maildir:/NANOG/INBOX OR maildir:/Apple/INBOX)"
-               :key ?u)
-              (:name "Today's messages"
-               :query "date:today..now AND NOT flag:trashed"
-               :key ?t)
+               :query "tag:unread AND NOT tag:trash AND (folder:gregnewman.org/INBOX OR folder:NANOG/INBOX OR folder:Apple/INBOX)"
+               :key "u"
+               :sort-order newest-first)
+              (:name "Today"
+               :query "date:today.. AND NOT tag:trash"
+               :key "t"
+               :sort-order newest-first)
               (:name "Last 7 days"
-               :query "date:7d..now AND NOT flag:trashed"
-               :hide-unread t
-               :key ?w)
+               :query "date:7d.. AND NOT tag:trash"
+               :key "w"
+               :sort-order newest-first)
               (:name "Flagged"
-               :query "flag:flagged AND NOT flag:trashed"
-               :key ?f)))
+               :query "tag:flagged AND NOT tag:trash"
+               :key "f"
+               :sort-order newest-first)
+              (:name "gregnewman.org"
+               :query "folder:gregnewman.org/INBOX"
+               :key "g"
+               :sort-order newest-first)
+              (:name "NANOG"
+               :query "folder:NANOG/INBOX"
+               :key "n"
+               :sort-order newest-first)
+              (:name "Apple"
+               :query "folder:Apple/INBOX"
+               :key "a"
+               :sort-order newest-first)))
+
+      ;; ── Auto-sync ─────────────────────────────────────────────────────────
+      ;; Poll every 5 minutes: fetch with mbsync then re-index with notmuch new.
+      (defun gn/notmuch-sync ()
+        "Fetch new mail with mbsync and re-index with notmuch."
+        (interactive)
+        (set-process-sentinel
+         (start-process-shell-command
+          "notmuch-sync" " *notmuch-sync*"
+          "mbsync -c ~/.config/isync/config -a && notmuch new")
+         (lambda (proc _event)
+           (when (eq (process-status proc) 'exit)
+             (message "notmuch: sync complete")))))
+
+      (run-with-timer 300 300 #'gn/notmuch-sync)
 
       ;; ── Calendar invites ──────────────────────────────────────────────────
-      ;; gnus-icalendar is bundled with Emacs and handles .ics attachments in
-      ;; mu4e message view. goto-addr activates clickable links in the view buffer.
+      ;; gnus-icalendar handles .ics attachments; goto-addr activates links.
       (require 'goto-addr)
-      (require 'gnus-icalendar)
-
-    ;; ── HTML rendering via xwidgets webkit ────────────────────────────────
-    ;; mu4e's built-in shr renderer produces unreadable output for HTML-heavy
-    ;; mail (Google Docs notifications, newsletters, etc.). mu4e-views replaces
-    ;; the message view with a proper webkit browser via xwidgets. The default
-    ;; method is "html" (webkit); press v in the headers view to pick a different
-    ;; renderer for the current message. M-n/M-p scroll the message view without
-    ;; leaving the headers buffer.
-    (use-package xwidgets-reuse
-      :straight (:type git :host github :repo "lordpretzel/xwidgets-reuse"))
-
-    (use-package mu4e-views
-      :straight (:type git :host github :repo "lordpretzel/mu4e-views")
-      :after mu4e
-      :defer nil
-      :bind (:map mu4e-headers-mode-map
-                  ("v" . mu4e-views-mu4e-select-view-msg-method)
-                  ("M-n" . mu4e-views-cursor-msg-view-window-down)
-                  ("M-p" . mu4e-views-cursor-msg-view-window-up))
-      :config
-      (setq mu4e-views-default-view-method "html")
-      (mu4e-views-mu4e-use-view-msg-method "html")
-      ;; Keep the message view in place when navigating with M-n/M-p rather than
-      ;; jumping back to the top of the message on each cursor move.
-      (setq mu4e-views-next-previous-message-behaviour 'stick-to-current-window))
-
+      (require 'gnus-icalendar))
   #+END_SRC
 
 
