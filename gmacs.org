@@ -1556,14 +1556,9 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
             notmuch-always-prompt-for-sender t)
 
       ;; ── Sent mail (FCC) ───────────────────────────────────────────────────
-      ;; Saves a copy of each sent message into the matching local Maildir folder.
-      ;; The key is a regexp matched against the From address; nil is the fallback.
-      ;; mbsync pushes these back to the IMAP Sent folder on the next sync.
-      (setq notmuch-fcc-dirs
-            '(("greg@gregnewman.org" . "gregnewman.org/[Gmail]/Sent Mail")
-              ("gnewman@nanog.org"   . "NANOG/[Gmail]/Sent Mail")
-              ("newman.greg@me.com"  . "Apple/Sent Messages")
-              (nil                   . "gregnewman.org/[Gmail]/Sent Mail")))
+      ;; Disabled — Gmail automatically saves sent mail server-side, and
+      ;; mbsync pulls it down on the next sync. No need for a local FCC copy.
+      (setq notmuch-fcc-dirs nil)
 
       ;; ── Outgoing mail via msmtp ───────────────────────────────────────────
       ;; Identical to the previous mu4e setup - msmtp selects the correct SMTP
@@ -1684,7 +1679,12 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
     (erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
                                "324" "329" "332" "333" "353" "477"))
     ;; ZNC is on a private Tailscale network - trust its self-signed cert.
-    (network-security-level 'low))
+    (network-security-level 'low)
+    :config
+    ;; Don't send PART when killing a channel buffer. ZNC stays joined
+    ;; and continues buffering messages until we reconnect. Use /part to
+    ;; actually leave a channel.
+    (advice-add 'erc-part-channel-on-kill :override #'ignore))
 
   (defun gn/erc-znc ()
     "Connect to ZNC bouncer at znc.tailebe1e.ts.net:8080 via Tailscale."
