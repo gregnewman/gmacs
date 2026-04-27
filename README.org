@@ -42,22 +42,22 @@ This configuration prioritizes:
 - *Consult* extensions for enhanced navigation and search
 - *Marginalia* for rich annotations on completion candidates
 
-*** Email with mu4e
-- *mu4e* email client with three-account setup (personal, work, iCloud) via mu4e contexts
+*** Email with notmuch
+- *notmuch* tag-based email client with three-account setup (personal Gmail, work Gmail, iCloud)
 - *mbsync* (isync) for fast IMAP sync to local Maildir at =~/.mailbox=
-- *msmtp* for outgoing mail, account selected automatically from the From address
-- *mu4e-views* with xwidgets webkit for proper HTML rendering; press =v= to switch renderers
+- *msmtp* for outgoing mail, account selected automatically from the From address via =--read-envelope-from=
 - *GPG-encrypted* credentials via =~/.authinfo.gpg= - shared by mbsync, msmtp, and Emacs auth-source
-- *gnus-icalendar* for accepting/declining calendar invites directly in mu4e
-- Custom bookmarks scoped to INBOX folders to avoid mailing list noise in unread counts
-- Run =M-x mu4e= to open; =C-c C-c= to send; =C-c C-x= to switch context when composing
+- *gnus-icalendar* for accepting/declining calendar invites directly in notmuch
+- Custom saved searches scoped to INBOX folders to avoid mailing list noise in unread counts
+- Run =M-x notmuch= to open; =C-c C-c= to send; FCC disabled (Gmail/iCloud save sent mail server-side)
 
 *** IRC with ERC and ZNC
-- *ERC* (built-in) connects to a *ZNC bouncer* on the homelab over Tailscale (=znc.tailebe1e.ts.net:8080=)
+- *ERC* (built-in) connects to a *ZNC bouncer* on the homelab over Tailscale (=znc.your-tailnet.ts.net:8080=)
 - *Buffer playback* on reconnect - ZNC replays missed messages from =#emacs= and =#org-mode= on Libera.Chat
 - *TLS* connection with self-signed cert trusted automatically (safe over Tailscale)
-- *GPG-encrypted* credentials via =~/.authinfo= - password never stored in config
-- Run =M-x gn/erc-znc= to connect; auto-reconnect on disconnect
+- *GPG-encrypted* credentials via =~/.authinfo.gpg= - password never stored in config
+- Killing a channel buffer does *not* send PART — ZNC stays joined and buffers messages; use =/part= to actually leave
+- Auto-connects on Emacs startup via =emacs-startup-hook=; run =M-x gn/erc-znc= to reconnect manually
 
 *** Developer Tools
 - *Magit* for Git operations with integrated TODO tracking
@@ -106,7 +106,7 @@ npm install -g typescript-language-server typescript
 brew install just  # For Justfile support
 
 # Email
-brew install mu isync msmtp
+brew install notmuch isync msmtp
 #+end_src
 
 *** Quick Start
@@ -266,7 +266,7 @@ As a software craftsman, this config provides excellent support for:
 
 *** Email Setup
 
-Email is not fully portable from this repo - you need to configure two files manually:
+Email is not fully portable from this repo - you need to configure these files manually:
 
 1. =~/.config/isync/config= - mbsync account config (IMAP servers, Maildir paths). A template matching this config's three-account structure is in the repo.
 2. =~/.config/msmtp/config= - msmtp outgoing mail config (SMTP servers, one account per sender). Also in the repo.
@@ -276,20 +276,19 @@ After creating both files:
 #+begin_src bash
 mkdir -p ~/.mailbox
 mbsync -c ~/.config/isync/config -a   # initial sync (may take a while for large mailboxes)
-mu init --maildir=~/.mailbox \
-  --my-address=you@domain1.com \
-  --my-address=you@domain2.com \
-  --my-address=you@domain3.com
-mu index
+notmuch new                            # index mail
 #+end_src
 
-Then run =M-x mu4e=. mu4e will keep the index current by running mbsync and re-indexing every 5 minutes automatically.
+Then run =M-x notmuch=. Use =U= (bound to =gn/notmuch-sync=) to sync and re-index from within Emacs.
 
 **** Gmail notes
 Gmail's IMAP throttles large initial syncs. If mbsync hits a bandwidth limit (=OVERQUOTA= error), wait a few minutes and re-run - it resumes where it left off. Use =caffeinate mbsync -c ~/.config/isync/config -a= on macOS to prevent sleep during the initial sync.
 
 **** App passwords
-Gmail requires an app-specific password (not your account password) when using IMAP with 2FA enabled. Generate one at [[https://myaccount.google.com/apppasswords][myaccount.google.com/apppasswords]] and store it in =~/.authinfo.gpg=.
+Gmail and iCloud require an app-specific password (not your account password) when using IMAP with 2FA enabled.
+- Gmail: generate at [[https://myaccount.google.com/apppasswords][myaccount.google.com/apppasswords]]
+- iCloud: generate in Apple ID settings under App-Specific Passwords
+Store passwords unquoted in =~/.authinfo.gpg=.
 
 *** Personal Settings
 
