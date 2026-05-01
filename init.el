@@ -21,6 +21,7 @@
 (setq my-user-emacs-directory "~/.emacs.d/")
 
 ;; Boostrap Straight for package management
+(setq straight-check-for-modifications '(check-on-save))
 (setq straight-repository-branch "develop") ;; temporary work around for errors compiling https://github.com/radian-software/straight.el/pull/1054
 (defvar bootstrap-version)
 (let ((bootstrap-file

@@ -20,7 +20,7 @@
        (straight-use-package-by-default t))
 
      (setq use-package-always-defer t)
-     (setq straight-check-for-modifications '(check-on-save find-when-checking))
+
      (setq straight-vc-git-default-clone-depth 1)
      (setq straight-cache-autoloads t)
    #+END_SRC
@@ -753,6 +753,8 @@ Using `exec-path-from-shell` fixes this.
       (use-package pyenv-mode-auto
         :demand t)
 
+      (setq python-indent-guess-indent-offset-verbose nil)
+
       (defun pyenv-activate-current-project ()
         "Automatically activates pyenv version if .python-version file exists."
         (interactive)
@@ -935,7 +937,7 @@ Using `exec-path-from-shell` fixes this.
                                            python-indent-offset 4)
                                (superword-mode 1)
                                (hs-minor-mode 1)
-                               (set-fill-column 88)
+                               (setq-local fill-column 88)
                                (display-line-numbers-mode 1)))))
 #+END_SRC
 
