@@ -529,8 +529,9 @@
     (org-load-modules-maybe t)
     
     ;; This is EXPENSIVE - only calculate when org loads, not at startup!
-    (setq org-agenda-files 
-          (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+    (setq org-agenda-files
+          (seq-remove (lambda (f) (string-match-p "/denote/" f))
+                      (directory-files-recursively "~/Dropbox/Org/" "\\.org$")))
     
     ;; All other org settings
     (setq org-agenda-window-setup 'current-window
@@ -566,7 +567,7 @@
   (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'org-mode-hook 'org-indent-mode)
-  (add-hook 'org-mode-hook #'gn/orgmode-ignore-line-numbers-mode)
+  (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 
   ;; Remove duplicate hook - this was already added above
   ;; (add-hook 'org-mode-hook 'visual-line-mode)  <-- DELETE if you see this duplicated
@@ -672,146 +673,10 @@
 #+END_SRC
 
 ** Agenda commands
-   Custom agenda views tailored for GTD workflow. These commands provide different perspectives on tasks: a simple agenda view (c) showing high-priority items first, a comprehensive due-date grouped view (d) organizing all tasks by when they're due, and focused views (f., fh) for daily planning and hotlist management. The custom commands use helper functions to filter by priority and organize tasks into meaningful groups. Org-super-agenda provides additional grouping capabilities by category for a comprehensive task overview.
+   Custom agenda views. Add views here when returning to org for task management.
 
    #+BEGIN_SRC emacs-lisp
-     (defun gn/org-skip-subtree-if-priority (priority)
-     "Skip an agenda subtree if it has a priority of PRIORITY.
-
-     PRIORITY may be one of the characters ?A, ?B, or ?C."
-       (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-          (pri-value (* 1000 (- org-lowest-priority priority)))
-          (pri-current (org-get-priority (thing-at-point 'line t))))
-        (if (= pri-value pri-current)
-          subtree-end
-        nil)))
-
-     (defun gn/org-agenda-with-tip (arg)
-       (org-agenda-list arg)
-       (let ((inhibit-read-only t)
-          (pos (point)))
-       (goto-char (point-max))
-       (goto-char pos)))
-
-     ;; Reset everything to nil
      (setq org-agenda-custom-commands nil)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("b" "Agenda" gn/org-agenda-with-tip))
-
-         ;; Taken from doc.norang.ca/org-mode.html
-     (add-to-list 'org-agenda-custom-commands
-          '("c" "Simple agenda view"
-               ((agenda "")
-               (tags "PRIORITY=\"A\""
-                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                  (org-agenda-overriding-header "HIGH PRIORITY ITEMS")))
-               (alltodo ""
-                 ((org-agenda-skip-function
-                  '(or (gn/org-skip-subtree-if-priority ?A)
-                   (org-agenda-skip-if nil '(scheduled deadline)))))))))
-
-     (add-to-list 'org-agenda-custom-commands
-               '("f" . "FOCUS...") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("d" "All Tasks (grouped by Due Date)"
-                 ((tags-todo "DEADLINE<\"<+0d>\""
-                             ((org-agenda-overriding-header "OVERDUE")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notdeadline))))
-                  (tags-todo "DEADLINE=\"<+0d>\""
-                             ((org-agenda-overriding-header "DUE TODAY")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notdeadline))))
-                  (tags-todo "DEADLINE=\"<+1d>\""
-                             ((org-agenda-overriding-header "DUE TOMORROW")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notdeadline))))
-                  (tags-todo "DEADLINE>\"<+1d>\"+DEADLINE<=\"<+7d>\""
-                             ((org-agenda-overriding-header "DUE WITHIN A WEEK")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notdeadline))))
-                  (tags-todo "DEADLINE>\"<+7d>\"+DEADLINE<=\"<+28d>\""
-                             ((org-agenda-overriding-header "DUE WITHIN A MONTH")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notdeadline))))
-                  (tags-todo "DEADLINE>\"<+28d>\""
-                             ((org-agenda-overriding-header "DUE LATER")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notdeadline))))
-                  (tags-todo "TODO={WAIT}"
-                             ((org-agenda-overriding-header "WAITING FOR")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'deadline))))
-                  (todo ""
-                        ((org-agenda-overriding-header "UNSCHEDULED")
-                         (org-agenda-skip-function
-                          '(org-agenda-skip-entry-if 'deadline)))))
-                 ((org-agenda-sorting-strategy '(priority-down))
-                  (org-agenda-write-buffer-name "All Tasks (grouped by Due Date)"))
-                 "~/Dropbox/Org/all-tasks-by-due-date.pdf") t)
-
-     (add-to-list 'org-agenda-custom-commands
-               `("f." "Today"
-                 ((agenda ""
-                          ((org-agenda-entry-types '(:timestamp :sexp))
-                           (org-agenda-overriding-header
-                            (concat "CALENDAR Today: "
-                                    (format-time-string "%a %d" (current-time))))
-                           (org-agenda-span 'day)))
-                  (tags-todo "DEADLINE=\"<+0d>\""
-                             ((org-agenda-overriding-header "DUE TODAY")
-                              (org-agenda-skip-function
-                               '(org-agenda-skip-entry-if 'notedeadline))
-                              (org-agenda-sorting-strategy '(priority-down))))
-                  (tags-todo "DEADLINE<\"<+0d>\""
-                             ((org-agenda-overriding-header "OVERDUE")
-                              (org-qagenda-skip-function
-                               '(org-agenda-skip-entry-if 'notedeadline))
-                              (org-agenda-sorting-strategy '(priority-down))))
-                  (agenda ""
-                          ((org-agenda-entry-types '(:scheduled))
-                           (org-agenda-overriding-header "SCHEDULED")
-                           (org-agenda-skip-function
-                            '(org-agenda-skip-entry-if 'todo 'done))
-                           (org-agenda-sorting-strategy
-                            '(priority-down time-down))
-                           (org-agenda-span 'day)
-                           (org-agenda-start-on-weekday nil)
-                           (org-agenda-time-grid nil)))
-                  (todo "DONE"
-                        ((org-agenda-overriding-header "COMPLETED"))))
-                 ((org-agenda-format-date "")
-                  (org-agenda-start-with-clockreport-mode nil))) t)
-
-     (add-to-list 'org-agenda-custom-commands
-               '("fh" "Hotlist"
-                 ((tags-todo "DEADLINE<\"<+0d>\""
-                             ((org-agenda-overriding-header "OVERDUE")))
-                  (tags-todo "DEADLINE>=\"<+0d>\"+DEADLINE<=\"<+1w>\""
-                             ((org-agenda-overriding-header "DUE IN NEXT 7 DAYS")))
-                  (tags-todo "DEADLINE=\"\"+FLAGGED|DEADLINE>\"<+1w>\"+FLAGGED"
-                             ((org-agenda-overriding-header "FLAGGED"))))
-                 ((org-agenda-todo-ignore-scheduled 'future)))  t)
-
-   #+end_src
-
-   Org-Super-Agenda commands
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package org-super-agenda
-       :straight
-       (org-super-agenda
-        :type git
-        :host github
-        :repo "alphapapa/org-super-agenda")
-       :config
-       (org-super-agenda-mode t)
-       (add-to-list 'org-agenda-custom-commands
-                    '("gt" "All Tasks - Grouped"
-                      ((todo "" ((org-super-agenda-groups
-                                  '((:name "All Tasks" :auto-category t)))))))))
    #+end_src
 
 ** Org bullets and misc settings
