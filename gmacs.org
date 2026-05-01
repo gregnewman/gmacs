@@ -1521,7 +1521,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
            (when (eq (process-status proc) 'exit)
              (message "notmuch: sync complete")))))
 
-      (run-with-timer 300 300 #'gn/notmuch-sync)
+      (run-with-timer 60 60 #'gn/notmuch-sync)
 
       ;; ── Calendar invites ──────────────────────────────────────────────────
       ;; gnus-icalendar handles .ics attachments; goto-addr activates links.
