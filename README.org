@@ -193,8 +193,7 @@ As a software craftsman, this config provides excellent support for:
 
 **** GTD with Org-mode
 - =C-c c= - Quick capture (todos, meetings, notes, knowledge investments)
-- =C-c a= - Open agenda
-- Custom agenda views: =c= (simple), =d= (by due date), =f.= (today's focus), =fh= (hotlist)
+- =C-c a= - Open agenda (=a= week view, =m= tags match, =T= by TODO state)
 - =C-c o= - Capture to OmniFocus with context
 
 **** Coding
@@ -215,6 +214,7 @@ As a software craftsman, this config provides excellent support for:
 | Key         | Command                      |
 |-------------+------------------------------|
 | C-x g       | Magit status                 |
+| C-c n       | Open notmuch                 |
 | C-c o       | OmniFocus capture            |
 | C-c p       | Projectile command map       |
 | C-c d       | Docker management            |

@@ -1408,7 +1408,8 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
     (use-package notmuch
       :straight t
       :commands notmuch
-      :bind (:map notmuch-hello-mode-map
+      :bind (("C-c n" . notmuch)
+             :map notmuch-hello-mode-map
                   ("U" . gn/notmuch-sync))
       :config
 
