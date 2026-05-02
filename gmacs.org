@@ -496,7 +496,7 @@
     :config
     (setq org-modern-star '("◉" "○" "✸" "✿")
           org-modern-list '((45 . "–") (43 . "•") (42 . "▸"))
-          org-modern-todo t
+          org-modern-todo nil
           org-modern-tag t
           org-modern-table t
           org-modern-block-name t))
@@ -538,7 +538,7 @@
           org-agenda-start-on-weekday 1
           org-agenda-tags-column -102
           org-agenda-span 7
-          org-tags-column 88
+          org-tags-column 0
           org-agenda-sticky nil
           org-agenda-inhibit-startup t
           org-agenda-use-tag-inheritance t
@@ -595,20 +595,18 @@
    #+BEGIN_SRC emacs-lisp
      ;; Keywords
      (setq org-todo-keywords
-       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "PROJECTDONE(e)")
-               (sequence "WAITING(w@/!)" "SOMEDAY(s@/!)" "|" "CANCELLED(c@/!)"))))
+       '((sequence "NEXT(n)" "|" "DONE(d)")
+         (sequence "WAITING(w@/!)" "SOMEDAY(s)" "|" "CANCELLED(c@/!)")))
 
      ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
      (setq org-log-done 'time)
 
      (setq org-todo-keyword-faces
-       (quote (("TODO" :foreground "lime green" :weight bold)
-               ("NEXT" :foreground "cyan" :weight bold)
-               ("DONE" :foreground "dim gray" :weight bold)
-               ("PROJECTDONE" :foreground "dim gray" :weight bold)
-               ("WAITING" :foreground "tomato" :weight bold)
-               ("SOMEDAY" :foreground "magenta" :weight bold)
-               ("CANCELLED" :foreground "dim gray" :weight bold))))
+       '(("NEXT"      :foreground "lime green" :weight bold)
+         ("DONE"      :foreground "dim gray" :weight bold)
+         ("WAITING"   :foreground "tomato" :weight bold)
+         ("SOMEDAY"   :foreground "magenta" :weight bold)
+         ("CANCELLED" :foreground "dim gray" :weight bold)))
    #+end_src
 
 ** Capture mode keybinding
@@ -622,7 +620,7 @@
     For my reference the syntax is as follows
     #+BEGIN_EXAMPLE
     ("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
-                 "* TODO %?\n%U\n%a\n" :clock-keep t)
+                 "* NEXT %?\n%U\n%a\n" :clock-keep t)
     #+end_example
 
     `t` is the trigger key for Todo.
@@ -638,7 +636,7 @@
      (setq org-indent-indentation-per-level 2)
      (setq org-capture-templates
          (quote (("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
-                 "* TODO %?\n%U\n%a\n" :clock-keep t)
+                 "* NEXT %?\n%U\n%a\n" :clock-keep t)
                  ("k" "Knowledge Investment" entry (file "~/Dropbox/Org/inbox.org")
                   "* %? :KI:\n%U\n%a\n" :clock-keep t)
                  ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")

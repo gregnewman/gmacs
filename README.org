@@ -150,7 +150,7 @@ This is a literate configuration written in Org-mode. The main file is =gmacs.or
 - Fontification and beautification
 - Core configuration with performance optimization
 - Alert notifications
-- Custom TODO keywords and capture templates
+- Custom TODO keywords: NEXT → DONE, WAITING / SOMEDAY → CANCELLED
 - Advanced agenda commands
 - Babel for executable code blocks
 
@@ -193,7 +193,7 @@ As a software craftsman, this config provides excellent support for:
 
 **** GTD with Org-mode
 - =C-c c= - Quick capture (todos, meetings, notes, knowledge investments)
-- =C-c a= - Open agenda (=a= week view, =m= tags match, =T= by TODO state)
+- =C-c a= - Open agenda (=a= week view, =m= tags match, =T= by keyword state)
 - =C-c o= - Capture to OmniFocus with context
 
 **** Coding
