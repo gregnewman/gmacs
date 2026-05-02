@@ -573,21 +573,21 @@
   ;; (add-hook 'org-mode-hook 'visual-line-mode)  <-- DELETE if you see this duplicated
 #+END_SRC
 ** Alerts
-   Desktop notifications for Org agenda items. Org-alert monitors upcoming deadlines and scheduled items, sending macOS notifications when tasks are approaching their due time. Configured to check every 60 seconds and notify 5 minutes before events, with a 2-minute window after events start. Notifications fade after 2 minutes to avoid cluttering the desktop.
+   Desktop notifications for Org agenda items. org-wild-notifier fires calendar-style reminders before scheduled items and deadlines — 30, 10, and 5 minutes before by default. Notifications are filtered to NEXT and WAITING keywords only. Uses the alert package with osx-notifier style for native macOS banners.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org-alert
-    :ensure t 
-    :config 
-        (setq org-alert-interval 60 
-              org-alert-notify-cutoff 5
-              org-alert-notify-after-event-cutoff 2) 
-        (org-alert-enable))
-
-  (use-package alert 
+  (use-package alert
     :config
     (setq alert-default-style 'osx-notifier
           alert-fade-time 120))
+
+  (use-package org-wild-notifier
+    :straight (org-wild-notifier :type git :host github :repo "emacsorphanage/org-wild-notifier")
+    :config
+    (setq org-wild-notifier-alert-time '(30 10 5)
+          org-wild-notifier-keyword-whitelist '("NEXT" "WAITING")
+          org-wild-notifier-notification-title "Org")
+    (org-wild-notifier-mode))
 #+END_SRC
 ** Todo Keywords
    Custom TODO keywords aligned with GTD workflow. Two sequences are defined: active task states (TODO → NEXT → DONE/PROJECTDONE) and deferred states (WAITING/SOMEDAY → CANCELLED). The @ symbol in keywords like "WAITING(w@/!)" triggers a note prompt when entering that state, creating an audit trail for why tasks are waiting or cancelled. Color-coding provides visual distinction: active states in bright colors (green/cyan), waiting states in red/magenta, and completed states in gray. All tasks automatically timestamp when marked DONE.

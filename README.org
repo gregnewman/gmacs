@@ -32,7 +32,7 @@ This configuration prioritizes:
 *** GTD Workflow with Org-mode
 - Complete Getting Things Done implementation with custom agenda views
 - Custom capture templates for todos, meetings, knowledge investments
-- Desktop notifications for upcoming deadlines
+- Desktop notifications via =org-wild-notifier= (30, 10, and 5 min before events)
 - OmniFocus integration for task capture with context
 
 *** Modern Completion Framework
