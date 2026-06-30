@@ -81,16 +81,16 @@
 #+BEGIN_SRC emacs-lisp
    (custom-set-faces
     ;; Default font for all text
-    '(default ((t (:family "Iosevka NF" :height 150))))
-    '(fixed-pitch ((t (:family "Iosevka NF" :height 130))))
+    '(default ((t (:family "Maple Mono NF" :height 130))))
+    '(fixed-pitch ((t (:family "Maple Mono NF" :height 130))))
 
     ;; Current line number
     '(line-number-current-line ((t (:foreground "orange" :inherit line-number))))
-    '(mode-line ((t (:family "Iosevka NF" :weight Bold))))
+    '(mode-line ((t (:family "Maple Mono NF" :weight Bold))))
 
     ;; Comments italic
-    '(font-lock-function-name-face ((t (:family "Iosevka NF":slant italic))))
-    '(font-lock-variable-name-face ((t (:family "Iosevka NF":weight bold)))))
+    '(font-lock-function-name-face ((t (:family "Maple Mono NF":slant italic))))
+    '(font-lock-variable-name-face ((t (:family "Maple Mono NF":weight bold)))))
   #+END_SRC
 
 * One liners preferences
@@ -104,6 +104,7 @@
     ;; Editor defaults
     (setq-default indent-tabs-mode nil)  ; Use spaces, not tabs
     (setq ring-bell-function (lambda ()))  ; Disable audible bell
+    (setq use-short-answers t)              ; y/n instead of yes/no
     (setq confirm-kill-emacs 'yes-or-no-p)  ; Prevent accidental exits
     (setq require-final-newline t)  ; POSIX compliance
     (setq-default line-spacing 0.15)  ; Slightly more readable line spacing

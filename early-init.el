@@ -23,7 +23,7 @@
 (setq native-comp-speed 3)
 (setq native-comp-async-report-warnings-errors nil)
 (setq native-comp-deferred-compilation t)
-(native-compile-async "/opt/homebrew/Cellar/emacs-plus@30/30.2/Emacs.app/Contents/native-lisp/" 'recursively)
+;; (native-compile-async ...) removed -- path was emacs-plus@30, no longer valid
 
 ;; set this early for lsp to use plists instead of hash tables
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/#use-plists-for-deserialization
