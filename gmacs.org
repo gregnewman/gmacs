@@ -104,7 +104,6 @@
     ;; Editor defaults
     (setq-default indent-tabs-mode nil)  ; Use spaces, not tabs
     (setq ring-bell-function (lambda ()))  ; Disable audible bell
-    (setq use-short-answers t)              ; y/n instead of yes/no
     (setq confirm-kill-emacs 'yes-or-no-p)  ; Prevent accidental exits
     (setq require-final-newline t)  ; POSIX compliance
     (setq-default line-spacing 0.15)  ; Slightly more readable line spacing
