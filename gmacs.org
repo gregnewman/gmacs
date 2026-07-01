@@ -334,7 +334,6 @@
     ;; Bind it directly to a key
     (global-set-key (kbd "C-c o") 'gn/omnifocus-capture)
 #+END_SRC
-
 * Which-key
   I forget bindings for modes I don't use regularly. Which-key provides nice reminders.
 
@@ -516,7 +515,7 @@
     :hook (org-mode . mixed-pitch-mode))
 #+END_SRC
 ** Configuration
-   Core Org-mode settings optimized for performance and GTD workflow. The configuration uses deferred loading to prevent slow startup times - expensive operations like recursively finding agenda files only run when Org actually loads. Settings control agenda behavior (7-day span starting Monday), task dependencies (enforcing TODO relationships), refile targets (up to 5 levels deep in agenda files), and various display preferences. The org-protocol module enables capturing from external applications. Keybindings for store-link (C-c l), agenda (C-c a), and capture (C-c c) are globally accessible.
+   Core Org-mode settings for GTD workflow. Agenda files are an explicit list of per-area files (inbox, nanog, freelance, personal, finances, home, health, studio). Context tags (@computer, @phone, @contact, @errands, @read, @agenda) are grouped as mutually exclusive so each NEXT action carries exactly one context. Refile targets scan up to 5 levels deep across all agenda files.
 
 #+BEGIN_SRC emacs-lisp
   ;; Lightweight settings - safe to run immediately
@@ -528,10 +527,15 @@
   (with-eval-after-load 'org
     (org-load-modules-maybe t)
     
-    ;; This is EXPENSIVE - only calculate when org loads, not at startup!
     (setq org-agenda-files
-          (seq-remove (lambda (f) (string-match-p "/denote/" f))
-                      (directory-files-recursively "~/Dropbox/Org/" "\\.org$")))
+          '("~/Org/inbox.org"
+            "~/Org/nanog.org"
+            "~/Org/freelance.org"
+            "~/Org/personal.org"
+            "~/Org/finances.org"
+            "~/Org/home.org"
+            "~/Org/health.org"
+            "~/Org/Studio.org"))
     
     ;; All other org settings
     (setq org-agenda-window-setup 'current-window
@@ -553,7 +557,19 @@
           org-fontify-done-headline t
           org-startup-folded t
           org-refile-targets '((org-agenda-files :maxlevel . 5))
-          org-refile-allow-creating-parent-nodes 'confirm)
+          org-refile-allow-creating-parent-nodes 'confirm
+          org-tag-alist '((:startgroup)
+                          ("@computer" . ?c)
+                          ("@phone"    . ?h)
+                          ("@contact"  . ?o)
+                          ("@errands"  . ?e)
+                          ("@read"     . ?r)
+                          ("@agenda"   . ?a)
+                          (:endgroup)
+                          ("PROJECT"   . ?P)
+                          ("KI"        . ?k)
+                          ("NOTE"      . ?n)
+                          ("MEETING"   . ?m)))
     
     ;; Load markdown export only when org loads
     (require 'ox-md))
@@ -590,7 +606,7 @@
     (org-wild-notifier-mode))
 #+END_SRC
 ** Todo Keywords
-   Custom TODO keywords aligned with GTD workflow. Two sequences are defined: active task states (TODO → NEXT → DONE/PROJECTDONE) and deferred states (WAITING/SOMEDAY → CANCELLED). The @ symbol in keywords like "WAITING(w@/!)" triggers a note prompt when entering that state, creating an audit trail for why tasks are waiting or cancelled. Color-coding provides visual distinction: active states in bright colors (green/cyan), waiting states in red/magenta, and completed states in gray. All tasks automatically timestamp when marked DONE.
+   GTD keyword sequences: =NEXT= (actionable) → =DONE=; =WAITING= (delegated/blocked, prompts for note) / =SOMEDAY= (parked) → =CANCELLED= (prompts for note). =WAITING= and =CANCELLED= prompt for a note on entry so there's an audit trail. Tasks timestamp when closed.
 
    #+BEGIN_SRC emacs-lisp
      ;; Keywords
@@ -615,41 +631,83 @@
    (global-set-key (kbd "C-c c") 'org-capture)
    #+end_src
 ** Capture templates
-    Capture template are critical for keeping focused on the current work and not getting sent down the proverbial rabbit hole.  It's also handy for knowledge investements while working.  For instance, a method in a python library I need to understand more deeply, I can trigger the capture template for Knowledge Investments with `C=c c k`, add some context and with `C=c C=c` close and save the capture without leaving my position in the file.  The link to where I found the method is captured in the template and I can visit that later in the day when I have time to dive deep.
+   Five templates: =t= (Todo → inbox as NEXT, defaults to @computer), =n= (Note → inbox), =k= (Knowledge Investment → inbox), =m= (Meeting → inbox), =r= (Weekly Review → reviews.org as a dated checklist). All task captures land in inbox.org and get refiled during the weekly review.
 
-    For my reference the syntax is as follows
-    #+BEGIN_EXAMPLE
-    ("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
-                 "* NEXT %?\n%U\n%a\n" :clock-keep t)
-    #+end_example
-
-    `t` is the trigger key for Todo.
-    Todo entry is layman's term for the capture followed by what file to store it in.
-    The instruction regex starts with the tag or keyword then [[https://orgmode.org/manual/Template-expansion.html#Template-expansion][template expansions]].
-       - %? Position the cursor where I was
-       - %u, %U Inactive timestamp
-       - %a annotation, normally the link created with org-store-link
-       - :clock-keep keeps the clock running if I'm clocking a task
+   Template expansion reference: =%?= cursor position, =%U= inactive timestamp, =%a= link to origin, =%t= active timestamp, =:clock-keep t= keeps running clock.
 
    #+BEGIN_SRC emacs-lisp
-     ;; Capture templates
+   (defun my/weekly-review-template ()
+     (string-join
+      '("* Weekly Review %t"
+        "** Collect"
+        "   - [ ] Process inbox.org to zero (refile or delete everything)"
+        "   - [ ] Check paper notes — anything to capture digitally?"
+        "** Clarify"
+        "   - [ ] Review all WAITING items — any gone stale?"
+        "   - [ ] Review all projects — does each have at least one NEXT action?"
+        "** Organize"
+        "   - [ ] Review SOMEDAY lists — anything to activate or delete?"
+        "   - [ ] Check deadlines for next 2 weeks"
+        "** Reflect"
+        "   - [ ] Open weekly review agenda: C-c a w"
+        "** Engage"
+        "   - [ ] Write paper weekly plan")
+      "\n"))
+   #+end_src
+
+   #+BEGIN_SRC emacs-lisp
      (setq org-indent-indentation-per-level 2)
      (setq org-capture-templates
-         (quote (("t" "Todo" entry (file "~/Dropbox/Org/inbox.org")
-                 "* NEXT %?\n%U\n%a\n" :clock-keep t)
-                 ("k" "Knowledge Investment" entry (file "~/Dropbox/Org/inbox.org")
-                  "* %? :KI:\n%U\n%a\n" :clock-keep t)
-                 ("n" "Note" entry (file "~/Dropbox/Org/inbox.org")
-                  "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
-                 ("d" "Daybook" entry (file+olp+datetree "~/Dropbox/Org/daybook.org")
-                  "* %?" :clock-keep t)
-                 ("o" "OBTF" entry (file+olp+datetree "~/Dropbox/Org/OBTF.org")
-                  "* %<%H:%M> %?" :jump-to-captured t)
-                 ("m" "Meeting" entry (file "~/Dropbox/Org/inbox.org")
-                  "* Meeting with %? :MEETING:\n%U" :clock-keep t)
-                 ("p" "Phone call" entry (file "~/Dropbox/Org/inbox.org")
-                  "* PHONE %? :PHONE:\n%U" :clock-keep t))))
+           '(("t" "Todo" entry (file "~/Org/inbox.org")
+              "* NEXT %? :@computer:\n%U\n%a\n" :clock-keep t)
+             ("n" "Note" entry (file "~/Org/inbox.org")
+              "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
+             ("k" "Knowledge Investment" entry (file "~/Org/inbox.org")
+              "* %? :KI:\n%U\n%a\n" :clock-keep t)
+             ("m" "Meeting" entry (file "~/Org/inbox.org")
+              "* Meeting: %? :MEETING:\n%U" :clock-keep t)
+             ("r" "Weekly Review" entry
+              (file+olp+datetree "~/Org/reviews.org")
+              (function my/weekly-review-template)
+              :jump-to-captured t)))
    #+end_src
+
+** Agenda Views
+   Custom agenda views for GTD workflow. =C-c a d= is the daily execution view. =C-c a w= drives the weekly review. =C-c a n= filters by context tag. =C-c a r= is a system health check.
+
+   #+BEGIN_SRC emacs-lisp
+     (with-eval-after-load 'org-agenda
+       (setq org-agenda-custom-commands
+             '(("d" "Daily"
+                ((agenda "" ((org-agenda-span 1)
+                             (org-agenda-start-on-weekday nil)
+                             (org-agenda-overriding-header "Today")))
+                 (todo "NEXT" ((org-agenda-overriding-header "Next Actions")))))
+
+               ("w" "Weekly Review"
+                ((todo "NEXT" ((org-agenda-overriding-header "📥 Inbox — process to zero")
+                               (org-agenda-files '("~/Org/inbox.org"))))
+                 (todo "WAITING"  ((org-agenda-overriding-header "Waiting For")))
+                 (tags "PROJECT"  ((org-agenda-overriding-header "Projects — verify each has a NEXT")))
+                 (todo "SOMEDAY"  ((org-agenda-overriding-header "Someday/Maybe")))
+                 (agenda "" ((org-agenda-span 14)
+                             (org-agenda-start-on-weekday 1)
+                             (org-agenda-overriding-header "Next 2 Weeks")))))
+
+               ("n" "Next Actions by Context"
+                ((tags-todo "@computer" ((org-agenda-overriding-header "@computer")))
+                 (tags-todo "@phone"    ((org-agenda-overriding-header "@phone")))
+                 (tags-todo "@contact"  ((org-agenda-overriding-header "@contact")))
+                 (tags-todo "@errands"  ((org-agenda-overriding-header "@errands")))
+                 (tags-todo "@read"     ((org-agenda-overriding-header "@read")))
+                 (tags-todo "@agenda"   ((org-agenda-overriding-header "@agenda")))))
+
+               ("r" "System Health"
+                ((todo "" ((org-agenda-files '("~/Org/inbox.org"))
+                           (org-agenda-overriding-header "Inbox")))
+                 (todo "WAITING" ((org-agenda-overriding-header "All WAITING")))
+                 (todo "SOMEDAY" ((org-agenda-overriding-header "All SOMEDAY"))))))))
+   #+END_SRC
 
 ** Org Babel
    Org Babel enables executable code blocks within Org documents for literate programming and reproducible research. Configured to support multiple languages including Python, JavaScript, Emacs Lisp, SQL, and Ditaa for diagrams. Code evaluation is enabled without confirmation prompts for a smoother workflow. This allows mixing documentation with executable code, making it ideal for literate configurations, data analysis notebooks, and technical documentation.
@@ -669,13 +727,6 @@
     ;; Don't prompt before running code in org
     (setq org-confirm-babel-evaluate nil))
 #+END_SRC
-
-** Agenda commands
-   Custom agenda views. Add views here when returning to org for task management.
-
-   #+BEGIN_SRC emacs-lisp
-     (setq org-agenda-custom-commands nil)
-   #+end_src
 
 ** Org bullets and misc settings
    Visual enhancements for Org documents using org-bullets to replace plain asterisks with attractive Unicode bullets. Leading stars are hidden and indentation is managed by org-indent-mode for a cleaner outline appearance. Additional fontification settings improve the display of headings, quotes, verse blocks, and completed headlines. Org-download enables easy image insertion with drag-and-drop, storing images in a central directory. Org-fancy-priorities replaces A/B/C priority indicators with emoji for visual appeal.
