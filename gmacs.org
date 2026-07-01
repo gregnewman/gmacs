@@ -366,7 +366,7 @@
                      (mode . python-ts-mode))
                     ("HTML"
                      (mode . mhtml-mode))
-                    ("JS"
+                    ("Js"
                      (or (mode . js-ts-mode)
                          (filename . ".js")))
                     ("TXT"
@@ -535,7 +535,7 @@
             "~/Org/finances.org"
             "~/Org/home.org"
             "~/Org/health.org"
-            "~/Org/Studio.org"))
+            "~/Org/ical.org"))
     
     ;; All other org settings
     (setq org-agenda-window-setup 'current-window
@@ -606,19 +606,20 @@
     (org-wild-notifier-mode))
 #+END_SRC
 ** Todo Keywords
-   GTD keyword sequences: =NEXT= (actionable) → =DONE=; =WAITING= (delegated/blocked, prompts for note) / =SOMEDAY= (parked) → =CANCELLED= (prompts for note). =WAITING= and =CANCELLED= prompt for a note on entry so there's an audit trail. Tasks timestamp when closed.
+   GTD keyword sequences: =INBOX= (captured, needs clarification) → =NEXT= (actionable) → =DONE=; =WAITING= (delegated/blocked, prompts for note) / =SOMEDAY= (parked) → =CANCELLED= (prompts for note). =WAITING= and =CANCELLED= prompt for a note on entry so there's an audit trail. Tasks timestamp when closed.
 
    #+BEGIN_SRC emacs-lisp
      ;; Keywords
      (setq org-todo-keywords
-       '((sequence "NEXT(n)" "|" "DONE(d)")
+       '((sequence "INBOX(i)" "NEXT(n)" "|" "DONE(d)")
          (sequence "WAITING(w@/!)" "SOMEDAY(s)" "|" "CANCELLED(c@/!)")))
 
      ;; Anytime a task is marked done the line states `CLOSED: [timestamp]
      (setq org-log-done 'time)
 
      (setq org-todo-keyword-faces
-       '(("NEXT"      :foreground "lime green" :weight bold)
+       '(("INBOX"     :foreground "cyan" :weight bold)
+         ("NEXT"      :foreground "lime green" :weight bold)
          ("DONE"      :foreground "dim gray" :weight bold)
          ("WAITING"   :foreground "tomato" :weight bold)
          ("SOMEDAY"   :foreground "magenta" :weight bold)
@@ -631,7 +632,7 @@
    (global-set-key (kbd "C-c c") 'org-capture)
    #+end_src
 ** Capture templates
-   Five templates: =t= (Todo → inbox as NEXT, defaults to @computer), =n= (Note → inbox), =k= (Knowledge Investment → inbox), =m= (Meeting → inbox), =r= (Weekly Review → reviews.org as a dated checklist). All task captures land in inbox.org and get refiled during the weekly review.
+   Five templates: =t= (Todo → inbox as INBOX, no context yet), =n= (Note → inbox), =k= (Knowledge Investment → inbox), =m= (Meeting → inbox), =r= (Weekly Review → reviews.org as a dated checklist). All task captures land in inbox.org and get clarified during the weekly review — context tags and NEXT state are assigned then, not at capture time.
 
    Template expansion reference: =%?= cursor position, =%U= inactive timestamp, =%a= link to origin, =%t= active timestamp, =:clock-keep t= keeps running clock.
 
@@ -659,7 +660,7 @@
      (setq org-indent-indentation-per-level 2)
      (setq org-capture-templates
            '(("t" "Todo" entry (file "~/Org/inbox.org")
-              "* NEXT %? :@computer:\n%U\n%a\n" :clock-keep t)
+              "* INBOX %?\n%U\n%a\n" :clock-keep t)
              ("n" "Note" entry (file "~/Org/inbox.org")
               "* %? :NOTE:\n%U\n%a\n" :clock-keep t)
              ("k" "Knowledge Investment" entry (file "~/Org/inbox.org")
@@ -678,23 +679,24 @@
    #+BEGIN_SRC emacs-lisp
      (with-eval-after-load 'org-agenda
        (setq org-agenda-custom-commands
-             '(("d" "Daily"
+             '(("d" "🌞 Daily"
                 ((agenda "" ((org-agenda-span 1)
                              (org-agenda-start-on-weekday nil)
                              (org-agenda-overriding-header "Today")))
                  (todo "NEXT" ((org-agenda-overriding-header "Next Actions")))))
 
-               ("w" "Weekly Review"
-                ((todo "NEXT" ((org-agenda-overriding-header "📥 Inbox — process to zero")
-                               (org-agenda-files '("~/Org/inbox.org"))))
-                 (todo "WAITING"  ((org-agenda-overriding-header "Waiting For")))
-                 (tags "PROJECT"  ((org-agenda-overriding-header "Projects — verify each has a NEXT")))
-                 (todo "SOMEDAY"  ((org-agenda-overriding-header "Someday/Maybe")))
+               ("w" "☕ Weekly Review"
+                ((todo "INBOX" ((org-agenda-overriding-header "📨 Inbox — process to zero")
+                                (org-agenda-files '("~/Org/inbox.org"))))
+                 (todo "WAITING"  ((org-agenda-overriding-header "🚧 Waiting For")))
+                 (tags "PROJECT"  ((org-agenda-overriding-header "🔨 Projects — verify each has a NEXT")
+                                  (org-tags-match-list-sublevels nil)))
+                 (todo "SOMEDAY"  ((org-agenda-overriding-header "📦 Someday/Maybe")))
                  (agenda "" ((org-agenda-span 14)
                              (org-agenda-start-on-weekday 1)
-                             (org-agenda-overriding-header "Next 2 Weeks")))))
+                             (org-agenda-overriding-header "📅 Next 2 Weeks")))))
 
-               ("n" "Next Actions by Context"
+               ("n" "🎯 Next Actions by Context"
                 ((tags-todo "@computer" ((org-agenda-overriding-header "@computer")))
                  (tags-todo "@phone"    ((org-agenda-overriding-header "@phone")))
                  (tags-todo "@contact"  ((org-agenda-overriding-header "@contact")))
@@ -702,7 +704,7 @@
                  (tags-todo "@read"     ((org-agenda-overriding-header "@read")))
                  (tags-todo "@agenda"   ((org-agenda-overriding-header "@agenda")))))
 
-               ("r" "System Health"
+               ("r" "🚑 System Health"
                 ((todo "" ((org-agenda-files '("~/Org/inbox.org"))
                            (org-agenda-overriding-header "Inbox")))
                  (todo "WAITING" ((org-agenda-overriding-header "All WAITING")))
