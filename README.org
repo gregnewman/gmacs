@@ -30,10 +30,11 @@ This configuration prioritizes:
 - *Flycheck* integration for additional syntax checking
 
 *** GTD Workflow with Org-mode
-- Complete Getting Things Done implementation with custom agenda views
-- Custom capture templates for todos, meetings, knowledge investments
+- Hybrid project model: projects as headings with nested NEXT actions; agenda flattens to execution lists
+- Per-area org files: =inbox.org=, =nanog.org=, =freelance.org=, =personal.org=, =finances.org=, =home.org=, =health.org=, =Studio.org=
+- 5 capture templates: =t= (Todo→NEXT), =n= (Note), =k= (Knowledge Investment), =m= (Meeting), =r= (Weekly Review checklist)
+- 4 agenda views: =d= Daily, =w= Weekly Review, =n= Next Actions by Context (@computer/@phone/@contact/@errands/@read/@agenda), =r= System Health
 - Desktop notifications via =org-wild-notifier= (30, 10, and 5 min before events)
-- OmniFocus integration for task capture with context
 
 *** Modern Completion Framework
 - *Vertico* + Orderless for flexible, fast completion
@@ -192,9 +193,11 @@ As a software craftsman, this config provides excellent support for:
 *** Daily Workflow
 
 **** GTD with Org-mode
-- =C-c c= - Quick capture (todos, meetings, notes, knowledge investments)
-- =C-c a= - Open agenda (=a= week view, =m= tags match, =T= by keyword state)
-- =C-c o= - Capture to OmniFocus with context
+- =C-c c= - Quick capture; then =t= todo, =n= note, =k= knowledge, =m= meeting, =r= weekly review
+- =C-c a d= - Daily view (today's agenda + NEXT actions)
+- =C-c a w= - Weekly review (inbox, waiting, projects, someday, 2-week calendar)
+- =C-c a n= - Next actions filtered by context tag
+- =C-c a r= - System health check (inbox size, all waiting/someday)
 
 **** Coding
 - =C-c p= - Projectile commands (find file, switch project, search, etc.)
@@ -227,12 +230,20 @@ As a software craftsman, this config provides excellent support for:
 
 *** Org-mode Bindings
 
-| Key     | Command                |
-|---------+------------------------|
-| C-c c   | Org capture            |
-| C-c a   | Org agenda             |
-| C-c l   | Store link             |
-| C-c g   | Grab Mac link          |
+| Key       | Command                              |
+|-----------+--------------------------------------|
+| C-c c     | Org capture                          |
+| C-c c t   | Capture: Todo (→ NEXT in inbox)      |
+| C-c c n   | Capture: Note                        |
+| C-c c k   | Capture: Knowledge Investment        |
+| C-c c m   | Capture: Meeting                     |
+| C-c c r   | Capture: Weekly Review checklist     |
+| C-c a d   | Agenda: Daily (today + NEXT actions) |
+| C-c a w   | Agenda: Weekly Review                |
+| C-c a n   | Agenda: Next Actions by context tag  |
+| C-c a r   | Agenda: System Health                |
+| C-c l     | Store link                           |
+| C-c g     | Grab Mac link                        |
 
 *** LSP (Eglot) Bindings
 
