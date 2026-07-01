@@ -1,3 +1,4 @@
+; -*- lexical-binding: t; -*-
 ;; HACK Work around native compilation on macOS failing with 'ld: library not
 ;; found for -lemutls_w'.
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/554 and https://github.com/d12frosted/homebrew-emacs-plus/issues/323

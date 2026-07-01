@@ -1,3 +1,4 @@
+; -*- lexical-binding: t; -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
 ;; Time-stamp:    <2020-01-31 23:21:56 vk>
@@ -105,6 +106,7 @@ Note the weekly scope of the command's precision.")
 	      (add-to-list 'body-list body)
 	      ))))
       (with-temp-file output-file
+        (insert "; -*- lexical-binding: t; -*-\n")
         (insert ";; ============================================================\n")
         (insert ";; Don't edit this file, edit gmacs.org' instead ...\n")
         (insert ";; Auto-generated at " (format-time-string current-date-time-format (current-time)) " on host " system-name "\n")
