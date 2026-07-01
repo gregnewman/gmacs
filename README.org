@@ -16,9 +16,9 @@ This configuration prioritizes:
 
 ** System Information
 
-| Operating System | Emacs Version |
-|------------------+---------------|
-| macOS Tahoe      | Emacs 30.2    |
+| Operating System | Emacs Version  |
+|------------------+----------------|
+| macOS Tahoe      | Emacs 31.0.90  |
 
 ** Key Features
 
@@ -84,7 +84,7 @@ This configuration prioritizes:
 *** Prerequisites
 
 **** System Requirements
-- Emacs 30.0 or later (recommended: Emacs Plus with native compilation)
+- Emacs 31.0 or later (recommended: Emacs Plus with native compilation)
 - Git
 - Homebrew (for macOS)
 
