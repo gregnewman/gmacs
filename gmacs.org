@@ -41,7 +41,7 @@
 
        ;; Corrects (and improves) org-mode's native fontification.
        (doom-themes-org-config)
-        (load-theme 'doom-dracula t))
+        (load-theme 'doom-tokyo-night t))
 
      (use-package doom-modeline
        :ensure t
@@ -786,6 +786,33 @@
     ;; search only for text files in denote dir
     (setq consult-notes-denote-files-function (lambda () (denote-directory-files nil t t))))
  #+END_SRC
+* HOWM
+[[https://kaorahi.github.io/howm/][HOWM]] (Hitori Otegaru Wiki Modoki) is a free-form note-taking system built around quick capture and grep-based search. Notes live as individual files; =[[keyword]]= links work by searching across all notes for that keyword rather than pointing to a named file.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package howm
+    :demand t
+    :init
+    ;; Must be set before howm loads so it knows where to search
+    (setq howm-directory "~/Dropbox/Org/howm/")
+    (setq howm-prefix (kbd "C-c h"))
+    :custom
+    (howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.howm")
+    (howm-view-use-grep t)
+    (howm-view-grep-command "rg")
+    (howm-view-grep-option "-nH --no-heading --color never")
+    (howm-view-grep-extended-option nil)
+    (howm-view-grep-fixed-option "-F")
+    (howm-view-grep-file-stdin-option nil)
+    :config
+    ;; Show note title in buffer name instead of timestamp filename
+    (add-hook 'howm-mode-hook 'howm-mode-set-buffer-name)
+    (add-hook 'after-save-hook 'howm-mode-set-buffer-name)
+    ;; Fix C-h so Emacs help still works in HOWM buffers
+    (define-key howm-menu-mode-map "\C-h" nil)
+    (define-key riffle-summary-mode-map "\C-h" nil)
+    (define-key howm-view-contents-mode-map "\C-h" nil))
+#+END_SRC
 * Path from shell
 When starting emacs gui on Mac OS, the paths are not read from .zshrc
 Using `exec-path-from-shell` fixes this.
