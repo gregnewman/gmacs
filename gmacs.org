@@ -772,6 +772,7 @@
     (dired-mode . denote-dired-mode))
 
   (use-package consult-notes
+    :straight (:type git :host github :repo "mclear-tools/consult-notes")
     :commands (consult-notes
                consult-notes-search-in-all-notes
                ;; if using org-roam 
@@ -1608,44 +1609,21 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
       (require 'gnus-icalendar))
   #+END_SRC
 
+  notmuch-indicator shows unread inbox counts in the mode line (doom-modeline displays it
+  in the misc-info segment). It shells out to =notmuch count=, so it doesn't need notmuch.el
+  loaded and shows from startup. It only reads the index; fetching is still done by
+  =gn/notmuch-sync=.
 
-* IRC - ERC via ZNC
-  ERC is Emacs' built-in IRC client. It connects to a ZNC bouncer on the homelab at
-  =znc.tailebe1e.ts.net:8080= (reachable over Tailscale). ZNC replays missed messages on
-  reconnect. Credentials are read from =~/.authinfo.gpg= - never stored here.
+  #+BEGIN_SRC emacs-lisp
+    (use-package notmuch-indicator
+      :straight t
+      :config
+      (setq notmuch-indicator-args
+            '((:terms "tag:unread AND NOT tag:trash AND folder:gregnewman.org/INBOX" :label "G:")
+              (:terms "tag:unread AND NOT tag:trash AND folder:NANOG/INBOX" :label "N:")))
+      (notmuch-indicator-mode 1))
+  #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-  (use-package erc
-    :straight nil
-    :commands (erc erc-tls)
-    :custom
-    (erc-prompt-for-password nil)
-    (erc-server-auto-reconnect nil)
-    (erc-hide-list '("JOIN" "PART" "QUIT"))
-    (erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
-                               "324" "329" "332" "333" "353" "477"))
-    ;; ZNC is on a private Tailscale network - trust its self-signed cert.
-    (network-security-level 'low)
-    :config
-    ;; Don't send PART when killing a channel buffer. ZNC stays joined
-    ;; and continues buffering messages until we reconnect. Use /part to
-    ;; actually leave a channel.
-    (advice-add 'erc-part-channel-on-kill :override #'ignore))
-
-  (defun gn/erc-znc ()
-    "Connect to ZNC bouncer at znc.tailebe1e.ts.net:8080 via Tailscale."
-    (interactive)
-    (erc-tls :server "znc.tailebe1e.ts.net"
-             :port 8080
-             :nick "gnewman"
-             :full-name "Greg Newman"
-             :password (auth-source-pick-first-password
-                        :host "znc.tailebe1e.ts.net"
-                        :user "gnewman"
-                        :port "8080")))
-
-  (add-hook 'emacs-startup-hook #'gn/erc-znc)
-#+END_SRC
 
 * Startup Profiling
   Performance analysis tool for identifying slow Emacs startup. ESUP (Emacs Start Up Profiler) measures how long each part of your configuration takes to load, helping identify bottlenecks and optimize startup time. Run M-x esup to profile the init process and see a detailed breakdown of where time is spent. Useful for maintaining fast startup times as your configuration grows.
