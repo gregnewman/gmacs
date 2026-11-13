@@ -1148,6 +1148,31 @@ Using `exec-path-from-shell` fixes this.
            ("C-x C-j" . consult-dir-jump-file)))
 #+END_SRC
 
+** Document Search
+   Full-text search inside documents, PDFs included, using ripgrep-all (rga) through consult-ripgrep. Defaults to ~/Documents and searches recursively. C-u prompts for a directory; C-u C-u prompts for a directory and includes hidden files. Requires =brew install ripgrep-all poppler=. The first search over a large folder is slow while rga extracts and caches text.
+
+#+BEGIN_SRC emacs-lisp
+  (defun gn/doc-search (&optional dir hidden)
+    "Search inside files under DIR, PDFs included, using ripgrep-all.
+  DIR defaults to ~/Documents.  When HIDDEN is non-nil, also search
+  hidden files and folders.
+
+  Interactively, \\[universal-argument] prompts for DIR, and
+  \\[universal-argument] \\[universal-argument] prompts for DIR and
+  includes hidden files."
+    (interactive
+     (list (when current-prefix-arg
+             (read-directory-name "Search in: " "~/Documents/"))
+           (equal current-prefix-arg '(16))))
+    (require 'consult)
+    (require 'subr-x)
+    (let ((consult-ripgrep-args
+           (concat "rga"
+                   (when hidden " --hidden")
+                   (string-remove-prefix "rg" consult-ripgrep-args))))
+      (consult-ripgrep (or dir "~/Documents/"))))
+#+END_SRC
+
 ** Embark - Context Actions
    Provides context-aware actions on completion targets and other objects. Press C-. on a completion candidate to see available actions (e.g., on a file: open, rename, delete; on a command: execute, describe, where-is). Embark-dwim (C-;) performs the most likely action automatically. This creates a powerful "act-on-thing-at-point" interface throughout Emacs. Embark-consult integration provides preview capabilities in Embark collect buffers.
 
