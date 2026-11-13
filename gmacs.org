@@ -1617,6 +1617,7 @@ Activities, this Emacs library allows the user to manage frames/tabs, windows, a
   #+BEGIN_SRC emacs-lisp
     (use-package notmuch-indicator
       :straight t
+      :demand t
       :config
       (setq notmuch-indicator-args
             '((:terms "tag:unread AND NOT tag:trash AND folder:gregnewman.org/INBOX" :label "G:")
