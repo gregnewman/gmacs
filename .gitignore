@@ -33,3 +33,4 @@ TAGS
 /persist/
 /elpaold
 /.worktrees
+/custom.el

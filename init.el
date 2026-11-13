@@ -115,6 +115,11 @@ Note the weekly scope of the command's precision.")
       (message "—————• Wrote %s" output-file))))
 
 
+;; Keep Customize's auto-generated settings out of init.el. Loaded before gmacs.el
+;; so saved values like custom-safe-themes are in place when the theme loads.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
+
 ;; following lines are executed only when my-tangle-gmacs.org-hook-func()
 ;; was not invoked when saving gmacs.org which is the normal case:
 (let ((orgfile (concat my-user-emacs-directory "gmacs.org"))
