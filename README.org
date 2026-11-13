@@ -52,6 +52,12 @@ This configuration prioritizes:
 - Custom saved searches scoped to INBOX folders to avoid mailing list noise in unread counts
 - Run =M-x notmuch= to open; =C-c C-c= to send; FCC disabled (Gmail/iCloud save sent mail server-side)
 
+*** Document Search
+- *gn/doc-search* runs full-text search inside documents, PDFs included, using *ripgrep-all* (rga) through =consult-ripgrep=
+- Defaults to =~/Documents= and searches recursively; =C-u= prompts for a directory, =C-u C-u= prompts for a directory and includes hidden files
+- No background index to break: rga reads files at search time and caches extracted text, so the first search over a large folder is slow and later ones are fast
+- Portable: rga and poppler work the same on Linux, unlike Spotlight
+
 *** IRC with ERC and ZNC
 - *ERC* (built-in) connects to a *ZNC bouncer* on the homelab over Tailscale (=znc.your-tailnet.ts.net:8080=)
 - *Buffer playback* on reconnect - ZNC replays missed messages from =#emacs= and =#org-mode= on Libera.Chat
@@ -108,6 +114,9 @@ brew install just  # For Justfile support
 
 # Email
 brew install notmuch isync msmtp
+
+# Document search (poppler provides pdftotext for PDFs)
+brew install ripgrep-all poppler
 #+end_src
 
 *** Quick Start
@@ -209,6 +218,7 @@ As a software craftsman, this config provides excellent support for:
 - =C-'= - Toggle imenu-list sidebar (code outline)
 - =C-.= - Embark actions on thing at point
 - Consult commands for enhanced search and navigation
+- =M-x gn/doc-search= - Search inside documents and PDFs under =~/Documents= (=C-u= to pick a directory)
 
 ** Important Keybindings
 
@@ -371,6 +381,12 @@ Some features are disabled by default but available:
 1. Ensure =.python-version= file exists in your project root
 2. Verify pyenv is installed and configured
 3. Check that the Python version in =.python-version= is installed in pyenv
+
+*** Document Search Hangs or Times Out
+
+1. An =Operation timed out (os error 60)= error means the file is an iCloud placeholder, not on disk. With "Optimize Mac Storage" on, macOS moves Documents files to iCloud and rga has to wait for each download.
+2. Fix: in Finder, right-click =Documents= → *Keep Downloaded*. Check placeholder count with =find ~/Documents -flags +dataless | wc -l=.
+3. A =*= after the prompt means the search is still running; the first pass over a large folder is slow while rga caches extracted text.
 
 *** Fonts Not Displaying Correctly
 
