@@ -16,8 +16,7 @@
      (use-package straight
        :custom
        ;; add project and flymake to the pseudo-packages variable so straight.el doesn't download a separate version than what eglot downloads.
-       (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref))
-       (straight-use-package-by-default t))
+       (straight-built-in-pseudo-packages '(emacs nadvice python image-mode project flymake xref)))
 
      (setq use-package-always-defer t)
 

@@ -13,11 +13,6 @@
 ;; For a brief description of my configuration, please take a look at gmacs.org in this directory!
 ;; ================================================================================================
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
 
@@ -41,12 +36,6 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
-
-;; Disable package.el in favor of straight.el
-(setq package-enable-at-startup nil)
-
-;; Install use-package
-(straight-use-package 'use-package)
 
 ;; =======================================================================================
 ;; The init.el file looks for "gmacs.org" and tangles its elisp blocks (matching
