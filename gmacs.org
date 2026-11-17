@@ -530,6 +530,7 @@
           '("~/Org/inbox.org"
             "~/Org/nanog.org"
             "~/Org/freelance.org"
+            "~/Org/orgmode.org"
             "~/Org/personal.org"
             "~/Org/finances.org"
             "~/Org/home.org"
